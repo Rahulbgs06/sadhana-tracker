@@ -7,6 +7,7 @@
     <!-- Google Fonts: Serif for spiritual feel, Sans for readability -->
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* ===== ROOT VARIABLES ===== */
         :root {
             --saffron: #ff9933;
             --saffron-light: #ffebcc;
@@ -19,6 +20,7 @@
             --shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
+        /* ===== RESET & BASE STYLES ===== */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -43,7 +45,7 @@
             padding: 20px;
         }
 
-        /* CARD STYLE */
+        /* ===== CARD STYLES ===== */
         .card {
             background: var(--white);
             border-radius: 16px;
@@ -54,7 +56,7 @@
             position: relative;
         }
 
-        /* SPIRITUAL GREETING */
+        /* ===== HEADER STYLES ===== */
         .greeting-header {
             text-align: center;
             margin-bottom: 30px;
@@ -76,7 +78,7 @@
             text-transform: capitalize;
         }
 
-        /* FORMS */
+        /* ===== FORM STYLES ===== */
         .form-group {
             margin-bottom: 15px;
             position: relative;
@@ -112,7 +114,7 @@
             background: #fff;
         }
 
-        /* BUTTONS */
+        /* ===== BUTTON STYLES ===== */
         .btn {
             display: block;
             width: 100%;
@@ -153,14 +155,14 @@
             color: #d9534f;
         }
 
-        /* NAVIGATION */
+        /* ===== NAVIGATION GRID ===== */
         .nav-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
 
-        /* TABLES */
+        /* ===== TABLE STYLES ===== */
         .table-container {
             overflow-x: auto;
         }
@@ -184,7 +186,7 @@
             border-bottom: 1px solid var(--border);
         }
 
-        /* REPORT STYLES */
+        /* ===== REPORT STYLES ===== */
         .report-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -247,7 +249,7 @@
             color: var(--text-muted);
         }
 
-        /* AUTOCOMPLETE STYLES */
+        /* ===== AUTOCOMPLETE STYLES ===== */
         .autocomplete-suggestions {
             position: absolute;
             border: 1px solid var(--border);
@@ -272,7 +274,7 @@
             background-color: var(--saffron-light);
         }
 
-        /* UTILS */
+        /* ===== UTILITY CLASSES ===== */
         .hidden { display: none; }
         .text-center { text-align: center; }
         .mt-20 { margin-top: 20px; }
@@ -295,9 +297,29 @@
         .role-admin { background: #fff3e0; color: #f57c00; }
         .role-developer { background: #f3e5f5; color: #7b1fa2; }
 
+        /* ===== DEBUG PANEL (visible in development) ===== */
+        #debug-panel {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-width: 300px;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
+
+<!-- ===== DEBUG PANEL (Hidden by default, shows only in development) ===== -->
+<div id="debug-panel" style="display: none;">
+    <div><strong>🐞 DEBUG MODE</strong> <button onclick="debug.toggle()">Hide</button></div>
+    <div id="debug-content"></div>
+</div>
 
 <div class="container">
     <!-- ===== USER ROLE DISPLAY ===== -->
@@ -307,23 +329,23 @@
         <div id="welcome-role" class="role-indicator">Role: Devotee</div>
     </div>
 
-    <!-- 1. LOGIN MODULE -->
+    <!-- ===== 1. LOGIN MODULE ===== -->
     <div id="view-login" class="card">
         <h2 class="spiritual-text text-center">Sadhana Tracker Login</h2>
         <p class="text-center" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;">Enter your credentials to continue</p>
         <div class="form-group">
             <label>Email Address</label>
-            <input type="email" id="login-email" placeholder="email@example.com">
+            <input type="email" id="login-email" placeholder="email@example.com" value="admin@sadhna.com">
         </div>
         <div class="form-group">
             <label>Password</label>
-            <input type="password" id="login-pass" placeholder="••••••••">
+            <input type="password" id="login-pass" placeholder="••••••••" value="admin123">
         </div>
         <button class="btn btn-primary" onclick="app.handleLogin()">Login</button>
         <button class="btn btn-outline" onclick="app.showView('register')">New Devotee? Register</button>
     </div>
 
-    <!-- 2. REGISTRATION MODULE -->
+    <!-- ===== 2. REGISTRATION MODULE ===== -->
     <div id="view-register" class="card hidden">
         <h2 class="spiritual-text">Devotee Registration</h2>
         <div class="form-group">
@@ -355,7 +377,7 @@
         <button class="btn btn-outline" onclick="app.showView('login')">Back to Login</button>
     </div>
 
-    <!-- 3. DASHBOARD MENU -->
+    <!-- ===== 3. DASHBOARD MENU ===== -->
     <div id="view-dashboard" class="hidden">
         <div class="nav-grid">
             <div class="card text-center" onclick="app.showView('tracking')" style="cursor:pointer">
@@ -378,7 +400,7 @@
         <button class="btn btn-danger" onclick="app.handleLogout()">Logout</button>
     </div>
 
-    <!-- 4. DAILY SADHANA TRACKING MODULE -->
+    <!-- ===== 4. DAILY SADHANA TRACKING MODULE ===== -->
     <div id="view-tracking" class="card hidden">
         <h2 class="spiritual-text">Daily Sadhana Report</h2>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">Fill your spiritual activities for the day.</p>
@@ -440,7 +462,7 @@
         </div>
     </div>
 
-    <!-- 5. SEARCH MODULE -->
+    <!-- ===== 5. SEARCH MODULE ===== -->
     <div id="view-search" class="card hidden">
         <h2 class="spiritual-text">Search Tracking Data</h2>
         
@@ -482,7 +504,7 @@
         </div>
     </div>
 
-    <!-- 6. REPORTS MODULE -->
+    <!-- ===== 6. REPORTS MODULE ===== -->
     <div id="view-reports" class="card hidden">
         <h2 class="spiritual-text">Spiritual Progress Report</h2>
         <!-- ===== REPORT SEARCH MODULE ===== -->
@@ -523,7 +545,7 @@
         <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">Back to Menu</button>
     </div>
 
-    <!-- 7. ADMIN USER MANAGEMENT -->
+    <!-- ===== 7. ADMIN USER MANAGEMENT ===== -->
     <div id="view-admin" class="card hidden">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <h2 class="spiritual-text">User Management</h2>
@@ -545,7 +567,7 @@
         <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">Back to Menu</button>
     </div>
 
-    <!-- USER MODAL -->
+    <!-- ===== USER MODAL ===== -->
     <div id="modal-user-edit" class="card hidden" style="position: fixed; top: 10%; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; z-index: 100; box-shadow: 0 0 50px rgba(0,0,0,0.3);">
         <h3 id="modal-title">Edit User</h3>
         <input type="hidden" id="edit-user-id">
@@ -571,114 +593,247 @@
 
 </div>
 
+<!-- ===== MAIN APPLICATION JAVASCRIPT ===== -->
 <script>
 /**
- * SADHANA TRACKER - UPDATED WITH API BACKEND CONNECTION
+ * SADHANA TRACKER - MAIN APPLICATION
+ * Version: 2.0 (API Backend Connected)
+ * 
+ * This application connects to a Node.js backend API running on port 3000
+ * All data is stored in MySQL database via Docker
+ * 
+ * DEBUGGING TIPS:
+ * 1. Press F12 to open Developer Tools
+ * 2. Check Console tab for any errors
+ * 3. Check Network tab to see API requests
+ * 4. The debug panel below can be toggled with debug.toggle()
  */
-const app = {
-    currentUser: null,
-    API_BASE_URL: 'http://localhost:3000', // Your local backend URL
-    masterNumber: '916206431908',
 
+// ===== DEBUGGING UTILITIES =====
+const debug = {
+    enabled: true, // Set to false to disable debug panel
+    
+    /**
+     * Log to console and debug panel
+     * @param {string} component - The component name
+     * @param {string} message - The message to log
+     * @param {any} data - Optional data to log
+     */
+    log: function(component, message, data = null) {
+        const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+        const logMessage = `[${timestamp}] [${component}] ${message}`;
+        
+        // Always log to console
+        console.log(logMessage, data ? data : '');
+        
+        // Also show in debug panel if enabled
+        if (this.enabled) {
+            const panel = document.getElementById('debug-panel');
+            const content = document.getElementById('debug-content');
+            if (panel && content) {
+                panel.style.display = 'block';
+                const entry = document.createElement('div');
+                entry.style.borderBottom = '1px solid #333';
+                entry.style.padding = '2px 0';
+                entry.style.fontSize = '10px';
+                entry.textContent = logMessage.substring(0, 50) + (data ? ' 📊' : '');
+                content.appendChild(entry);
+                
+                // Keep only last 10 messages
+                while (content.children.length > 10) {
+                    content.removeChild(content.firstChild);
+                }
+            }
+        }
+    },
+    
+    /**
+     * Toggle debug panel visibility
+     */
+    toggle: function() {
+        const panel = document.getElementById('debug-panel');
+        if (panel) {
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                this.enabled = true;
+            } else {
+                panel.style.display = 'none';
+                this.enabled = false;
+            }
+        }
+    },
+    
+    /**
+     * Clear debug panel
+     */
+    clear: function() {
+        const content = document.getElementById('debug-content');
+        if (content) {
+            content.innerHTML = '';
+        }
+    }
+};
+
+// ===== MAIN APPLICATION OBJECT =====
+const app = {
+    // ===== APPLICATION STATE =====
+    currentUser: null,                 // Currently logged in user
+    API_BASE_URL: 'http://localhost:3000', // Backend API URL (change for production)
+    masterNumber: '916206431908',       // WhatsApp master number
+    
+    // ===== INITIALIZATION =====
+    /**
+     * Initialize the application
+     * Called when DOM is loaded
+     */
     init: function() {
+        debug.log('INIT', 'Application starting...');
+        
         // Check for saved session
         const savedSession = localStorage.getItem('sadhana_session');
         const savedToken = localStorage.getItem('token');
         
+        debug.log('INIT', 'Saved session exists:', { session: !!savedSession, token: !!savedToken });
+        
         if (savedSession && savedToken) {
             try {
                 this.currentUser = JSON.parse(savedSession);
+                debug.log('INIT', 'Restored user session', this.currentUser);
                 this.showView('dashboard');
             } catch (e) {
+                debug.log('INIT', 'Error parsing saved session', e);
                 localStorage.removeItem('sadhana_session');
                 localStorage.removeItem('token');
                 this.showView('login');
             }
         } else {
+            debug.log('INIT', 'No saved session, showing login');
             this.showView('login');
         }
 
+        // Add click listener for autocomplete
         document.addEventListener('click', (e) => {
             const list = document.getElementById('search-autocomplete-list');
             if (list && !e.target.closest('#search-name')) {
                 list.classList.add('hidden');
             }
         });
+        
+        debug.log('INIT', 'Application initialized successfully');
     },
 
+    // ===== VIEW MANAGEMENT =====
+    /**
+     * Show a specific view and hide others
+     * @param {string} viewId - The ID of the view to show (login, register, dashboard, etc.)
+     */
     showView: function(viewId) {
+        debug.log('VIEW', `Switching to view: ${viewId}`, { currentUser: this.currentUser });
+        
+        // Check authentication for protected views
         if (viewId !== 'login' && viewId !== 'register' && !this.currentUser) {
+            debug.log('VIEW', 'Unauthorized access attempt, redirecting to login');
             this.showView('login');
             return;
         }
 
+        // Hide all views
         const views = ['login', 'register', 'dashboard', 'tracking', 'search', 'reports', 'admin'];
         views.forEach(v => {
             const el = document.getElementById('view-' + v);
             if(el) el.classList.add('hidden');
         });
         
+        // Show selected view
         const currentView = document.getElementById('view-' + viewId);
         if(currentView) currentView.classList.remove('hidden');
 
+        // Update header
         const header = document.getElementById('header-area');
         if (viewId === 'login' || viewId === 'register') {
             header.classList.add('hidden');
         } else {
             header.classList.remove('hidden');
-            document.getElementById('welcome-name').innerText = `Welcome ${this.currentUser.name}`;
-            document.getElementById('welcome-role').innerText = `Role: ${this.currentUser.role}`;
-            
-            const adminMenu = document.getElementById('admin-menu-item');
-            if (this.currentUser.role === 'admin' || this.currentUser.role === 'developer') {
-                adminMenu.classList.remove('hidden');
-            } else {
-                adminMenu.classList.add('hidden');
+            if (this.currentUser) {
+                document.getElementById('welcome-name').innerText = `Welcome ${this.currentUser.name}`;
+                document.getElementById('welcome-role').innerText = `Role: ${this.currentUser.role}`;
+                
+                // Show/hide admin menu based on role
+                const adminMenu = document.getElementById('admin-menu-item');
+                if (this.currentUser.role === 'admin' || this.currentUser.role === 'developer') {
+                    adminMenu.classList.remove('hidden');
+                } else {
+                    adminMenu.classList.add('hidden');
+                }
             }
         }
 
+        // Initialize view-specific data
         if (viewId === 'tracking') this.initTrackingForm();
         if (viewId === 'admin') this.renderAdminTable();
         if (viewId === 'reports') this.initReports();
         if (viewId === 'search') this.initSearch();
+        
+        debug.log('VIEW', `View ${viewId} rendered successfully`);
     },
 
-    // ===== API CALLS =====
+    // ===== AUTHENTICATION API CALLS =====
+    /**
+     * Handle user login
+     * Makes POST request to /api/auth/login
+     */
     handleLogin: async function() {
+        debug.log('AUTH', 'Login attempt started');
+        
         const email = document.getElementById('login-email').value.trim();
         const password = document.getElementById('login-pass').value.trim();
 
         if (!email || !password) {
+            debug.log('AUTH', 'Login failed: Missing credentials');
             alert("|| Hare Krishna || Please enter Email and Password");
             return;
         }
 
+        debug.log('AUTH', 'Login credentials', { email });
+
         try {
+            debug.log('API', `POST ${this.API_BASE_URL}/api/auth/login`);
             const response = await fetch(`${this.API_BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
 
+            debug.log('API', `Response status: ${response.status}`);
             const data = await response.json();
+            debug.log('API', 'Response data', data);
 
             if (response.ok) {
                 // Save token and user data
                 localStorage.setItem('token', data.token);
                 this.currentUser = data.user;
                 localStorage.setItem('sadhana_session', JSON.stringify(data.user));
+                
+                debug.log('AUTH', 'Login successful', this.currentUser);
                 this.showView('dashboard');
                 alert('Login successful! || Hare Krishna ||');
             } else {
+                debug.log('AUTH', 'Login failed', data.error);
                 alert(data.error || 'Login failed. Please register first.');
             }
         } catch (error) {
-            console.error('Login error:', error);
+            debug.log('ERROR', 'Network error during login', error);
             alert('Cannot connect to server. Make sure backend is running at ' + this.API_BASE_URL);
         }
     },
 
+    /**
+     * Handle user registration
+     * Makes POST request to /api/auth/register
+     */
     handleRegister: async function() {
+        debug.log('AUTH', 'Registration attempt started');
+        
         const name = document.getElementById('reg-name').value.trim();
         const email = document.getElementById('reg-email').value.trim();
         const password = document.getElementById('reg-pass').value.trim();
@@ -686,57 +841,94 @@ const app = {
         const phone = document.getElementById('reg-phone').value.trim();
 
         if (!name || !email || !password) {
+            debug.log('AUTH', 'Registration failed: Missing required fields');
             alert("Please fill all required fields");
             return;
         }
 
+        debug.log('AUTH', 'Registration data', { name, email, group });
+
         try {
+            debug.log('API', `POST ${this.API_BASE_URL}/api/auth/register`);
             const response = await fetch(`${this.API_BASE_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, password, group, phone })
             });
 
+            debug.log('API', `Response status: ${response.status}`);
             const data = await response.json();
+            debug.log('API', 'Response data', data);
 
             if (response.ok) {
+                debug.log('AUTH', 'Registration successful');
                 alert("Registration Successful! || Hare Krishna || Please login.");
                 this.showView('login');
             } else {
+                debug.log('AUTH', 'Registration failed', data.error);
                 alert(data.error || 'Registration failed');
             }
         } catch (error) {
-            console.error('Registration error:', error);
+            debug.log('ERROR', 'Network error during registration', error);
             alert('Cannot connect to server. Make sure backend is running.');
         }
     },
 
+    /**
+     * Handle user logout
+     */
     handleLogout: function() {
+        debug.log('AUTH', 'Logging out user', this.currentUser);
+        
         this.currentUser = null;
         localStorage.removeItem('sadhana_session');
         localStorage.removeItem('token');
+        
+        debug.log('AUTH', 'Logout complete');
         this.showView('login');
     },
 
+    // ===== SADHANA TRACKING =====
+    /**
+     * Initialize the tracking form
+     */
     initTrackingForm: function() {
+        debug.log('TRACKING', 'Initializing tracking form');
+        
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('sd-date').value = today;
         document.getElementById('sd-name').value = this.currentUser?.name || '';
         document.getElementById('message-generator-section').classList.add('hidden');
         this.updateDayDisplay();
+        
+        debug.log('TRACKING', 'Tracking form initialized', { date: today, user: this.currentUser?.name });
     },
 
+    /**
+     * Update the day display based on selected date
+     */
     updateDayDisplay: function() {
         const dateInput = document.getElementById('sd-date').value;
         if (!dateInput) return;
+        
         const date = new Date(dateInput);
         const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        document.getElementById('sd-day-display').innerText = days[date.getDay()];
+        const dayName = days[date.getDay()];
+        
+        document.getElementById('sd-day-display').innerText = dayName;
+        debug.log('TRACKING', 'Day updated', { date: dateInput, day: dayName });
     },
 
+    /**
+     * Save sadhana entry to database
+     * Makes POST request to /api/sadhana
+     */
     saveSadhana: async function() {
+        debug.log('TRACKING', 'Save sadhana attempt started');
+        
         const token = localStorage.getItem('token');
         if (!token) {
+            debug.log('TRACKING', 'Save failed: No token');
             alert('Please login first');
             this.showView('login');
             return;
@@ -744,6 +936,7 @@ const app = {
 
         const date = document.getElementById('sd-date').value;
         if (!date) {
+            debug.log('TRACKING', 'Save failed: No date');
             alert("|| Hare Krishna || Date is mandatory.");
             return;
         }
@@ -759,7 +952,10 @@ const app = {
             sleep: document.getElementById('sd-sleep').value || null
         };
 
+        debug.log('TRACKING', 'Entry data', entry);
+
         try {
+            debug.log('API', `POST ${this.API_BASE_URL}/api/sadhana`);
             const response = await fetch(`${this.API_BASE_URL}/api/sadhana`, {
                 method: 'POST',
                 headers: {
@@ -768,8 +964,8 @@ const app = {
                 },
                 body: JSON.stringify(entry)
             });
-
             const data = await response.json();
+            debug.log('API', 'Response', data);
 
             if (response.ok) {
                 alert('Sadhana entry saved! || Hare Krishna ||');
@@ -781,7 +977,7 @@ const app = {
                 alert(data.error || 'Error saving entry');
             }
         } catch (error) {
-            console.error('Save error:', error);
+            debug.log('ERROR', 'Save error', error);
             alert('Network error. Is backend running?');
         }
     },
@@ -820,7 +1016,7 @@ Sent via Sadhana Tracker`;
         const searchInput = document.getElementById('search-name');
         const groupSelect = document.getElementById('search-group');
 
-        if (this.currentUser.role === 'devotee') {
+        if (this.currentUser && this.currentUser.role === 'devotee') {
             searchInput.value = this.currentUser.name;
             searchInput.readOnly = true;
             groupSelect.disabled = true;
@@ -832,7 +1028,7 @@ Sent via Sadhana Tracker`;
     },
 
     handleNameAutocomplete: async function(val) {
-        if (this.currentUser.role === 'devotee') return;
+        if (this.currentUser && this.currentUser.role === 'devotee') return;
 
         const list = document.getElementById('search-autocomplete-list');
         if (!val || val.length < 1) {
@@ -955,12 +1151,11 @@ Sent via Sadhana Tracker`;
         this.lastSearchResults = results;
     },
 
-    // ===== REPORT FUNCTIONS =====
     initReports: async function() {
         const filter = document.getElementById('report-user-filter');
         const searchArea = document.getElementById('report-admin-search');
         
-        if (this.currentUser.role === 'admin' || this.currentUser.role === 'developer') {
+        if (this.currentUser && (this.currentUser.role === 'admin' || this.currentUser.role === 'developer')) {
             searchArea.classList.remove('hidden');
             
             try {
@@ -982,23 +1177,106 @@ Sent via Sadhana Tracker`;
             }
         } else {
             searchArea.classList.add('hidden');
-            filter.innerHTML = `<option value="name:${this.currentUser.name}">${this.currentUser.name}</option>`;
+            if (this.currentUser) {
+                filter.innerHTML = `<option value="name:${this.currentUser.name}">${this.currentUser.name}</option>`;
+            }
         }
         
         this.generateReport();
     },
 
     generateReport: async function() {
-        const filterVal = document.getElementById('report-user-filter').value;
+        console.log('Generate report called');
         const statsArea = document.getElementById('report-stats-area');
-        const actionsArea = document.getElementById('report-actions-area');
-        
-        const searchName = document.getElementById('report-search-name').value;
-        const dateFrom = document.getElementById('report-date-from').value;
-        const dateTo = document.getElementById('report-date-to').value;
-
         statsArea.innerHTML = '<p class="text-center">Loading report...</p>';
-        actionsArea.innerHTML = '';
-
+        
         try {
             const token = localStorage.getItem('token');
+            const filterVal = document.getElementById('report-user-filter').value;
+            const searchName = document.getElementById('report-search-name')?.value || '';
+            const dateFrom = document.getElementById('report-date-from')?.value || '';
+            const dateTo = document.getElementById('report-date-to')?.value || '';
+            
+            let url = `${this.API_BASE_URL}/api/reports?`;
+            const params = [];
+            if (filterVal.startsWith('name:')) {
+                params.push(`name=${encodeURIComponent(filterVal.substring(5))}`);
+            }
+            if (searchName) params.push(`name=${encodeURIComponent(searchName)}`);
+            if (dateFrom) params.push(`fromDate=${dateFrom}`);
+            if (dateTo) params.push(`toDate=${dateTo}`);
+            url += params.join('&');
+            
+            const response = await fetch(url, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                this.displayReport(data);
+            }
+        } catch (error) {
+            console.error('Report error:', error);
+            statsArea.innerHTML = '<p class="text-center">Error loading report</p>';
+        }
+    },
+
+    displayReport: function(data) {
+        const statsArea = document.getElementById('report-stats-area');
+        if (!data || data.length === 0) {
+            statsArea.innerHTML = '<p class="text-center">No data found for report</p>';
+            return;
+        }
+        
+        let html = '<div class="report-grid">';
+        data.forEach(row => {
+            html += `
+                <div class="devotee-report-card">
+                    <div class="devotee-report-name">${row.name}</div>
+                    <div class="devotee-report-stats">
+                        <div class="stat-line"><span>Days:</span> <span>${row.total_days}</span></div>
+                        <div class="stat-line"><span>Rounds:</span> <span>${row.total_rounds}</span></div>
+                        <div class="stat-line"><span>Hearing:</span> <span>${row.total_hearing}m</span></div>
+                        <div class="stat-line"><span>Reading:</span> <span>${row.total_reading}m</span></div>
+                        <div class="stat-line"><span>Study:</span> <span>${row.total_study}m</span></div>
+                        <div class="stat-line"><span>Avg Wake:</span> <span>${row.avg_wakeup || '-'}</span></div>
+                        <div class="stat-line"><span>Avg Sleep:</span> <span>${row.avg_sleep || '-'}</span></div>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        statsArea.innerHTML = html;
+    },
+
+    renderAdminTable: function() {
+        console.log('Admin table');
+        document.getElementById('admin-user-list').innerHTML = '<tr><td colspan="3">Admin features coming soon</td></tr>';
+    },
+
+    openUserModal: function() {
+        console.log('Open modal');
+        alert('User management coming soon');
+    },
+
+    saveUserChanges: function() {
+        console.log('Save user');
+    },
+
+    deleteUser: function() {
+        console.log('Delete user');
+    },
+
+    exportData: function() {
+        console.log('Export data');
+    }
+};
+
+// Initialize app when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing app');
+    app.init();
+});
+</script>
+
+
