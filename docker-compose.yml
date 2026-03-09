@@ -1,0 +1,30 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: sadhana-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: Sadhana@123
+      MYSQL_DATABASE: sadhana_tracker
+      MYSQL_USER: sadhana_user
+      MYSQL_PASSWORD: SadhanaUser@123
+    ports:
+      - "3306:3306"
+    volumes:
+      # Named volume for database files - NEVER DELETES DATA
+      - mysql_data:/var/lib/mysql
+      # Bind mount for custom config (optional)
+      - ./mysql-conf:/etc/mysql/conf.d
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - sadhana_network
+
+# Named volumes - these persist even after docker-compose down
+volumes:
+  mysql_data:
+    name: sadhana_mysql_data
+    # This volume will NOT be deleted unless explicitly removed
+
+networks:
+  sadhana_network:
+    driver: bridge
