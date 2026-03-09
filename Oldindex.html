@@ -573,25 +573,27 @@
 
 <script>
 /**
- * SADHANA TRACKER - UPDATED WITH API BACKEND CONNECTION
+ * SADHANA TRACKER - CORE APPLICATION SCRIPT
+ * Updated for Date Validation, Report Search, and Excel Export
  */
 const app = {
     currentUser: null,
-    API_BASE_URL: 'http://localhost:3000', // Your local backend URL
+    db: {
+        users: [],
+        tracking: []
+    },
     masterNumber: '916206431908',
 
     init: function() {
-        // Check for saved session
-        const savedSession = localStorage.getItem('sadhana_session');
-        const savedToken = localStorage.getItem('token');
+        this.loadData();
         
-        if (savedSession && savedToken) {
+        const savedSession = localStorage.getItem('sadhana_session');
+        if (savedSession) {
             try {
                 this.currentUser = JSON.parse(savedSession);
                 this.showView('dashboard');
             } catch (e) {
                 localStorage.removeItem('sadhana_session');
-                localStorage.removeItem('token');
                 this.showView('login');
             }
         } else {
@@ -604,6 +606,18 @@ const app = {
                 list.classList.add('hidden');
             }
         });
+    },
+
+    loadData: function() {
+        const u = localStorage.getItem('st_users');
+        const t = localStorage.getItem('st_tracking');
+        if (u) this.db.users = JSON.parse(u);
+        if (t) this.db.tracking = JSON.parse(t);
+    },
+
+    saveData: function() {
+        localStorage.setItem('st_users', JSON.stringify(this.db.users));
+        localStorage.setItem('st_tracking', JSON.stringify(this.db.tracking));
     },
 
     showView: function(viewId) {
@@ -643,85 +657,68 @@ const app = {
         if (viewId === 'search') this.initSearch();
     },
 
-    // ===== API CALLS =====
-    handleLogin: async function() {
-        const email = document.getElementById('login-email').value.trim();
-        const password = document.getElementById('login-pass').value.trim();
+    handleLogin: function() {
+        const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
+        const passInput = document.getElementById('login-pass').value.trim();
 
-        if (!email || !password) {
+        if (!emailInput || !passInput) {
             alert("|| Hare Krishna || Please enter Email and Password");
             return;
         }
 
-        try {
-            const response = await fetch(`${this.API_BASE_URL}/api/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                // Save token and user data
-                localStorage.setItem('token', data.token);
-                this.currentUser = data.user;
-                localStorage.setItem('sadhana_session', JSON.stringify(data.user));
-                this.showView('dashboard');
-                alert('Login successful! || Hare Krishna ||');
+        if (emailInput === 'admin@sadhna.com' && passInput === 'admin') {
+            this.currentUser = {
+                id: 'system-dev',
+                name: 'System Developer',
+                email: 'admin@sadhna.com',
+                role: 'developer',
+                group: 'Sahdev'
+            };
+        } else {
+            const user = this.db.users.find(u => u.email.toLowerCase() === emailInput && u.password === passInput);
+            if (user) {
+                this.currentUser = user;
             } else {
-                alert(data.error || 'Login failed. Please register first.');
+                alert("|| Hare Krishna || Please register yourself");
+                return;
             }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('Cannot connect to server. Make sure backend is running at ' + this.API_BASE_URL);
-        }
-    },
-
-    handleRegister: async function() {
-        const name = document.getElementById('reg-name').value.trim();
-        const email = document.getElementById('reg-email').value.trim();
-        const password = document.getElementById('reg-pass').value.trim();
-        const group = document.getElementById('reg-group').value;
-        const phone = document.getElementById('reg-phone').value.trim();
-
-        if (!name || !email || !password) {
-            alert("Please fill all required fields");
-            return;
         }
 
-        try {
-            const response = await fetch(`${this.API_BASE_URL}/api/auth/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password, group, phone })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert("Registration Successful! || Hare Krishna || Please login.");
-                this.showView('login');
-            } else {
-                alert(data.error || 'Registration failed');
-            }
-        } catch (error) {
-            console.error('Registration error:', error);
-            alert('Cannot connect to server. Make sure backend is running.');
-        }
+        localStorage.setItem('sadhana_session', JSON.stringify(this.currentUser));
+        this.showView('dashboard');
     },
 
     handleLogout: function() {
         this.currentUser = null;
         localStorage.removeItem('sadhana_session');
-        localStorage.removeItem('token');
+        this.showView('login');
+    },
+
+    handleRegister: function() {
+        const name = document.getElementById('reg-name').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const pass = document.getElementById('reg-pass').value.trim();
+        const group = document.getElementById('reg-group').value;
+        const phone = document.getElementById('reg-phone').value.trim();
+
+        if (!name || !email || !pass) return alert("Fill all fields");
+
+        const newUser = {
+            id: Date.now(),
+            name, email, password: pass, group, phone,
+            role: 'devotee'
+        };
+
+        this.db.users.push(newUser);
+        this.saveData();
+        alert("Registration Successful!");
         this.showView('login');
     },
 
     initTrackingForm: function() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('sd-date').value = today;
-        document.getElementById('sd-name').value = this.currentUser?.name || '';
+        document.getElementById('sd-name').value = this.currentUser.name;
         document.getElementById('message-generator-section').classList.add('hidden');
         this.updateDayDisplay();
     },
@@ -734,56 +731,41 @@ const app = {
         document.getElementById('sd-day-display').innerText = days[date.getDay()];
     },
 
-    saveSadhana: async function() {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            alert('Please login first');
-            this.showView('login');
-            return;
-        }
-
+    saveSadhana: function() {
         const date = document.getElementById('sd-date').value;
+        const name = document.getElementById('sd-name').value;
+
+        // ===== DATE REQUIRED VALIDATION =====
         if (!date) {
             alert("|| Hare Krishna || Date is mandatory.");
             return;
         }
 
+        // ===== DATE UNIQUE ENTRY VALIDATION =====
+        const duplicate = this.db.tracking.find(t => t.name === name && t.date === date);
+        if (duplicate) {
+            alert("|| Hare Krishna || Entry for this date already exists.");
+            return;
+        }
+
         const entry = {
+            id: Date.now(),
+            userId: this.currentUser.id,
+            name: name,
             date: date,
-            wakeup: document.getElementById('sd-wakeup').value || null,
-            rounds: parseInt(document.getElementById('sd-rounds').value) || 0,
-            chantEnd: document.getElementById('sd-chantend').value || null,
-            hearing: parseInt(document.getElementById('sd-hearing').value) || 0,
-            reading: parseInt(document.getElementById('sd-reading').value) || 0,
-            study: parseInt(document.getElementById('sd-study').value) || 0,
-            sleep: document.getElementById('sd-sleep').value || null
+            day: document.getElementById('sd-day-display').innerText,
+            wakeup: document.getElementById('sd-wakeup').value,
+            rounds: document.getElementById('sd-rounds').value || '0',
+            chantEnd: document.getElementById('sd-chantend').value,
+            hearing: document.getElementById('sd-hearing').value || '0',
+            reading: document.getElementById('sd-reading').value || '0',
+            study: document.getElementById('sd-study').value || '0',
+            sleep: document.getElementById('sd-sleep').value
         };
 
-        try {
-            const response = await fetch(`${this.API_BASE_URL}/api/sadhana`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(entry)
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                alert('Sadhana entry saved! || Hare Krishna ||');
-                // Add name to entry for message generation
-                entry.name = this.currentUser.name;
-                entry.day = document.getElementById('sd-day-display').innerText;
-                this.generateMessage(entry);
-            } else {
-                alert(data.error || 'Error saving entry');
-            }
-        } catch (error) {
-            console.error('Save error:', error);
-            alert('Network error. Is backend running?');
-        }
+        this.db.tracking.push(entry);
+        this.saveData();
+        this.generateMessage(entry);
     },
 
     generateMessage: function(entry) {
@@ -831,7 +813,7 @@ Sent via Sadhana Tracker`;
         }
     },
 
-    handleNameAutocomplete: async function(val) {
+    handleNameAutocomplete: function(val) {
         if (this.currentUser.role === 'devotee') return;
 
         const list = document.getElementById('search-autocomplete-list');
@@ -840,37 +822,24 @@ Sent via Sadhana Tracker`;
             return;
         }
 
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${this.API_BASE_URL}/api/search/names`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            
-            if (response.ok) {
-                const names = await response.json();
-                const filtered = names.filter(name => 
-                    name.toLowerCase().includes(val.toLowerCase())
-                ).slice(0, 5);
+        const uniqueNames = [...new Set(this.db.tracking.map(t => t.name))];
+        const filtered = uniqueNames.filter(name => name.toLowerCase().includes(val.toLowerCase())).slice(0, 5);
 
-                if (filtered.length > 0) {
-                    list.innerHTML = '';
-                    filtered.forEach(name => {
-                        const div = document.createElement('div');
-                        div.className = 'autocomplete-suggestion';
-                        div.innerText = name;
-                        div.onclick = () => {
-                            document.getElementById('search-name').value = name;
-                            list.classList.add('hidden');
-                        };
-                        list.appendChild(div);
-                    });
-                    list.classList.remove('hidden');
-                } else {
+        if (filtered.length > 0) {
+            list.innerHTML = '';
+            filtered.forEach(name => {
+                const div = document.createElement('div');
+                div.className = 'autocomplete-suggestion';
+                div.innerText = name;
+                div.onclick = () => {
+                    document.getElementById('search-name').value = name;
                     list.classList.add('hidden');
-                }
-            }
-        } catch (error) {
-            console.error('Autocomplete error:', error);
+                };
+                list.appendChild(div);
+            });
+            list.classList.remove('hidden');
+        } else {
+            list.classList.add('hidden');
         }
     },
 
@@ -886,43 +855,25 @@ Sent via Sadhana Tracker`;
         document.getElementById('search-back-btn-container').classList.remove('hidden');
     },
 
-    performSearch: async function() {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            alert('Please login first');
-            return;
-        }
-
-        const nameVal = document.getElementById('search-name').value;
+    performSearch: function() {
+        const nameVal = document.getElementById('search-name').value.toLowerCase();
         const monthVal = document.getElementById('search-month').value;
         
-        try {
-            let url = `${this.API_BASE_URL}/api/search?`;
-            const params = [];
-            if (nameVal) params.push(`name=${encodeURIComponent(nameVal)}`);
-            if (monthVal) params.push(`month=${monthVal}`);
-            url += params.join('&');
-
-            const response = await fetch(url, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            if (response.ok) {
-                const results = await response.json();
-                this.displaySearchResults(results);
-            } else {
-                alert('Search failed');
-            }
-        } catch (error) {
-            console.error('Search error:', error);
-            alert('Network error during search');
+        let results = [];
+        if (this.currentUser.role === 'devotee') {
+            results = this.db.tracking.filter(t => t.name === this.currentUser.name);
+        } else {
+            results = [...this.db.tracking];
         }
-    },
 
-    displaySearchResults: function(results) {
-        const area = document.getElementById('search-results-area');
+        results = results.filter(t => {
+            const dateMatch = !monthVal || t.date.startsWith(monthVal);
+            const nameMatch = this.currentUser.role === 'devotee' ? true : (!nameVal || t.name.toLowerCase().includes(nameVal));
+            return dateMatch && nameMatch;
+        });
+
         if (results.length === 0) {
-            area.innerHTML = '<p class="text-center mt-20">No entries found.</p>';
+            document.getElementById('search-results-area').innerHTML = '<p class="text-center mt-20">No entries found.</p>';
             return;
         }
 
@@ -931,20 +882,18 @@ Sent via Sadhana Tracker`;
                 <tr>
                     <th>Date</th>
                     <th>Name</th>
-                    <th>Rounds</th>
-                    <th>Hearing</th>
-                    <th>Reading</th>
+                    <th>Rds</th>
+                    <th>Hear</th>
                 </tr>
             </thead>
             <tbody>`;
         
         results.forEach(r => {
             html += `<tr>
-                <td>${r.date}</td>
-                <td>${r.name}</td>
+                <td>${r.date.slice(5)}</td>
+                <td>${r.name.split(' ')[0]}</td>
                 <td>${r.rounds}</td>
-                <td>${r.hearing_minutes}m</td>
-                <td>${r.reading_minutes}m</td>
+                <td>${r.hearing}m</td>
             </tr>`;
         });
 
@@ -955,31 +904,64 @@ Sent via Sadhana Tracker`;
         this.lastSearchResults = results;
     },
 
-    // ===== REPORT FUNCTIONS =====
-    initReports: async function() {
+    // ===== REPORT CALCULATIONS HELPERS =====
+    timeToMinutes: function(timeStr) {
+        if (!timeStr || !timeStr.includes(':')) return null;
+        const [h, m] = timeStr.split(':').map(Number);
+        return h * 60 + m;
+    },
+
+    minutesToTime: function(totalMinutes) {
+        if (totalMinutes === null) return '-';
+        const h = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+        const m = Math.round(totalMinutes % 60).toString().padStart(2, '0');
+        return `${h}:${m}`;
+    },
+
+    calculateDevoteeStats: function(data) {
+        // ===== REPORT FIELD CALCULATIONS =====
+        const sum = (field) => data.reduce((acc, curr) => acc + (Number(curr[field]) || 0), 0);
+
+        const avgOfTimeField = (field) => {
+            const validMinutes = data
+                .map(d => this.timeToMinutes(d[field]))
+                .filter(m => m !== null);
+            
+            if (validMinutes.length === 0) return '-';
+            const avg = validMinutes.reduce((a, b) => a + b, 0) / validMinutes.length;
+            return this.minutesToTime(avg);
+        };
+
+        return {
+            name: data.length > 0 ? data[0].name : 'Unknown',
+            days: data.length,
+            rounds: sum('rounds'),
+            hearing: sum('hearing'),
+            reading: sum('reading'),
+            study: sum('study'),
+            // ===== AVERAGE WAKEUP TIME CALCULATION =====
+            avgWake: avgOfTimeField('wakeup'),
+            // ===== AVERAGE SLEEP TIME CALCULATION =====
+            avgSleep: avgOfTimeField('sleep'),
+            // ===== AVERAGE CHANT END TIME CALCULATION =====
+            avgChantEnd: avgOfTimeField('chantEnd')
+        };
+    },
+
+    initReports: function() {
         const filter = document.getElementById('report-user-filter');
         const searchArea = document.getElementById('report-admin-search');
         
         if (this.currentUser.role === 'admin' || this.currentUser.role === 'developer') {
             searchArea.classList.remove('hidden');
+            let optionsHtml = '<option value="overall">Overall Dashboard (Each Devotee)</option>';
             
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`${this.API_BASE_URL}/api/search/names`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                
-                if (response.ok) {
-                    const names = await response.json();
-                    let optionsHtml = '<option value="overall">Overall Dashboard (All Devotees)</option>';
-                    names.forEach(name => {
-                        optionsHtml += `<option value="name:${name}">${name} (Individual Report)</option>`;
-                    });
-                    filter.innerHTML = optionsHtml;
-                }
-            } catch (error) {
-                console.error('Error loading names:', error);
-            }
+            const uniqueNames = [...new Set(this.db.tracking.map(t => t.name))];
+            uniqueNames.forEach(name => {
+                optionsHtml += `<option value="name:${name}">${name} (Specific Report)</option>`;
+            });
+            
+            filter.innerHTML = optionsHtml;
         } else {
             searchArea.classList.add('hidden');
             filter.innerHTML = `<option value="name:${this.currentUser.name}">${this.currentUser.name}</option>`;
@@ -988,17 +970,220 @@ Sent via Sadhana Tracker`;
         this.generateReport();
     },
 
-    generateReport: async function() {
+    generateReport: function() {
         const filterVal = document.getElementById('report-user-filter').value;
         const statsArea = document.getElementById('report-stats-area');
         const actionsArea = document.getElementById('report-actions-area');
         
-        const searchName = document.getElementById('report-search-name').value;
+        // Report Search Module inputs
+        const searchName = document.getElementById('report-search-name').value.toLowerCase();
         const dateFrom = document.getElementById('report-date-from').value;
         const dateTo = document.getElementById('report-date-to').value;
 
-        statsArea.innerHTML = '<p class="text-center">Loading report...</p>';
+        statsArea.innerHTML = '';
         actionsArea.innerHTML = '';
 
-        try {
-            const token = localStorage.getItem('token');
+        if (filterVal === 'overall' && this.currentUser.role !== 'devotee') {
+            // ===== REPORT SEARCH MODULE LOGIC =====
+            let names = [...new Set(this.db.tracking.map(t => t.name))];
+            if (searchName) names = names.filter(n => n.toLowerCase().includes(searchName));
+
+            if (names.length === 0) {
+                statsArea.innerHTML = '<p class="text-center">No devotee records match your search.</p>';
+                return;
+            }
+
+            // ===== EXPORT OVERALL REPORT TO EXCEL =====
+            const overallExportBtn = document.createElement('button');
+            overallExportBtn.className = 'btn btn-secondary';
+            overallExportBtn.innerText = 'Export Overall Report (Excel)';
+            overallExportBtn.onclick = () => this.exportOverallReport(names, dateFrom, dateTo);
+            actionsArea.appendChild(overallExportBtn);
+
+            names.forEach(name => {
+                let devoteeData = this.db.tracking.filter(t => t.name === name);
+                
+                // Filter by date range
+                if (dateFrom) devoteeData = devoteeData.filter(t => t.date >= dateFrom);
+                if (dateTo) devoteeData = devoteeData.filter(t => t.date <= dateTo);
+
+                if (devoteeData.length === 0) return;
+
+                const stats = this.calculateDevoteeStats(devoteeData);
+                const card = document.createElement('div');
+                card.className = 'devotee-report-card';
+                card.innerHTML = `
+                    <div class="devotee-report-name">${stats.name}</div>
+                    <div class="devotee-report-stats">
+                        <div class="stat-line"><span>Days:</span> <span>${stats.days}</span></div>
+                        <div class="stat-line"><span>Rounds:</span> <span>${stats.rounds}</span></div>
+                        <div class="stat-line"><span>Hearing:</span> <span>${stats.hearing}m</span></div>
+                        <div class="stat-line"><span>Reading:</span> <span>${stats.reading}m</span></div>
+                        <div class="stat-line"><span>Study:</span> <span>${stats.study}m</span></div>
+                        <div class="stat-line"><span>Wakeup Avg:</span> <span>${stats.avgWake}</span></div>
+                        <div class="stat-line"><span>Sleep Avg:</span> <span>${stats.avgSleep}</span></div>
+                        <div class="stat-line"><span>Chant End Avg:</span> <span>${stats.avgChantEnd}</span></div>
+                    </div>
+                `;
+                statsArea.appendChild(card);
+            });
+        } else {
+            let targetName = this.currentUser.name;
+            if (filterVal.startsWith('name:')) targetName = filterVal.split('name:')[1];
+
+            let data = this.db.tracking.filter(t => t.name === targetName);
+            if (dateFrom) data = data.filter(t => t.date >= dateFrom);
+            if (dateTo) data = data.filter(t => t.date <= dateTo);
+
+            const stats = this.calculateDevoteeStats(data);
+
+            // ===== EXPORT USER REPORT TO EXCEL =====
+            const userExportBtn = document.createElement('button');
+            userExportBtn.className = 'btn btn-secondary';
+            userExportBtn.innerText = 'Export User Report (Excel)';
+            userExportBtn.onclick = () => this.exportUserReport(data);
+            actionsArea.appendChild(userExportBtn);
+
+            const grid = document.createElement('div');
+            grid.className = 'report-grid';
+            grid.innerHTML = `
+                <div class="report-stat-card"><span class="report-stat-value">${stats.days}</span><span class="report-stat-label">Total Days</span></div>
+                <div class="report-stat-card"><span class="report-stat-value">${stats.rounds}</span><span class="report-stat-label">Total Rounds</span></div>
+                <div class="report-stat-card"><span class="report-stat-value">${stats.hearing}m</span><span class="report-stat-label">Hearing</span></div>
+                <div class="report-stat-card"><span class="report-stat-value">${stats.reading}m</span><span class="report-stat-label">Reading</span></div>
+                <div class="report-stat-card"><span class="report-stat-value">${stats.study}m</span><span class="report-stat-label">Study</span></div>
+                <div class="report-stat-card"><span class="report-stat-value">${stats.avgWake}</span><span class="report-stat-label">Avg Wakeup</span></div>
+                <div class="report-stat-card"><span class="report-stat-value">${stats.avgSleep}</span><span class="report-stat-label">Avg Sleep</span></div>
+                <div class="report-stat-card"><span class="report-stat-value">${stats.avgChantEnd}</span><span class="report-stat-label">Avg Chant End</span></div>
+            `;
+            statsArea.appendChild(grid);
+        }
+    },
+
+    // ===== EXPORT USER REPORT TO EXCEL =====
+    exportUserReport: function(data) {
+        if (!data || data.length === 0) return alert("No data to export");
+        const headers = ["Name", "Date", "Wakeup Time", "Chanting Rounds", "Chanting End Time", "Hearing Minutes", "Reading Minutes", "Study Minutes", "Sleep Time"];
+        const rows = data.map(d => [d.name, d.date, d.wakeup, d.rounds, d.chantEnd, d.hearing, d.reading, d.study, d.sleep]);
+        this.downloadCSV(headers, rows, 'user_sadhana_report.csv');
+    },
+
+    // ===== EXPORT OVERALL REPORT TO EXCEL =====
+    exportOverallReport: function(names, dateFrom, dateTo) {
+        const rows = names.map(name => {
+            let devoteeData = this.db.tracking.filter(t => t.name === name);
+            if (dateFrom) devoteeData = devoteeData.filter(t => t.date >= dateFrom);
+            if (dateTo) devoteeData = devoteeData.filter(t => t.date <= dateTo);
+            const stats = this.calculateDevoteeStats(devoteeData);
+            return [stats.name, stats.days, stats.rounds, stats.hearing, stats.reading, stats.study, stats.avgWake, stats.avgSleep, stats.avgChantEnd];
+        }).filter(r => r[1] > 0);
+
+        const headers = ["Name", "Total Practice Days", "Total Rounds", "Total Hearing", "Total Reading", "Total Study", "Average Wakeup Time", "Average Sleep Time", "Average Chant End Time"];
+        this.downloadCSV(headers, rows, 'overall_sadhana_report.csv');
+    },
+
+    downloadCSV: function(headers, rows, fileName) {
+        const csvContent = [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", fileName);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    },
+
+    renderAdminTable: function() {
+        const list = document.getElementById('admin-user-list');
+        list.innerHTML = '';
+        this.db.users.forEach(u => {
+            list.innerHTML += `
+                <tr>
+                    <td>${u.name}</td>
+                    <td><span class="role-badge role-${u.role}">${u.role}</span></td>
+                    <td>
+                        <button onclick="app.openUserModal(${u.id})" style="border:none; background:none; cursor:pointer">✏️</button>
+                        <button onclick="app.deleteUser(${u.id})" style="border:none; background:none; cursor:pointer">🗑️</button>
+                    </td>
+                </tr>
+            `;
+        });
+    },
+
+    openUserModal: function(userId = null) {
+        const modal = document.getElementById('modal-user-edit');
+        modal.classList.remove('hidden');
+        if (userId) {
+            const u = this.db.users.find(user => user.id === userId);
+            document.getElementById('modal-title').innerText = "Edit Devotee";
+            document.getElementById('edit-user-id').value = u.id;
+            document.getElementById('edit-user-name').value = u.name;
+            document.getElementById('edit-user-email').value = u.email;
+            document.getElementById('edit-user-role').value = u.role;
+        } else {
+            document.getElementById('modal-title').innerText = "Add Devotee";
+            document.getElementById('edit-user-id').value = '';
+            document.getElementById('edit-user-name').value = '';
+            document.getElementById('edit-user-email').value = '';
+            document.getElementById('edit-user-role').value = 'devotee';
+        }
+    },
+
+    saveUserChanges: function() {
+        const id = document.getElementById('edit-user-id').value;
+        const name = document.getElementById('edit-user-name').value.trim();
+        const email = document.getElementById('edit-user-email').value.trim();
+        const role = document.getElementById('edit-user-role').value;
+
+        if (id) {
+            const idx = this.db.users.findIndex(u => u.id == id);
+            this.db.users[idx] = { ...this.db.users[idx], name, email, role };
+        } else {
+            this.db.users.push({
+                id: Date.now(),
+                name, email, role,
+                password: 'password123',
+                group: 'Sahdev'
+            });
+        }
+        
+        this.saveData();
+        document.getElementById('modal-user-edit').classList.add('hidden');
+        this.renderAdminTable();
+    },
+
+    deleteUser: function(id) {
+        if (!confirm("Remove this devotee?")) return;
+        this.db.users = this.db.users.filter(u => u.id !== id);
+        this.saveData();
+        this.renderAdminTable();
+    },
+
+    exportData: function(format) {
+        const data = this.lastSearchResults || this.db.tracking;
+        if (data.length === 0) return alert("No data to export");
+
+        let csv = "Date,Day,Name,Wakeup,Rounds,ChantEnd,Hearing,Reading,Study,Sleep\n";
+        data.forEach(r => {
+            csv += `${r.date},${r.day},${r.name},${r.wakeup},${r.rounds},${r.chantEnd},${r.hearing},${r.reading},${r.study},${r.sleep}\n`;
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', `sadhana_data_export_${Date.now()}.csv`);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+};
+
+window.onload = () => app.init();
+</script>
+
+</body>
+</html>
