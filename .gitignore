@@ -1,14 +1,16 @@
-# Local VS Code settings
-.vscode/
-
-# Node modules
+# Dependencies
 node_modules/
-backend/node_modules/
 
-# Environment files
+# Environment
 .env
-backend/.env
+.env.local
 
-# Mac OS and log files
-.DS_Store
+# Logs
 *.log
+
+# OS files
+.DS_Store
+
+# Backups
+*.bak
+*.old

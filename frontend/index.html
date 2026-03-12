@@ -61,7 +61,62 @@
 
         .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 0.8rem; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
         .stat-item b { color: var(--saffron); }
+
+        /* --- SADHANA DASHBOARD SPECIFIC STYLES --- */
+        /* --- ENHANCED SADHANA DASHBOARD STYLES --- */
+        .dashboard-card { 
+            background: #fff; border-radius: 20px; padding: 25px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
+            border: 1px solid #f0f0f0; border-top: 6px solid var(--saffron);
+        }
+        .report-header { text-align: center; margin-bottom: 20px; }
+        .report-header h3 { color: #2d3748; font-size: 1.4rem; margin-bottom: 5px; }
+        .report-header p { color: #718096; font-size: 0.9rem; letter-spacing: 0.5px; }
+
+        .score-container { 
+            display: flex; justify-content: space-around; gap: 10px; margin-bottom: 25px;
+        }
+        .score-box { 
+            flex: 1; text-align: center; padding: 12px; border-radius: 15px; 
+            font-size: 0.85rem; font-weight: 700; transition: transform 0.2s;
+        }
+        .score-box:hover { transform: translateY(-3px); }
+        .score-box span { display: block; font-size: 1.2rem; margin-top: 4px; }
+
+        .discipline-section { margin-bottom: 20px; }
+        .section-title { 
+            font-size: 0.95rem; font-weight: 800; color: var(--saffron-dark); 
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+         .metric-row { 
+            display: grid; grid-template-columns: 1fr 120px 40px; 
+            align-items: center; margin-bottom: 12px; font-size: 0.9rem;
+        }
+        .consistency-dots { display: flex; gap: 4px; justify-content: flex-end; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #edf2f7; }
+        .dot.success { background: #48bb78; box-shadow: 0 0 5px rgba(72, 187, 120, 0.4); }
+
+        .progress-track { background: #edf2f7; height: 8px; border-radius: 10px; overflow: hidden; position: relative; }
+        .progress-fill { background: var(--saffron); height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+
+        .pill-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .effort-pill { 
+            background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; 
+            border-radius: 12px; text-align: center; font-size: 0.75rem; 
+        }
+        .effort-pill b { display: block; font-size: 1rem; color: #4a5568; }
+
+        .whatsapp-btn { 
+            background: #25D366; color: white; border: none; padding: 15px; 
+            border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin-top: 15px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+        }
+
     </style>
+    <!-- Prevent favicon 404 -->
+    <link rel="icon" href="data:image/x-icon;,">    
 </head>
 <body>
 
@@ -113,6 +168,8 @@
         <div class="nav-grid">
             <div class="card text-center" onclick="app.showView('tracking')" style="cursor:pointer">📝 Track Sadhana</div>
             <div class="card text-center" onclick="app.showView('search')" style="cursor:pointer">🔍 Day Report</div>
+            <!-- New DASHBOARD -->
+            <div class="card text-center" onclick="app.showView('sadhana-dashboard')" style="cursor:pointer; border: 1px solid var(--saffron)">🕉️ Sadhana Dashboard</div>
             <div class="card text-center" onclick="app.showView('reports')" style="cursor:pointer">📊 Analytics</div>
             <div id="admin-menu" class="card text-center hidden" onclick="app.showView('user-mgmt')" style="cursor:pointer">👥 User Mgmt</div>
         </div>
@@ -135,7 +192,44 @@
         <div class="form-group"><label>Study (Min)</label><input type="number" id="sd-study" value="0"></div>
         <div class="nav-grid">
             <div class="form-group"><label>Day Rest (HH:MM)</label><input type="time" id="sd-dayrest"></div>
-            <div class="form-group"><label>Sleep (HH:MM:SS)</label><input type="time" id="sd-sleep" step="1"></div>
+            <!-- NEW SADHANA FIELDS -->
+        <div class="nav-grid">
+        <div class="form-group">
+        <label>Temple Reach Time</label>
+        <input type="time" id="sd-temple">
+        </div>
+
+        <div class="form-group">
+        <label>Time Wasted</label>
+        <input type="time" id="sd-waste">
+        </div>
+        </div>
+
+        <div class="nav-grid">
+        <div class="form-group">
+        <label>Morning Class</label>
+        <select id="sd-morning">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+        </select>
+        </div>
+
+        <div class="form-group">
+        <label>Mangala Arti</label>
+        <select id="sd-mangala">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+        </select>
+        </div>
+        </div>
+
+        <div class="form-group"><label>Cleanliness</label>
+        <select id="sd-clean"><option value="0">No</option><option value="1">Yes</option></select></div>
+
+        <div class="form-group"><label>Book Name</label><input type="text" id="sd-book"></div>
+
+        <div class="form-group"><label>Reflections</label><textarea id="sd-reflect"></textarea></div>
+        <div class="form-group"><label>Sleep (HH:MM:SS)</label><input type="time" id="sd-sleep" step="1"></div>
         </div>
         <button class="btn btn-primary" onclick="app.saveSadhana()">Save Record</button>
         
@@ -178,6 +272,31 @@
         <div id="search-results" class="table-container"></div>
         <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">Back</button>
     </div>
+    <!-- NEW: SADHANA DASHBOARD -->
+    <div id="view-sadhana-dashboard" class="card hidden">
+        <h2 class="spiritual-text">Sadhana Dashboard</h2>
+        <div class="nav-grid mt-20">
+            <div class="form-group">
+                <label>Report Period</label>
+                <select id="dash-report-type" onchange="app.loadSadhanaDashboard()">
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Filter by Group</label>
+                <select id="dash-group-filter" onchange="app.loadSadhanaDashboard()">
+                    <option value="All">All Groups</option>
+                    <option value="Yudhisthir">Yudhisthir</option>
+                    <option value="Bheem">Bheem</option>
+                    <option value="Nakul">Nakul</option>
+                    <option value="Sahdev">Sahdev</option>
+                </select>
+            </div>
+        </div>
+        <div id="dashboard-report-content" class="mt-20"></div>
+        <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">Back</button>
+    </div>
 
     <!-- VIEW: ANALYTICS -->
     <div id="view-reports" class="card hidden">
@@ -207,7 +326,17 @@
 
 <script>
 const app = {
-    API_BASE_URL: 'http://localhost:3000',
+        // Auto-detect API URL based on where frontend is running
+    API_BASE_URL: (function() {
+        // Check if running on localhost
+        if (window.location.hostname === 'localhost' || 
+            window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3000';  // Local backend
+        } else {
+            // Running on production domain
+            return 'https://your-app.railway.app';  // Production backend
+        }
+    })(),
     MASTER_NUMBER: '916206431908',
     currentUser: null,
     activeVoice: 'All',
@@ -232,11 +361,18 @@ const app = {
     },
 
     showView: function(id) {
-        ['login', 'register', 'dashboard', 'tracking', 'search', 'reports', 'user-mgmt'].forEach(v => {
+        ['login', 'register', 'dashboard', 'tracking', 'search', 'reports', 'user-mgmt','sadhana-dashboard'].forEach(v => {
             document.getElementById('view-' + v).classList.add('hidden');
         });
         document.getElementById('view-' + id).classList.remove('hidden');
-        
+        // added dashboard function call
+        if (id === 'sadhana-dashboard') {
+        // Only allow devotees or admins
+        if (!this.currentUser || !['devotee','developer', 'admin'].includes(this.currentUser.role)) {
+        this.notify("Access Denied", true); return;} 
+        this.loadSadhanaDashboard(); 
+        }
+
         if (id !== 'login' && id !== 'register') {
             document.getElementById('header-area').classList.remove('hidden');
             this.updateHeader();
@@ -256,13 +392,23 @@ const app = {
 
     updateHeader: function() {
         if (!this.currentUser) return;
+
+        // Update welcome info
         document.getElementById('welcome-name').innerText = `Hare Krishna, ${this.currentUser.name}`;
         document.getElementById('welcome-voice').innerText = this.currentUser.voice;
         document.getElementById('welcome-group').innerText = this.currentUser.group;
+
+        // Role-based access control
         if (this.currentUser.role !== 'devotee') {
+            // Admin or other roles: show voice switcher and admin menu
             document.getElementById('voice-switcher-box').classList.remove('hidden');
             document.getElementById('admin-menu').classList.remove('hidden');
-            this.fetchVoices('global-voice-switcher', true);
+            this.fetchVoices('global-voice-switcher', true); // Fetch all voices for switch
+        } else {
+            // Devotee: hide voice switcher and admin menu
+            document.getElementById('voice-switcher-box').classList.add('hidden');
+            document.getElementById('admin-menu').classList.add('hidden');
+            this.activeVoice = this.currentUser.voice; // Devotee can only see own voice
         }
     },
 
@@ -383,21 +529,65 @@ const app = {
             reading: document.getElementById('sd-reading').value,
             study: document.getElementById('sd-study').value,
             dayRestMinutes,
-            sleep: document.getElementById('sd-sleep').value
+            sleep: document.getElementById('sd-sleep').value,
+            // NEW FIELDS
+            temp_hall_rech: document.getElementById('sd-temple').value,
+            time_wasted: document.getElementById('sd-waste').value,
+            morning_class: document.getElementById('sd-morning').value,
+            mangala_aarti: document.getElementById('sd-mangala').value,
+            cleanliness: document.getElementById('sd-clean').value,
+            book_name: document.getElementById('sd-book').value,
+            reflections: document.getElementById('sd-reflect').value
         };
         const res = await fetch(`${this.API_BASE_URL}/api/sadhana`, {
             method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
             body: JSON.stringify(body)
         });
         if (res.ok) {
-            this.notify("Saved!");
-            this.generateSummary(body);
-        } else {
-            const data = await res.json();
-            this.notify(data.error || "Save failed", true);
+
+        this.notify("Sadhana Saved Successfully 🙏");
+        this.generateSummary(body);
         }
+        else if (res.status === 409) {
+        this.notify("Sadhana already saved for this date", true);
+        }
+        else {
+        this.notify(data.error || "Save failed", true);
+        }
+
     },
     generateSummary: function(e) {
+            
+    let msg =
+    `*|| Hare Krishna ||*
+        
+    🪔 *Sadhana Summary*
+        
+    👤 Devotee: ${this.currentUser.name}
+    🏠 Voice: ${this.currentUser.voice}
+    🏷 Group: ${this.currentUser.group}   
+    📅 Date: ${e.date}
+    🌅 Wakeup: ${e.wakeup || '-'}
+    🛏 Sleep: ${e.sleep || '-'}
+    🛕 Temple Reach: ${e.temp_hall_rech || '-'}   
+    📿 Rounds: ${e.rounds}
+    🔚 Chant End: ${e.chantEnd || '-'}
+    🎧 Hearing: ${e.hearing}m
+    📖 Reading: ${e.reading}m
+    📚 Study: ${e.study}m  
+    🧘 Morning Class: ${e.morning_class == 1 ? 'Yes':'No'}
+    🪔 Mangala Arti: ${e.mangala_aarti == 1 ? 'Yes':'No'}
+    🧹 Cleanliness: ${e.cleanliness == 1 ? 'Yes':'No'}   
+    📘 Book: ${e.book_name || '-'}
+    💭 Reflections:${e.reflections || '-'}  
+    ⏳ Time Wasted: ${e.time_wasted || '-'} 
+    `;
+    document.getElementById('whatsapp-preview').value = msg;
+    document.getElementById('whatsapp-section').classList.remove('hidden');
+    },
+
+
+    /*generateSummary: function(e) {
     let msg = `*|| Hare Krishna ||*\n 🪔 *Sadhana Summary*\n` +
               `👤 *Devotee:* ${this.currentUser.name}\n` +
               `🏠 *Voice:* ${this.currentUser.voice}\n` + // Voice field added with home emoji
@@ -411,11 +601,6 @@ const app = {
 
     document.getElementById('whatsapp-preview').value = msg;
     document.getElementById('whatsapp-section').classList.remove('hidden');
-    },
-    /*generateSummary: function(e) {
-        let msg = `*|| Hare Krishna ||*\n 🪔 *Sadhana Summary*\n👤 *Devotee:* ${this.currentUser.name}\n📅 *Date:* ${e.date}\n🌅 *Wakeup:* ${e.wakeup || '-'}\n📿 *Rounds:* ${e.rounds}\n🔚 *End:* ${e.chantEnd || '-'}\n🎧 *Hear:* ${e.hearing}m | 📖 *Read:* ${e.reading}m\n🛌 *Rest:* ${e.dayRest || '-'}\n🌙 *Sleep:* ${e.sleep || '-'}`;
-        document.getElementById('whatsapp-preview').value = msg;
-        document.getElementById('whatsapp-section').classList.remove('hidden');
     },*/
 
     sendToWhatsApp: function() {
@@ -459,14 +644,23 @@ const app = {
                         <th>Devotee</th>
                         <th>Voice</th>
                         <th>Group</th>
-                        <th>Rounds</th>
                         <th>Wake</th>
+                        <th>Temple</th>
+                        <th>Rounds</th>
                         <th>Chant End</th>
-                        <th>Hearing (m)</th>
-                        <th>Reading (m)</th>
-                        <th>Study (m)</th>
-                        <th>Day Rest (m)</th>
+                        <th>Hearing</th>
+                        <th>Reading</th>
+                        <th>Study</th>
+                        <th>Morning Class</th>
+                        <th>Mangala Arti</th>
+                        <th>Cleanliness</th>
+                        <th>Rest</th>
                         <th>Sleep</th>
+                        <th>Waste</th>
+                        <th>Book</th>
+                        <th>Reflection</th>
+                        <th>Body %</th>
+                        <th>Soul %</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -485,14 +679,23 @@ const app = {
                     <td>${r.name}</td>
                     <td>${r.voice_name}</td>
                     <td>${r.user_group}</td>
-                    <td>${r.rounds}</td>
                     <td>${r.wakeup_time || '-'}</td>
+                    <td>${r.temp_hall_rech || '-'}</td>
+                    <td>${r.rounds}</td>
                     <td>${r.chanting_end_time || '-'}</td>
-                    <td>${r.hearing_minutes || 0}</td>
-                    <td>${r.reading_minutes || 0}</td>
-                    <td>${r.study_minutes || 0}</td>
+                    <td>${r.hearing_minutes}</td>
+                    <td>${r.reading_minutes}</td>
+                    <td>${r.study_minutes}</td>
+                    <td>${r.morning_class ? 'Yes' : 'No'}</td>
+                    <td>${r.mangala_aarti ? 'Yes' : 'No'}</td>
+                    <td>${r.cleanliness ? 'Yes' : 'No'}</td>
                     <td>${dayRestMins}</td>
                     <td>${r.sleep_time || '-'}</td>
+                    <td>${r.time_wasted || '-'}</td>
+                    <td>${r.book_name || '-'}</td>
+                    <td>${r.reflections || '-'}</td>
+                    <td>${r.body_percent || 0}%</td>
+                    <td>${r.soul_percent || 0}%</td>
                 </tr>
             `;
         });
@@ -503,6 +706,240 @@ const app = {
     } catch (e) {
         this.notify("Failed to load Day Report", true);
     }
+    },
+
+/*
+    loadSadhanaDashboard: async function() {
+    const type = document.getElementById('dash-report-type').value;
+    const group = document.getElementById('dash-group-filter').value;
+    const container = document.getElementById('dashboard-report-content');
+    container.innerHTML = '<p class="text-center">Loading transcendental data...</p>';
+
+    try {
+        const url = `${this.API_BASE_URL}/api/dashboard/report?voice=${this.activeVoice}&type=${type}&group=${group}`;
+        const res = await fetch(url, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
+        const data = await res.json();
+        
+        if (!data.length) { container.innerHTML = '<p class="text-center">No records found.</p>'; return; }
+        
+        container.innerHTML = data.map(d => this.renderDevoteeDashboardCard(d, type)).join('');
+    } catch (e) { this.notify("Dashboard load failed", true); }
+    },*/
+
+    /*renderDevoteeDashboardCard: function(d, type) {
+        const totalDays = type === 'weekly' ? 7 : 30;
+        const getBar = (count) => {
+            const filled = Math.min(Math.round((count / totalDays) * 9), 9);
+            return "█".repeat(filled) + "░".repeat(9 - filled);
+        };
+
+        // Scoring logic (matching your body/soul percent intent)
+        const bodyScore = Math.round((d.wakeSuccess + d.templeSuccess + d.sleepSuccess) / (totalDays * 7) * 100);
+        const soulScore = Math.round((d.roundSuccess + d.morningClassSuccess + d.mangalaArtiSuccess) / (totalDays * 7) * 100);
+
+        return `
+            <div class="card" style="border-left: 5px solid var(--saffron); padding: 15px; margin-bottom: 15px;">
+                <div style="text-align: center;">
+                    <h3 class="spiritual-text">${type === 'weekly' ? 'Weekly' : 'Monthly'} Sadhana Report</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted)">${d.name} | ${d.voice} | ${d.group}</p>
+                </div>
+                <div style="display: flex; justify-content: center; flex-wrap: wrap;">
+                    <div class="score-badge bg-body">[ Body Score: ${bodyScore}% ]</div>
+                    <div class="score-badge bg-soul">[ Soul Score: ${soulScore}% ]</div>
+                    <div class="score-badge bg-total">[ Total Rounds: ${d.totalRounds} ]</div>
+                </div>
+                <div class="report-section">
+                    <div class="report-title">Morning Discipline</div>
+                    <div class="progress-row"><span>Wake Before 4:30</span> <span class="ascii-bar">${getBar(d.wakeSuccess)}</span> <span>${d.wakeSuccess}/${totalDays}</span></div>
+                    <div class="progress-row"><span>Temple Reach</span> <span class="ascii-bar">${getBar(d.templeSuccess)}</span> <span>${d.templeSuccess}/${totalDays}</span></div>
+                    <div class="progress-row"><span>16 Rounds</span> <span class="ascii-bar">${getBar(d.roundSuccess)}</span> <span>${d.roundSuccess}/${totalDays}</span></div>
+                </div>
+                <div class="report-section">
+                    <div class="report-title">Temple Participation</div>
+                    <div class="progress-row"><span>Morning Class</span> <span class="ascii-bar">${getBar(d.morningClassSuccess)}</span></div>
+                    <div class="progress-row"><span>Mangala Arti</span> <span class="ascii-bar">${getBar(d.mangalaArtiSuccess)}</span></div>
+                    <div class="progress-row"><span>Cleanliness</span> <span class="ascii-bar">${getBar(d.cleanSuccess)}</span></div>
+                </div>
+                <div class="report-section">
+                    <div class="report-title">Spiritual Effort</div>
+                    <div class="pill-box">
+                        <span class="lifestyle-pill">Hearing: ${d.avgHearing}m</span>
+                        <span class="lifestyle-pill">Reading: ${d.avgReading}m</span>
+                        <span class="lifestyle-pill">Study: ${d.avgStudy}m</span>
+                    </div>
+                </div>
+                <div class="report-section">
+                    <div class="report-title">Lifestyle Balance</div>
+                    <div class="pill-box">
+                        <span class="lifestyle-pill">Sleep: ${d.avgSleep}</span>
+                        <span class="lifestyle-pill">Rest: ${d.avgRest}m</span>
+                        <span class="lifestyle-pill">Waste: ${d.avgWaste}</span>
+                    </div>
+                </div>
+                <button class="btn btn-whatsapp btn-action" style="width:100%" onclick="window.open('https://wa.me/?text=' + encodeURIComponent('*Sadhana Report for ${d.name}*\\nBody: ${bodyScore}%\\nSoul: ${soulScore}%'))">[ Share WhatsApp Report ]</button>
+            </div>`;
+    },*/
+
+    loadSadhanaDashboard: async function() {
+        const type = document.getElementById('dash-report-type').value;
+        const group = document.getElementById('dash-group-filter').value;
+
+        // Determine voice filter based on user role
+        let voiceFilter;
+        if (this.currentUser.role === 'devotee') {
+            voiceFilter = this.currentUser.voice; // restrict to own voice
+        } else { 
+            voiceFilter = this.activeVoice; // admin can switch/filter
+        }
+
+        const container = document.getElementById('dashboard-report-content');
+        container.innerHTML = '<p class="text-center">Loading transcendental data...</p>';
+
+        try {
+            const url = `${this.API_BASE_URL}/api/dashboard/report?voice=${voiceFilter}&type=${type}&group=${group}`;
+            const res = await fetch(url, {
+                headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+
+            if (!data.length) {
+                container.innerHTML = '<p class="text-center">No records found.</p>';
+                return;
+            }
+
+            container.innerHTML = data.map(d => this.renderDevoteeDashboardCard(d, type)).join('');
+
+        } catch(e) {
+            console.error('Dashboard error:', e);
+            this.notify("Dashboard load failed: " + e.message, true);
+            container.innerHTML = '<p class="text-center text-error">Failed to load dashboard.</p>';
+        }
+    },
+
+
+    //reder function new
+    renderDevoteeDashboardCard: function(d, type) {
+       const totalDays = type === 'weekly' ? 7 : 30;
+       const getBar = (count) => {
+           const filled = Math.min(Math.round((count/totalDays)*9), 9);
+           return "█".repeat(filled) + "░".repeat(9-filled);
+       };
+
+       // BODY SCORE (Wake + Temple + Rounds + Sleep)
+       const bodyScore = Math.round(
+           (d.wakeSuccess + d.templeSuccess + d.roundSuccess + d.sleepSuccess) / (totalDays * 4) * 100
+       );
+
+       // SOUL SCORE (MC + MA + Cleanliness)
+       const soulScore = Math.round(
+           (d.morningClassSuccess + d.mangalaArtiSuccess + d.cleanSuccess) / (totalDays * 3) * 100
+       );
+
+       const whatsappMsg = encodeURIComponent(
+           `Hare Krishna 🙏\n\n` +
+           `Sadhana Report - ${d.name}\n` +
+           `Body Score : ${bodyScore}%\n` +
+           `Soul Score : ${soulScore}%\n\n` +
+           `Wake Before 4:30 : ${d.wakeSuccess}/${totalDays}\n` +
+           `Temple Reach     : ${d.templeSuccess}/${totalDays}\n` +
+           `16 Rounds        : ${d.roundSuccess}/${totalDays}\n` +
+           `Sleep Before 9:30: ${d.sleepSuccess}/${totalDays}\n\n` +
+           `Morning Class    : ${d.morningClassSuccess}/${totalDays}\n` +
+           `Mangala Arti     : ${d.mangalaArtiSuccess}/${totalDays}\n` +
+           `Cleanliness      : ${d.cleanSuccess}/${totalDays}\n\n` +
+           `Hearing          : ${d.totalHearing || 0} min\n` +
+           `Reading          : ${d.totalReading || 0} min\n` +
+           `Study            : ${d.totalStudy || 0} min\n\n` +
+           `Rest Taken       : ${d.totalRest || 0} min\n` +
+           `Time Wasted      : ${d.totalWaste || 0} min`
+       );
+
+       return `
+       <div class="card" style="border-left:5px solid var(--saffron);padding:15px;margin-bottom:15px;">
+           <div style="text-align:center">
+               <h3 class="spiritual-text">${type==='weekly'?'Weekly':'Monthly'} Sadhana Report</h3>
+               <p style="font-size:0.8rem;color:var(--text-muted)">
+                   ${d.name} | ${d.voice} | ${d.group} 
+               </p>
+           </div>
+           <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:15px 0;">
+               <div class="badge" style="background:#e6fffa;color:#2c7a7b;">Body Score: ${bodyScore}%</div>
+               <div class="badge" style="background:#fef3c7;color:#92400e;">Soul Score: ${soulScore}%</div>
+               <div class="badge" style="background:#fee2e2;color:#991b1b;">Total Rounds: ${d.totalRounds}</div>
+           </div>
+
+           <div class="report-section">
+               <div class="report-title" style="font-weight:bold;color:var(--saffron-dark);margin-top:10px;">Morning Discipline</div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Wake Before 4:30</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.wakeSuccess)}</span>
+                   <span>${d.wakeSuccess}/${totalDays}</span>
+               </div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Temple Reach</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.templeSuccess)}</span>
+                   <span>${d.templeSuccess}/${totalDays}</span>
+               </div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>16 Rounds</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.roundSuccess)}</span>
+                   <span>${d.roundSuccess}/${totalDays}</span>
+               </div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Sleep Before 9:30</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.sleepSuccess)}</span>
+                   <span>${d.sleepSuccess}/${totalDays}</span>
+               </div>
+           </div>
+
+           <div class="report-section">
+               <div class="report-title" style="font-weight:bold;color:var(--saffron-dark);margin-top:10px;">Temple Participation</div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Morning Class</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.morningClassSuccess)}</span>
+                   <span>${d.morningClassSuccess}/${totalDays}</span>
+               </div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Mangala Arti</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.mangalaArtiSuccess)}</span>
+                   <span>${d.mangalaArtiSuccess}/${totalDays}</span>
+               </div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Cleanliness</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.cleanSuccess)}</span>
+                   <span>${d.cleanSuccess}/${totalDays}</span>
+               </div>
+           </div>
+
+           <div class="report-section">
+               <div class="report-title" style="font-weight:bold;color:var(--saffron-dark);margin-top:10px;">Spiritual Effort</div>
+               <div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;">
+                   <span class="badge">Hearing: ${d.totalHearing || 0}m</span>
+                   <span class="badge">Reading: ${d.totalReading || 0}m</span>
+                   <span class="badge">Study: ${d.totalStudy || 0}m</span>
+               </div>
+           </div>
+
+           <div class="report-section">
+               <div class="report-title" style="font-weight:bold;color:var(--saffron-dark);margin-top:10px;">Lifestyle Balance</div>
+               <div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;">
+                   <span class="badge">Rest: ${d.totalRest || 0}m</span>
+                   <span class="badge">Waste: ${d.totalWaste || 0}m</span>
+               </div>
+           </div>
+
+           <button class="btn btn-whatsapp btn-action"
+                   style="width:100%;margin-top:15px;"
+                   onclick="window.open('https://wa.me/?text=${whatsappMsg}')">
+               Share WhatsApp Report
+           </button>
+       </div>
+       `;
     },
 
     handleReportModeSwitch: function(v) {
@@ -638,20 +1075,30 @@ const app = {
         if (res.ok) { this.notify("Registration Success!"); this.showView('login'); }
         else { const d = await res.json(); this.notify(d.error, true); }
     }*/
-   handleVoiceSwitch: async function(v) {
-    this.activeVoice = v;
 
-    // Reload user pickers for search and report
-    await this.loadPickers();
-
-    // Refresh reports and search
-    this.generateReport();
-    this.performSearch();
-
-    // Reload user management table if open
-    if(!document.getElementById('view-user-mgmt').classList.contains('hidden')) 
-        this.loadUsers();
-    },
+    handleLogout: function() { localStorage.clear(); location.reload(); },
+    handleVoiceSwitch: function(selectedVoice) {
+       this.activeVoice = selectedVoice;       // Update active voice
+       
+       // Refresh all components that depend on voice
+       this.loadPickers();                      // Refresh user pickers
+       
+       // Check which view is currently visible and update accordingly
+       if (!document.getElementById('view-sadhana-dashboard').classList.contains('hidden')) {
+           this.loadSadhanaDashboard();         // Reload dashboard if visible
+       }
+       if (!document.getElementById('view-reports').classList.contains('hidden')) {
+           this.generateReport();                // Reload reports if visible
+       }
+       if (!document.getElementById('view-search').classList.contains('hidden')) {
+           this.performSearch();                  // Reload search if visible
+       }
+       if (!document.getElementById('view-user-mgmt').classList.contains('hidden')) {
+           this.loadUsers();                      // Reload user management if visible
+       }
+       
+       this.notify(`Switched to voice: ${selectedVoice}`);
+    }  ,
 };
 document.addEventListener('DOMContentLoaded', () => app.init());
 </script>

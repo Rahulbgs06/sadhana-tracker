@@ -28,5 +28,14 @@
     "api"
   ],
   "author": "Rahul",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rahulbgs06/sadhana-tracker.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Rahulbgs06/sadhana-tracker/issues"
+  },
+  "homepage": "https://github.com/Rahulbgs06/sadhana-tracker#readme"
 }
