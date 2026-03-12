@@ -24,19 +24,16 @@ console.log(`🌍 Server running in ${process.env.NODE_ENV || 'development'} mod
 // DATABASE CONNECTION POOL
 // ============================================
 const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'Sadhana@123',
-    database: process.env.DB_NAME || 'sadhana_tracker',
-    port: process.env.DB_PORT || 3306,
+    host: process.env.MYSQLHOST,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE,
+    port: process.env.MYSQLPORT || 3306,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
     enableKeepAlive: true,
-    keepAliveInitialDelay: 0,
-    connectTimeout: 60000, // 60 seconds
-    acquireTimeout: 60000,  // 60 seconds
-    timeout: 60000          // 60 seconds
+    keepAliveInitialDelay: 0
 }).promise();
 
 // ============================================
@@ -68,10 +65,10 @@ const pool = mysql.createPool({
         console.error('1. Make sure MySQL server is running');
         console.error('2. Check if database "sadhana_tracker" exists');
         console.error('3. Verify credentials in .env file:');
-        console.error(`   Host: ${process.env.DB_HOST || 'localhost'}`);
-        console.error(`   User: ${process.env.DB_USER || 'root'}`);
-        console.error(`   Password: ${process.env.DB_PASSWORD ? '****' : 'not set'}`);
-        console.error(`   Database: ${process.env.DB_NAME || 'sadhana_tracker'}`);
+        console.error(`   Host: ${process.env.DB_HOST || 'NOT SET'}`);
+        console.error(`   User: ${process.env.DB_USER || 'NOT SET'}`);
+        console.error(`   Password: ${process.env.DB_PASSWORD ? 'NOT SET' : 'not set'}`);
+        console.error(`   Database: ${process.env.DB_NAME || 'NOT SET'}`);
         console.error('\n💡 Run this SQL to create database:');
         console.error('CREATE DATABASE IF NOT EXISTS sadhana_tracker;');
     }
@@ -604,7 +601,7 @@ app.get('/api/voices', async (req, res) => {
 // SERVER START
 // ============================================
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0',() => {   // ← Add '0.0.0.0' here!
     console.log(`🚀 Sadhana Tracker Backend Ready on port ${PORT}`);
     console.log(`📝 API endpoints available at http://localhost:${PORT}`);
     console.log(`🔍 Health check: http://localhost:${PORT}/api/health`);
