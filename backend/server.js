@@ -23,14 +23,22 @@ console.log(`🌍 Server running in ${process.env.NODE_ENV || 'development'} mod
 // ============================================
 // DATABASE CONNECTION POOL
 // ============================================
+console.log('🔍 MySQL Connection Details:');
+console.log('Host:', process.env.MYSQLHOST);
+console.log('Port:', process.env.MYSQLPORT);
+console.log('User:', process.env.MYSQLUSER);
+console.log('Database:', process.env.MYSQL_DATABASE);
+console.log('Password Set:', process.env.MYSQLPASSWORD ? '✅ YES' : '❌ NO');
+
 const pool = mysql.createPool({
     host: process.env.MYSQLHOST,
     user: process.env.MYSQLUSER,
-    password: process.env.MYSQLROOTPASSWORD,
-    database: 'railway',  // ← CHANGE: sadhana_tracker se railway karo
-    port: process.env.MYSQLPORT,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    port: parseInt(process.env.MYSQLPORT) || 3306,
     waitForConnections: true,
-    connectionLimit: 10
+    connectionLimit: 10,
+    queueLimit: 0
 }).promise();
 
 // ============================================
