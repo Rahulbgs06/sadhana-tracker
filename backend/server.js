@@ -12,7 +12,7 @@ const app = express();
 // ============================================
 // for both loacl and production
 app.use(cors({ 
-    origin: ['http://localhost:5500', 'http://localhost:3000', 'https://your-app.railway.app'], 
+    origin: ['http://localhost:5500', 'http://localhost:3000', 'https://rahulbgs06.github.io/sadhana-tracker/'], 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
     allowedHeaders: ['Content-Type', 'Authorization'] 
 }));
@@ -28,9 +28,15 @@ const pool = mysql.createPool({
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || 'Sadhana@123',
     database: process.env.DB_NAME || 'sadhana_tracker',
-    port: 3306,
+    port: process.env.DB_PORT || 3306,
     waitForConnections: true,
-    connectionLimit: 10
+    connectionLimit: 10,
+    queueLimit: 0,
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0,
+    connectTimeout: 60000, // 60 seconds
+    acquireTimeout: 60000,  // 60 seconds
+    timeout: 60000          // 60 seconds
 }).promise();
 
 // ============================================
