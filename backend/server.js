@@ -8,21 +8,29 @@ require('dotenv').config();
 const app = express();
 
 // ============================================
-// MIDDLEWARE CONFIGURATION
+// MIDDLEWARE CONFIGURATION - UPDATED CORS
 // ============================================
-// for both loacl and production
 const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5500',
-    'http://localhost:5501',  // ← YEH ADD KARO (5501 port)
+    'http://localhost:5501',
     'http://127.0.0.1:5500',
-    'http://127.0.0.1:5501',  // ← YEH BHI ADD KARO
+    'http://127.0.0.1:5501',
     'http://localhost:8000',
-    'https://rahulbgs06.github.io/sadhana-tracker/'
+    'https://rahulbgs06.github.io',  // ✅ YEH ADD KARO (important!)
+    'https://sadhana-tracker-production.up.railway.app'
 ];
 
 app.use(cors({
-    origin: allowedOrigins,
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps, curl)
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.log('Blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
