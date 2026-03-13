@@ -11,11 +11,27 @@ const app = express();
 // MIDDLEWARE CONFIGURATION
 // ============================================
 // for both loacl and production
-app.use(cors({ 
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:5500',
+    'http://localhost:5501',  // ← YEH ADD KARO (5501 port)
+    'http://127.0.0.1:5500',
+    'http://127.0.0.1:5501',  // ← YEH BHI ADD KARO
+    'http://localhost:8000',
+    'https://rahulbgs06.github.io/sadhana-tracker/'
+];
+
+app.use(cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
+/*app.use(cors({ 
     origin: ['http://localhost:5500', 'http://localhost:3000', 'https://rahulbgs06.github.io/sadhana-tracker/'], 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
     allowedHeaders: ['Content-Type', 'Authorization'] 
-}));
+}));*/
 /*app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization'] }));*/
 app.use(express.json());
 console.log(`🌍 Server running in ${process.env.NODE_ENV || 'development'} mode`);
@@ -31,11 +47,11 @@ console.log('Database:', process.env.MYSQL_DATABASE);
 console.log('Password Set:', process.env.MYSQLPASSWORD ? '✅ YES' : '❌ NO');
 
 const pool = mysql.createPool({
-    host: process.env.MYSQLHOST,
-    user: process.env.MYSQLUSER,
-    password: process.env.MYSQLPASSWORD,
-    database: process.env.MYSQL_DATABASE,
-    port: parseInt(process.env.MYSQLPORT) || 3306,
+    host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
+    user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
+    password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || 'Sadhana@123',
+    database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'sadhana_tracker',
+    port: process.env.MYSQLPORT || process.env.DB_PORT || 3306,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -603,12 +619,18 @@ app.get('/api/voices', async (req, res) => {
 });
 
 // ============================================
-// SERVER START
+// SERVER START - SIMPLE & SAFE (WORKS EVERYWHERE)
 // ============================================
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0',() => {   // ← Add '0.0.0.0' here!
+
+// '0.0.0.0' har jagah kaam karta hai - local bhi, production bhi
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Sadhana Tracker Backend Ready on port ${PORT}`);
-    console.log(`📝 API endpoints available at http://localhost:${PORT}`);
+    console.log(`🌍 Listening on 0.0.0.0:${PORT} (accessible locally & publicly)`);
+    console.log(`📝 Local URL: http://localhost:${PORT}`);
     console.log(`🔍 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`🔍 Debug dashboard: http://localhost:${PORT}/api/debug/dashboard`);
+    
+    if (process.env.NODE_ENV === 'production') {
+        console.log(`🌐 Public URL: https://sadhana-tracker-production.up.railway.app:${PORT}`);
+    }
 });
