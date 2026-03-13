@@ -43,7 +43,8 @@ console.log('🔍 MySQL Connection Details:');
 console.log('Host:', process.env.MYSQLHOST);
 console.log('Port:', process.env.MYSQLPORT);
 console.log('User:', process.env.MYSQLUSER);
-console.log('Database:', process.env.MYSQL_DATABASE);
+// ✅ FIX: MYSQLDATABASE (without underscore) use karo
+console.log('Database:', process.env.MYSQLDATABASE || process.env.DB_NAME || 'sadhana_tracker');
 console.log('Password Set:', process.env.MYSQLPASSWORD ? '✅ YES' : '❌ NO');
 
 const pool = mysql.createPool({
