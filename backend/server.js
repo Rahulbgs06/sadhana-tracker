@@ -37,12 +37,21 @@ app.use(express.json());
 console.log(`🌍 Server running in ${process.env.NODE_ENV || 'development'} mode`);
 
 // ============================================
-// DATABASE CONNECTION - FOOLPROOF
+// DATABASE CONNECTION - WITH EXTENSIVE DEBUGGING
 // ============================================
-// Check if running on Railway (MYSQLHOST will be set)
 const IS_RAILWAY = !!process.env.MYSQLHOST;
 
 console.log('🔍 Environment:', IS_RAILWAY ? '🚂 RAILWAY (PRODUCTION)' : '💻 LOCAL (DEVELOPMENT)');
+
+// Log ALL relevant environment variables at startup
+console.log('📋 Raw Environment Variables:');
+console.log(`   MYSQLHOST: ${process.env.MYSQLHOST || 'not set'}`);
+console.log(`   MYSQLPORT: ${process.env.MYSQLPORT || 'not set'}`);
+console.log(`   MYSQLUSER: ${process.env.MYSQLUSER || 'not set'}`);
+console.log(`   MYSQLDATABASE: ${process.env.MYSQLDATABASE || 'not set'}`);
+console.log(`   MYSQLPASSWORD: ${process.env.MYSQLPASSWORD ? '✅ set' : '❌ not set'}`);
+console.log(`   DB_HOST: ${process.env.DB_HOST || 'not set'}`);
+console.log(`   DB_NAME: ${process.env.DB_NAME || 'not set'}`);
 
 // Database configuration
 const dbConfig = {
@@ -50,58 +59,53 @@ const dbConfig = {
     port: IS_RAILWAY ? process.env.MYSQLPORT : (process.env.DB_PORT || 3306),
     user: IS_RAILWAY ? process.env.MYSQLUSER : (process.env.DB_USER || 'root'),
     password: IS_RAILWAY ? process.env.MYSQLPASSWORD : (process.env.DB_PASSWORD || 'Sadhana@123'),
-    // ⚡ CRITICAL: Railway ALWAYS uses 'railway' database
     database: IS_RAILWAY ? 'railway' : (process.env.DB_NAME || 'sadhana_tracker'),
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
 };
 
-console.log('📊 Database Config:');
+console.log('📊 Final Database Config Used for Pool:');
 console.log(`   Host: ${dbConfig.host}`);
-console.log(`   Port: ${dbConfig.port}`);
 console.log(`   User: ${dbConfig.user}`);
 console.log(`   Database: ${dbConfig.database}`);
+console.log(`   Port: ${dbConfig.port}`);
 console.log(`   Password: ${dbConfig.password ? '✅ SET' : '❌ NOT SET'}`);
 
 const pool = mysql.createPool(dbConfig).promise();
 
-
 // ============================================
-// DATABASE CONNECTIVITY TEST
+// DATABASE CONNECTIVITY TEST - FIXED
 // ============================================
 (async function testDBConnection() {
+    let connection;
     try {
-        const connection = await pool.getConnection();
-        console.log('✅ MySQL Database connected successfully!');
-        console.log(`📊 Connected to database: ${process.env.DB_NAME || 'sadhana_tracker'}`);
-        
-        // Test query to verify tables exist
+        connection = await pool.getConnection();
+        console.log('✅ Pool connection acquired.');
+
+        // Explicitly select the database we intend to use
+        await connection.query(`USE ${dbConfig.database}`);
+        console.log(`📊 Using database: ${dbConfig.database}`);
+
+        // Now test tables
         const [tables] = await connection.query('SHOW TABLES');
         console.log('📋 Available tables:', tables.map(t => Object.values(t)[0]).join(', '));
-        
-        // Check if sadhana_entries table has the expected columns
+
+        // Test users table specifically
         try {
-            const [columns] = await connection.query('DESCRIBE sadhana_entries');
-            console.log('✅ sadhana_entries table verified with', columns.length, 'columns');
+            const [users] = await connection.query('SELECT COUNT(*) as count FROM users');
+            console.log(`👥 Users in database: ${users[0].count}`);
         } catch (e) {
-            console.error('❌ sadhana_entries table might be missing:', e.message);
+            console.log('⚠️ Users table not accessible:', e.message);
         }
-        
+
         connection.release();
+        console.log('✅ Database connectivity test passed.');
     } catch (error) {
-        console.error('❌ MySQL Connection Failed!');
+        console.error('❌ Database Connection Test Failed!');
         console.error('Error details:', error.message);
-        console.error('\n🔧 Troubleshooting tips:');
-        console.error('1. Make sure MySQL server is running');
-        console.error('2. Check if database "sadhana_tracker" exists');
-        console.error('3. Verify credentials in .env file:');
-        console.error(`   Host: ${process.env.DB_HOST || 'NOT SET'}`);
-        console.error(`   User: ${process.env.DB_USER || 'NOT SET'}`);
-        console.error(`   Password: ${process.env.DB_PASSWORD ? 'NOT SET' : 'not set'}`);
-        console.error(`   Database: ${process.env.DB_NAME || 'NOT SET'}`);
-        console.error('\n💡 Run this SQL to create database:');
-        console.error('CREATE DATABASE IF NOT EXISTS sadhana_tracker;');
+        console.error('This is likely why the container is stopping.');
+        // Don't exit the process, let the app try to run, but it will fail on first query
     }
 })();
 
