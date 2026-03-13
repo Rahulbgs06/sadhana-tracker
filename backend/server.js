@@ -635,7 +635,7 @@ app.get('/api/voices', async (req, res) => {
 // ============================================
 // SERVER START - SIMPLE & SAFE (WORKS EVERYWHERE)
 // ============================================
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // '0.0.0.0' har jagah kaam karta hai - local bhi, production bhi
 app.listen(PORT, '0.0.0.0', () => {
