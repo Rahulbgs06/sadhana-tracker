@@ -839,8 +839,6 @@ const app = {
     }
     },
 
-
-
     handleLogin: async function() {
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-pass').value;
@@ -856,6 +854,76 @@ const app = {
                 this.showView('dashboard');
             } else { this.notify(data.error, true); }
         } catch (e) { this.notify("Connection Error", true); }
+    },
+
+        // ✅ Registration
+    handleRegister: async function() {
+        // Get form values
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-pass').value;
+        const voice = document.getElementById('reg-voice').value;
+        const group = document.getElementById('reg-group').value;
+        
+        // Validation
+        if (!name || !email || !password || !voice || !group) {
+            this.notify("❌ All fields are required", true);
+            return;
+        }
+        
+        if (password.length < 6) {
+            this.notify("❌ Password must be at least 6 characters", true);
+            return;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            this.notify("❌ Please enter a valid email address", true);
+            return;
+        }
+        
+        // Prepare request body
+        const body = {
+            name: name,
+            email: email,
+            password: password,
+            voice: voice,
+            group: group
+        };
+        
+        try {
+            const res = await fetch(`${this.API_BASE_URL}/api/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            
+            const data = await res.json();
+            
+            if (res.ok) {
+                this.notify("✅ Registration Successful! Please login.");
+                // Clear form
+                document.getElementById('reg-name').value = '';
+                document.getElementById('reg-email').value = '';
+                document.getElementById('reg-pass').value = '';
+                document.getElementById('reg-voice').value = '';
+                document.getElementById('reg-group').selectedIndex = 0;
+                // Go to login view
+                this.showView('login');
+            } else {
+                if (res.status === 400) {
+                    this.notify(data.error || "❌ Registration failed. Email may already exist.", true);
+                } else {
+                    this.notify(data.error || "❌ Registration failed", true);
+                }
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            this.notify("❌ Network error. Please try again.", true);
+        }
     },
 
     loadUsers: async function() {

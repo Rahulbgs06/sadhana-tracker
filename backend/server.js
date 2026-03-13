@@ -37,26 +37,35 @@ app.use(express.json());
 console.log(`🌍 Server running in ${process.env.NODE_ENV || 'development'} mode`);
 
 // ============================================
-// DATABASE CONNECTION POOL
+// DATABASE CONNECTION - FOOLPROOF
 // ============================================
-console.log('🔍 MySQL Connection Details:');
-console.log('Host:', process.env.MYSQLHOST);
-console.log('Port:', process.env.MYSQLPORT);
-console.log('User:', process.env.MYSQLUSER);
-// ✅ FIX: MYSQLDATABASE (without underscore) use karo
-console.log('Database:', process.env.MYSQLDATABASE || process.env.DB_NAME || 'sadhana_tracker');
-console.log('Password Set:', process.env.MYSQLPASSWORD ? '✅ YES' : '❌ NO');
+// Check if running on Railway (MYSQLHOST will be set)
+const IS_RAILWAY = !!process.env.MYSQLHOST;
 
-const pool = mysql.createPool({
-    host: process.env.MYSQLHOST || process.env.DB_HOST || 'localhost',
-    user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
-    password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || 'Sadhana@123',
-    database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'sadhana_tracker',
-    port: process.env.MYSQLPORT || process.env.DB_PORT || 3306,
+console.log('🔍 Environment:', IS_RAILWAY ? '🚂 RAILWAY (PRODUCTION)' : '💻 LOCAL (DEVELOPMENT)');
+
+// Database configuration
+const dbConfig = {
+    host: IS_RAILWAY ? process.env.MYSQLHOST : (process.env.DB_HOST || 'localhost'),
+    port: IS_RAILWAY ? process.env.MYSQLPORT : (process.env.DB_PORT || 3306),
+    user: IS_RAILWAY ? process.env.MYSQLUSER : (process.env.DB_USER || 'root'),
+    password: IS_RAILWAY ? process.env.MYSQLPASSWORD : (process.env.DB_PASSWORD || 'Sadhana@123'),
+    // ⚡ CRITICAL: Railway ALWAYS uses 'railway' database
+    database: IS_RAILWAY ? 'railway' : (process.env.DB_NAME || 'sadhana_tracker'),
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
-}).promise();
+};
+
+console.log('📊 Database Config:');
+console.log(`   Host: ${dbConfig.host}`);
+console.log(`   Port: ${dbConfig.port}`);
+console.log(`   User: ${dbConfig.user}`);
+console.log(`   Database: ${dbConfig.database}`);
+console.log(`   Password: ${dbConfig.password ? '✅ SET' : '❌ NOT SET'}`);
+
+const pool = mysql.createPool(dbConfig).promise();
+
 
 // ============================================
 // DATABASE CONNECTIVITY TEST
