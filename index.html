@@ -62,6 +62,302 @@
         .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 0.8rem; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
         .stat-item b { color: var(--saffron); }
 
+        /* ============================================
+           DASHBOARD ENHANCEMENTS - Spiritual & Responsive
+           Add at the end of your existing CSS
+        ============================================ */
+
+        /* Spiritual Banner */
+        .spiritual-banner {
+            background: linear-gradient(135deg, var(--saffron-light) 0%, #fff 50%, var(--saffron-light) 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 1px solid var(--saffron);
+            box-shadow: 0 4px 15px rgba(255, 153, 51, 0.1);
+        }
+
+        .banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .om-symbol {
+            font-size: 1.8rem;
+            animation: gentlePulse 3s infinite;
+        }
+
+        .banner-text {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            color: var(--saffron-dark);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .banner-subtext {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+            /* Dashboard Cards */
+            .dashboard-card {
+                background: var(--white);
+                border-radius: 16px;
+                padding: 20px 15px;
+                text-align: center;
+                cursor: pointer;
+                border: 1px solid var(--border);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+        
+            .dashboard-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(255, 153, 51, 0.15);
+                border-color: var(--saffron);
+            }
+        
+            .dashboard-card.featured {
+                border: 2px solid var(--saffron);
+                background: linear-gradient(135deg, #fff, #fff9f0);
+            }
+        
+            .card-icon {
+                font-size: 2.2rem;
+                margin-bottom: 10px;
+            }
+        
+            .card-title {
+                font-family: 'Lora', serif;
+                font-weight: 600;
+                font-size: 1.1rem;
+                color: var(--text-dark);
+                margin-bottom: 5px;
+            }
+        
+            .card-desc {
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                margin-bottom: 12px;
+                line-height: 1.4;
+            }
+        
+            .card-footer {
+                font-size: 0.8rem;
+                color: var(--saffron);
+                font-weight: 600;
+                opacity: 0.8;
+                transition: opacity 0.2s;
+            }
+        
+            .dashboard-card:hover .card-footer {
+                opacity: 1;
+                text-decoration: underline;
+            }
+        
+            .featured-badge {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: var(--saffron);
+                color: white;
+                font-size: 0.6rem;
+                padding: 3px 8px;
+                border-radius: 12px;
+                font-weight: 600;
+            }
+        
+            /* Admin Card */
+            .dashboard-card.admin-card {
+                border-color: #81e6d9;
+                background: #f0fefc;
+            }
+        
+            /* Quick Stats */
+            .quick-stats {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+        
+            .stat-pill {
+                background: white;
+                border: 1px solid var(--border);
+                border-radius: 30px;
+                padding: 8px 5px;
+                text-align: center;
+                font-size: 0.75rem;
+            }
+        
+            .stat-label {
+                display: block;
+                color: var(--text-muted);
+                margin-bottom: 2px;
+            }
+        
+            .stat-value {
+                display: block;
+                font-weight: 700;
+                color: var(--saffron-dark);
+                font-size: 0.9rem;
+            }
+        
+            /* Logout Button */
+            .btn-logout {
+                width: 100%;
+                padding: 14px;
+                border: none;
+                border-radius: 12px;
+                background: white;
+                border: 1px solid #ffcdd2;
+                color: #d32f2f;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 20px;
+                transition: all 0.3s ease;
+            }
+        
+            .btn-logout:hover {
+                background: #ffebee;
+                border-color: #d32f2f;
+                transform: translateY(-2px);
+            }
+        
+            .logout-icon {
+                font-size: 1.2rem;
+            }
+        
+            /* Spiritual Footer */
+            .spiritual-footer {
+                text-align: center;
+                padding: 15px 0 5px;
+                border-top: 1px dashed var(--saffron-light);
+            }
+        
+            .footer-mantra {
+                font-family: 'Lora', serif;
+                font-size: 0.8rem;
+                color: var(--saffron-dark);
+                opacity: 0.7;
+                line-height: 1.6;
+            }
+        
+            /* Animations */
+            @keyframes gentlePulse {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0.8; transform: scale(1.05); }
+            }
+        
+            /* Responsive Design */
+            @media (min-width: 768px) {
+                .dashboard-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+            
+                .banner-text {
+                    font-size: 1.5rem;
+                }
+            }
+        
+            @media (min-width: 1024px) {
+                .dashboard-grid {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+            }
+        
+            @media (max-width: 480px) {
+                .quick-stats {
+                    grid-template-columns: 1fr;
+                    gap: 8px;
+                }
+            
+                .banner-content {
+                    gap: 8px;
+                }
+            
+                .om-symbol {
+                    font-size: 1.4rem;
+                }
+            
+                .banner-text {
+                    font-size: 1.1rem;
+                }
+            }
+        
+            /* Update current date and user info via JavaScript */
+        
+        /* ===========================================
+           TRACKING VIEW SPECIFIC STYLES
+           (Add at the end of your existing CSS)
+        ============================================ */
+          /* Tracking grid - only affects tracking view */
+        .tracking-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        /* Full width item in tracking grid */
+        .tracking-grid .tracking-full {
+            grid-column: 1 / -1;
+        }
+
+        /* Input styling specific to tracking view */
+        .tracking-input {
+            width: 100%;
+            padding: 10px !important;  /* Slightly smaller than default 12px */
+            font-size: 0.95rem !important;
+        }
+
+        /* Override number input spinners only for tracking */
+        .tracking-input[type=number] {  -moz-appearance: textfield;
+        }
+        .tracking-input[type=number]::-webkit-inner-spin-button,
+        .tracking-input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Responsive for tracking grid only */
+        @media (max-width: 768px) {
+            .tracking-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tracking-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Keep existing mt-20 class */
+        .mt-20 {
+            margin-top: 20px;
+        }
+
         /* --- SADHANA DASHBOARD SPECIFIC STYLES --- */
         /* --- ENHANCED SADHANA DASHBOARD STYLES --- */
         .dashboard-card { 
@@ -165,82 +461,140 @@
 
     <!-- VIEW: DASHBOARD -->
     <div id="view-dashboard" class="hidden">
-        <div class="nav-grid">
-            <div class="card text-center" onclick="app.showView('tracking')" style="cursor:pointer">📝 Track Sadhana</div>
-            <div class="card text-center" onclick="app.showView('search')" style="cursor:pointer">🔍 Day Report</div>
-            <!-- New DASHBOARD -->
-            <div class="card text-center" onclick="app.showView('sadhana-dashboard')" style="cursor:pointer; border: 1px solid var(--saffron)">🕉️ Sadhana Dashboard</div>
-            <div class="card text-center" onclick="app.showView('reports')" style="cursor:pointer">📊 Analytics</div>
-            <div id="admin-menu" class="card text-center hidden" onclick="app.showView('user-mgmt')" style="cursor:pointer">👥 User Mgmt</div>
+        <!-- Welcome Banner -->
+        <div class="spiritual-banner">
+            <div class="banner-content">
+                <span class="om-symbol">🕉️</span>
+                <h3 class="banner-text">Hare Krishna Hare Krishna</h3>
+                <span class="om-symbol">🕉️</span>
+            </div>
+            <div class="banner-subtext">Krishna Krishna Hare Hare</div>
         </div>
-        <button class="btn btn-outline" style="color:red; margin-top:20px" onclick="app.handleLogout()">Logout</button>
+
+        <!-- Main Menu Grid -->
+        <div class="dashboard-grid">
+            <!-- Track Sadhana Card -->
+            <div class="dashboard-card" onclick="app.showView('tracking')">
+                <div class="card-icon">📝</div>
+                <div class="card-title">Track Sadhana</div>
+                <div class="card-desc">Record your daily spiritual activities</div>
+                <div class="card-footer">Start Now →</div>
+            </div>
+
+            <!-- Day Report Card -->
+            <div class="dashboard-card" onclick="app.showView('search')">
+                <div class="card-icon">🔍</div>
+                <div class="card-title">Day Report</div>
+                <div class="card-desc">View detailed daily reports</div>
+                <div class="card-footer">Search →</div>
+            </div>
+
+            <!-- Sadhana Dashboard Card -->
+            <div class="dashboard-card featured" onclick="app.showView('sadhana-dashboard')">
+                <div class="card-icon">🕉️</div>
+                <div class="card-title">Sadhana Dashboard</div>
+                <div class="card-desc">Track your spiritual progress</div>
+                <div class="card-footer">View Analytics →</div>
+                <div class="featured-badge">New</div>
+            </div>
+
+            <!-- Analytics Card -->
+            <div class="dashboard-card" onclick="app.showView('reports')">
+                <div class="card-icon">📊</div>
+                <div class="card-title">Analytics</div>
+                <div class="card-desc">Insights and statistics</div>
+                <div class="card-footer">Explore →</div>
+            </div>
+
+            <!-- User Management Card (Admin Only) -->
+            <div id="admin-menu" class="dashboard-card admin-card hidden" onclick="app.showView('user-mgmt')">
+                <div class="card-icon">👥</div>
+                <div class="card-title">User Management</div>
+                <div class="card-desc">Manage devotees and permissions</div>
+                <div class="card-footer">Admin →</div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Section -->
+        <div class="quick-stats">
+            <div class="stat-pill">
+                <span class="stat-label">Today's Date</span>
+                <span class="stat-value" id="current-date"></span>
+            </div>
+            <div class="stat-pill">
+                <span class="stat-label">Your Voice</span>
+                <span class="stat-value" id="user-voice-display"></span>
+            </div>
+            <div class="stat-pill">
+                <span class="stat-label">Your Group</span>
+                <span class="stat-value" id="user-group-display"></span>
+            </div>
+        </div>
+
+        <!-- Logout Button -->
+        <button class="btn-logout" onclick="app.handleLogout()">
+            <span class="logout-icon">🚪</span>
+            <span class="logout-text">Exit (Logout)</span>
+        </button>
+
+        <!-- Spiritual Footer -->
+        <div class="spiritual-footer">
+            <div class="footer-mantra">हरे कृष्ण हरे कृष्ण | कृष्ण कृष्ण हरे हरे | हरे राम हरे राम | राम राम हरे हरे ||</div>
+        </div>
     </div>
 
     <!-- VIEW: TRACKING -->
     <div id="view-tracking" class="card hidden">
-        <h2 class="spiritual-text">Daily Entry</h2>
-        <div class="form-group mt-20"><label>Date (Auto-filled)</label><input type="date" id="sd-date"></div>
-        <div class="nav-grid">
-            <div class="form-group"><label>Wakeup (HH:MM:SS)</label><input type="time" id="sd-wakeup" step="1"></div>
-            <div class="form-group"><label>Japa Rounds</label><input type="number" id="sd-rounds" value="16"></div>
-        </div>
-        <div class="form-group"><label>Chant End Time</label><input type="time" id="sd-chantend" step="1"></div>
-        <div class="nav-grid">
-            <div class="form-group"><label>Hearing (Min)</label><input type="number" id="sd-hearing" value="0"></div>
-            <div class="form-group"><label>Reading (Min)</label><input type="number" id="sd-reading" value="0"></div>
-        </div>
-        <div class="form-group"><label>Study (Min)</label><input type="number" id="sd-study" value="0"></div>
-        <div class="nav-grid">
-            <div class="form-group"><label>Day Rest (HH:MM)</label><input type="time" id="sd-dayrest"></div>
-            <!-- NEW SADHANA FIELDS -->
-        <div class="nav-grid">
-        <div class="form-group">
-        <label>Temple Reach Time</label>
-        <input type="time" id="sd-temple">
+        <h2 class="spiritual-text">Sadhana Entry</h2>
+
+        <!-- COMPACT GRID - Uses existing classes + new specific classes -->
+        <div class="tracking-grid">
+            <!-- Row 1 -->
+            <div class="form-group"><label>📅 Date</label><input type="date" id="sd-date" class="tracking-input"></div>
+            <div class="form-group"><label>⏰ Wakeup</label><input type="time" id="sd-wakeup" step="1" class="tracking-input"></div>
+            <div class="form-group"><label>📿 Rounds</label><input type="number" id="sd-rounds" value="16" min="0" class="tracking-input"></div>
+
+            <!-- Row 2 -->
+            <div class="form-group"><label>🔚 Chant End</label><input type="time" id="sd-chantend" step="1" class="tracking-input"></div>
+            <div class="form-group"><label>🎧 Hearing</label><input type="number" id="sd-hearing" value="0" min="0" class="tracking-input"></div>
+            <div class="form-group"><label>📖 Reading</label><input type="number" id="sd-reading" value="0" min="0" class="tracking-input"></div>
+
+            <!-- Row 3 -->
+            <div class="form-group"><label>📚 Study</label><input type="number" id="sd-study" value="0" min="0" class="tracking-input"></div>
+            <div class="form-group"><label>😴 Day Rest</label><input type="number" id="sd-dayrest" min="0" placeholder="min" class="tracking-input"></div>
+            <div class="form-group"><label>🛕 Temple</label><input type="time" id="sd-temple" class="tracking-input"></div>
+
+            <!-- Row 4 -->
+            <div class="form-group"><label>⏳ Wasted</label><input type="number" id="sd-waste" min="0" placeholder="min" class="tracking-input"></div>
+            <div class="form-group"><label>🧘 Morning</label>
+                <select id="sd-morning" class="tracking-input"><option value="0">No</option><option value="1">Yes</option></select>
+            </div>
+            <div class="form-group"><label>🪔 Mangala</label>
+                <select id="sd-mangala" class="tracking-input"><option value="0">No</option><option value="1">Yes</option></select>
+            </div>
+
+            <!-- Row 5 -->
+            <div class="form-group"><label>🧹 Clean</label>
+                <select id="sd-clean" class="tracking-input"><option value="0">No</option><option value="1">Yes</option></select>
+            </div>
+            <div class="form-group"><label>🌙 Sleep</label><input type="time" id="sd-sleep" step="1" class="tracking-input"></div>
+            <div class="form-group"><label>📘 Book</label><input type="text" id="sd-book" placeholder="Optional" class="tracking-input"></div>
+
+            <!-- Row 6 - Full Width -->
+            <div class="form-group tracking-full"><label>💭 Reflections</label><textarea id="sd-reflect" rows="2" placeholder="Optional" class="tracking-input"></textarea></div>
         </div>
 
-        <div class="form-group">
-        <label>Time Wasted</label>
-        <input type="time" id="sd-waste">
-        </div>
+        <!-- Buttons - Using existing btn classes -->
+        <button class="btn btn-primary" onclick="app.saveSadhana()">💾 Save Record</button>
+
+        <!-- WhatsApp Section -->
+        <div id="whatsapp-section" class="hidden mt-20">
+            <div class="form-group"><label style="color: var(--saffron-dark)">📱 Summary:</label>
+            <textarea id="whatsapp-preview" rows="3" class="tracking-input" style="background: #fdf6e3;"></textarea></div>
+            <button class="btn btn-whatsapp" onclick="app.sendToWhatsApp()">📲 Send WhatsApp</button>
         </div>
 
-        <div class="nav-grid">
-        <div class="form-group">
-        <label>Morning Class</label>
-        <select id="sd-morning">
-        <option value="0">No</option>
-        <option value="1">Yes</option>
-        </select>
-        </div>
-
-        <div class="form-group">
-        <label>Mangala Arti</label>
-        <select id="sd-mangala">
-        <option value="0">No</option>
-        <option value="1">Yes</option>
-        </select>
-        </div>
-        </div>
-
-        <div class="form-group"><label>Cleanliness</label>
-        <select id="sd-clean"><option value="0">No</option><option value="1">Yes</option></select></div>
-
-        <div class="form-group"><label>Book Name</label><input type="text" id="sd-book"></div>
-
-        <div class="form-group"><label>Reflections</label><textarea id="sd-reflect"></textarea></div>
-        <div class="form-group"><label>Sleep (HH:MM:SS)</label><input type="time" id="sd-sleep" step="1"></div>
-        </div>
-        <button class="btn btn-primary" onclick="app.saveSadhana()">Save Record</button>
-        
-        <!-- Post-Save Summary -->
-        <div id="whatsapp-section" class="hidden mt-20" style="border-top: 1px dashed var(--saffron); padding-top: 15px;">
-            <label style="color: var(--saffron-dark)">Editable Summary Message:</label>
-            <textarea id="whatsapp-preview" style="height: 140px; background: #fdf6e3; font-size: 0.85rem; border: 1px solid var(--saffron-light)"></textarea>
-            <button class="btn btn-whatsapp" onclick="app.sendToWhatsApp()">📲 Send to Master WhatsApp</button>
-        </div>
-
-        <button class="btn btn-outline" onclick="app.showView('dashboard')">Back</button>
+        <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">← Back</button>
     </div>
 
     <!-- VIEW: USER MANAGEMENT -->
@@ -334,7 +688,7 @@ const app = {
             return 'http://localhost:3000';  // Local backend
         } else {
             // Running on production domain
-            return 'https://sadhana-tracker-production.up.railway.app:8080';  // Production backend
+            return 'https://sadhana-tracker-production.up.railway.app:8085';  // Production backend
         }
     })(),
     MASTER_NUMBER: '916206431908',
@@ -351,6 +705,7 @@ const app = {
             this.showView('dashboard');
         } else { this.showView('login'); }
     },
+
 
     notify: function(msg, isError = false) {
         const box = document.getElementById('status-box');
@@ -388,6 +743,33 @@ const app = {
         if (id === 'user-mgmt') this.loadUsers();
         if (id === 'reports' || id === 'search') { this.loadPickers(); this.generateReport(); this.performSearch(); }
         if (id === 'register') this.fetchVoices('reg-voice');
+        // ✅ NEW CODE - YAHAN PE ADD KIYA
+        if (id === 'dashboard') {
+            this.updateDashboardInfo();
+        }
+    },
+        // ✅ YAHAN PE YEH FUNCTION ADD KARO (kisi bhi existing function ke baad)
+    updateDashboardInfo: function() {
+        // Update date
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const dateElement = document.getElementById('current-date');
+        if (dateElement) {
+            dateElement.textContent = today.toLocaleDateString('en-IN', options);
+        }
+        
+        // Update user info
+        if (this.currentUser) {
+            const voiceElement = document.getElementById('user-voice-display');
+            const groupElement = document.getElementById('user-group-display');
+            
+            if (voiceElement) {
+                voiceElement.textContent = this.currentUser.voice || 'N/A';
+            }
+            if (groupElement) {
+                groupElement.textContent = this.currentUser.group || 'N/A';
+            }
+        }
     },
 
     updateHeader: function() {
@@ -517,45 +899,185 @@ const app = {
         this.renderUserTable(filtered);
     },
 
+    // saveSadhana: async function() {
+    //     const dayRestParts = document.getElementById('sd-dayrest').value.split(':');
+    //     const dayRestMinutes = (+dayRestParts[0] || 0) * 60 + (+dayRestParts[1] || 0);
+    //     const body = {
+    //         date: document.getElementById('sd-date').value,
+    //         wakeup: document.getElementById('sd-wakeup').value,
+    //         rounds: document.getElementById('sd-rounds').value,
+    //         chantEnd: document.getElementById('sd-chantend').value,
+    //         hearing: document.getElementById('sd-hearing').value,
+    //         reading: document.getElementById('sd-reading').value,
+    //         study: document.getElementById('sd-study').value,
+    //         dayRestMinutes,
+    //         sleep: document.getElementById('sd-sleep').value,
+    //         // NEW FIELDS
+    //         temp_hall_rech: document.getElementById('sd-temple').value,
+    //         time_wasted: document.getElementById('sd-waste').value,
+    //         morning_class: document.getElementById('sd-morning').value,
+    //         mangala_aarti: document.getElementById('sd-mangala').value,
+    //         cleanliness: document.getElementById('sd-clean').value,
+    //         book_name: document.getElementById('sd-book').value,
+    //         reflections: document.getElementById('sd-reflect').value
+    //     };
+    //     const res = await fetch(`${this.API_BASE_URL}/api/sadhana`, {
+    //         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+    //         body: JSON.stringify(body)
+    //     });
+    //     if (res.ok) {
+
+    //     this.notify("Sadhana Saved Successfully 🙏");
+    //     this.generateSummary(body);
+    //     }
+    //     else if (res.status === 409) {
+    //     this.notify("Sadhana already saved for this date", true);
+    //     }
+    //     else {
+    //     this.notify(data.error || "Save failed", true);
+    //     }
+
+    // },
     saveSadhana: async function() {
-        const dayRestParts = document.getElementById('sd-dayrest').value.split(':');
+        // ============================================
+        // FIELD VALIDATION - Check all mandatory fields
+        // ============================================
+
+        // Get all field values
+        const date = document.getElementById('sd-date').value;
+        const wakeup = document.getElementById('sd-wakeup').value;
+        const rounds = document.getElementById('sd-rounds').value;
+        const chantEnd = document.getElementById('sd-chantend').value;
+        const hearing = document.getElementById('sd-hearing').value;
+        const reading = document.getElementById('sd-reading').value;
+        const study = document.getElementById('sd-study').value;
+        const dayRest = document.getElementById('sd-dayrest').value;
+        const sleep = document.getElementById('sd-sleep').value;
+        const temple = document.getElementById('sd-temple').value;
+        const waste = document.getElementById('sd-waste').value; 
+        const morningClass = document.getElementById('sd-morning').value;
+        const mangala = document.getElementById('sd-mangala').value;
+        const clean = document.getElementById('sd-clean').value;
+        const book = document.getElementById('sd-book').value;      // OPTIONAL
+        const reflect = document.getElementById('sd-reflect').value; // OPTIONAL
+
+        // Array to store missing fields
+        let missingFields = [];
+
+        // Check each mandatory field
+        if (!date) missingFields.push('Date');
+        if (!wakeup) missingFields.push('Wakeup Time');
+        if (!rounds && rounds !== '0') missingFields.push('Japa Rounds');
+        if (!chantEnd) missingFields.push('Chant End Time');
+        if (!hearing && hearing !== '0') missingFields.push('Hearing Minutes');
+        if (!reading && reading !== '0') missingFields.push('Reading Minutes');
+        if (!study && study !== '0') missingFields.push('Study Minutes');
+        if (!dayRest && dayRest !== '0') missingFields.push('Day Rest (minutes)');  // Minutes check
+        if (!sleep) missingFields.push('Sleep Time');
+        if (!temple) missingFields.push('Temple Reach Time');
+        if (!waste && waste !== '0') missingFields.push('Time Wasted (minutes)');   // Minutes check
+        if (!morningClass && morningClass !== '0') missingFields.push('Morning Class');
+        if (!mangala && mangala !== '0') missingFields.push('Mangala Arti');
+        if (!clean && clean !== '0') missingFields.push('Cleanliness');
+        // BOOK NAME - OPTIONAL (no validation)
+        // REFLECTIONS - OPTIONAL (no validation)
+
+        // If any fields are missing, show error and stop
+        if (missingFields.length > 0) {
+            const msg = "❌ Mandatory fields missing:\n• " + missingFields.join('\n• ');
+            this.notify(msg, true);
+
+            // Highlight the first missing field
+            const firstMissingId = this.getFieldId(missingFields[0]);
+            if (firstMissingId) {
+                document.getElementById(firstMissingId)?.focus();
+                document.getElementById(firstMissingId)?.classList.add('error-field');
+                setTimeout(() => {
+                    document.getElementById(firstMissingId)?.classList.remove('error-field');
+                }, 3000);
+            }
+            return;
+        }
+
+        // ============================================
+        // PROCESS DAY REST (convert to minutes)
+        // ============================================
+        const dayRestParts = dayRest.split(':');
         const dayRestMinutes = (+dayRestParts[0] || 0) * 60 + (+dayRestParts[1] || 0);
+
+        // ============================================
+        // PREPARE REQUEST BODY
+        // ============================================
         const body = {
-            date: document.getElementById('sd-date').value,
-            wakeup: document.getElementById('sd-wakeup').value,
-            rounds: document.getElementById('sd-rounds').value,
-            chantEnd: document.getElementById('sd-chantend').value,
-            hearing: document.getElementById('sd-hearing').value,
-            reading: document.getElementById('sd-reading').value,
-            study: document.getElementById('sd-study').value,
-            dayRestMinutes,
-            sleep: document.getElementById('sd-sleep').value,
-            // NEW FIELDS
-            temp_hall_rech: document.getElementById('sd-temple').value,
-            time_wasted: document.getElementById('sd-waste').value,
-            morning_class: document.getElementById('sd-morning').value,
-            mangala_aarti: document.getElementById('sd-mangala').value,
-            cleanliness: document.getElementById('sd-clean').value,
-            book_name: document.getElementById('sd-book').value,
-            reflections: document.getElementById('sd-reflect').value
+            date: date,
+            wakeup: wakeup,
+            rounds: rounds,
+            chantEnd: chantEnd,
+            hearing: hearing,
+            reading: reading,
+            study: study,
+            dayRestMinutes: parseInt(dayRest) || 0,     // Direct minutes bhejo
+            sleep: sleep,
+            temp_hall_rech: temple,
+            time_wasted: parseInt(waste) || 0,     //direct minutes
+            morning_class: morningClass,
+            mangala_aarti: mangala,
+            cleanliness: clean,
+            book_name: book || null,        // Agar blank hai to null bhejo
+            reflections: reflect || null     // Agar blank hai to null bhejo
         };
-        const res = await fetch(`${this.API_BASE_URL}/api/sadhana`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-            body: JSON.stringify(body)
-        });
-        if (res.ok) {
 
-        this.notify("Sadhana Saved Successfully 🙏");
-        this.generateSummary(body);
-        }
-        else if (res.status === 409) {
-        this.notify("Sadhana already saved for this date", true);
-        }
-        else {
-        this.notify(data.error || "Save failed", true);
-        }
+        // ============================================
+        // SEND TO BACKEND
+        // ============================================
+        try {
+            const res = await fetch(`${this.API_BASE_URL}/api/sadhana`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(body)
+            });
 
+            const data = await res.json();
+
+            if (res.ok) {
+                this.notify("✅ Sadhana Saved Successfully 🙏");
+                this.generateSummary(body);
+            } else if (res.status === 409) {
+                this.notify("⚠️ Sadhana already saved for this date", true);
+            } else {
+                this.notify(data.error || "❌ Save failed", true);
+            }
+        } catch (error) {
+            this.notify("❌ Network error. Please try again.", true);
+            console.error('Save error:', error);
+        }
     },
+
+    // Helper function to get field ID from field name
+    getFieldId: function(fieldName) {
+        const mapping = {
+            'Date': 'sd-date',
+            'Wakeup Time': 'sd-wakeup',
+            'Japa Rounds': 'sd-rounds',
+            'Chant End Time': 'sd-chantend',
+            'Hearing Minutes': 'sd-hearing',
+            'Reading Minutes': 'sd-reading',
+            'Study Minutes': 'sd-study',
+            'Day Rest (minutes)': 'sd-dayrest', 
+            'Sleep Time': 'sd-sleep',
+            'Time Wasted (minutes)': 'sd-waste',
+            'Time Wasted': 'sd-waste',
+            'Morning Class': 'sd-morning',
+            'Mangala Arti': 'sd-mangala',
+            'Cleanliness': 'sd-clean'
+            // Book Name aur Reflections ka mapping nahi hai kyunki optional hain
+        };
+        return mapping[fieldName];
+    },
+
     generateSummary: function(e) {
             
     let msg =
