@@ -2159,39 +2159,85 @@ const MarksCalculator = {
         }
     },
 
-        // ============================================
-        // NEW: Get configuration (with caching)
-        // ============================================
-     getConfig: async function(voice) {
+    // ============================================
+    // ADD THIS FUNCTION to MarksCalculator (around line 2100)
+    // ============================================
+    normalizeConfig: function(dbConfig) {
+        // If already in correct format, return as is
+        if (dbConfig.soul?.activities || dbConfig.body?.activities) {
+            return dbConfig;
+        }
+        
+        // Handle database format (with rules wrapper)
+        if (dbConfig.rules) {
+            console.log('🔄 Normalizing database config format');
+            const rules = dbConfig.rules;
+            
+            return {
+                soul: {
+                    activities: (rules.soul || []).map(rule => ({
+                        name: rule.field,
+                        maxMarks: rule.maxMarks,
+                        enabled: true
+                    })),
+                    maxTotal: 50,
+                    japa: {
+                        slabs: (rules.japa?.[0]?.conditions || []).map(cond => ({
+                            min: cond.value,
+                            marks: cond.marks
+                        }))
+                    }
+                },
+                body: {
+                    activities: (rules.body || []).map(rule => ({
+                        name: rule.field,
+                        type: rule.type || 'duration',
+                        maxMarks: rule.maxMarks,
+                        slabs: rule.conditions || []
+                    })),
+                    maxTotal: 75
+                }
+            };
+        }
+        
+        // Fallback to default
+        console.warn('Using default config');
+        return this.defaultConfig;
+    },
+    
+    // ============================================
+    // UPDATE your getConfig function (around line 2150)
+    // ============================================
+    getConfig: async function(voice) {
         if (!voice && app && app.currentUser) {
             voice = app.currentUser.voice;
         }
-
         if (!voice) voice = 'all';
-
+        
         const now = Date.now();
         const cacheKey = voice;
-
-        // Check if we have cached config and it's still valid
+    
+        // Check cache
         if (this.configCache[cacheKey] && 
             this.lastFetchTime[cacheKey] && 
             (now - this.lastFetchTime[cacheKey] < this.cacheDuration)) {
             console.log(`📦 Using cached config for ${voice}`);
             return this.configCache[cacheKey];
         }
-
+    
         // Load fresh config
         const config = await this.loadConfig(voice);
-
-        // Ensure config has the expected structure
-        const validatedConfig = this.validateConfigStructure(config);
-
+        
+        // ✅ NORMALIZE the config
+        const normalizedConfig = this.normalizeConfig(config);
+        
         // Update cache
-        this.configCache[cacheKey] = validatedConfig;
+        this.configCache[cacheKey] = normalizedConfig;
         this.lastFetchTime[cacheKey] = now;
-
-        return validatedConfig;
+        
+        return normalizedConfig;
     },
+ 
 
     // Add this helper function to validate config structure
     validateConfigStructure: function(config) {
