@@ -8,12 +8,192 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <style>
+        /*. findtheme for light dark theme  style */
         :root {
-            --saffron: #ff9933; --saffron-dark: #cc7a29; --saffron-light: #ffebcc; --cream: #fdfcfb;
-            --text-dark: #333333; --text-muted: #666666; --border: #eeeeee;
-            --white: #ffffff; --shadow: 0 4px 15px rgba(0,0,0,0.05);
-            --whatsapp: #25D366;
+            /* Light theme (default) */
+            --bg-primary: #f5f0e7;
+            --bg-card: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #5a6b7c;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+            --input-border: #e2e8f0;
+            --saffron: #ff9933;
+            --saffron-dark: #cc7a29;
+            --saffron-light: #ffebcc;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0c10;        /* Much darker background */
+            --bg-card: #1a1e24;            /* Dark card background */
+            --text-primary: #e5e7eb;        /* Light text */
+            --text-secondary: #9ca3af;      /* Muted text */
+            --border-color: #2d3748;        /* Dark border */
+            --input-bg: #232a33;            /* Dark input background */
+            --input-border: #3a4452;        /* Input border */
+            --saffron: #fbbf24;              /* Brighter saffron for dark mode */
+            --saffron-dark: #f59e0b;
+            --saffron-light: #2d3748;
+            --shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        /* Remove default outline and add clean focus effect */
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            outline: none;  /* Removes default outline */
+        }
+
+        /* Clean focus effect - no outline, just border color change */
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--saffron);
+            box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.15);
+            outline: none;
+        }
+
+        /* Remove spinners from number inputs */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* make all button use theme*/
+                .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--saffron);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--saffron-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--input-bg);
+        }
+        /* Force all cards to use theme variables */
+        .card,
+        .form-card,
+        .dashboard-card,
+        .stat-pill,
+        .table-container,
+        .leaderboard-container,
+        .today-report-panel,
+        .rule-card,
+        .rule-creator,
+        .voice-selector,
+        .modal-content,
+        .condition-builder,
+        .metric-badge,
+        .summary-card {
+            background: var(--bg-card) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        /* Table styles for dark mode */
+        th {
+            background: var(--saffron-light);
+            color: var(--saffron-dark);
+        }
+
+        td {
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        /* Progress bars and badges in dark mode */
+        .progress-bar-container {
+            background: var(--input-bg);
+        }
+
+        .badge {
+            background: var(--input-bg);
+            color: var(--text-secondary);
+        }
+
+        /* Fix for spiritual banner in dark mode */
+        .spiritual-banner {
+            background: linear-gradient(135deg, var(--saffron-light) 0%, var(--bg-card) 100%);
+            border: 1px solid var(--saffron);
+        }
+
+        /* Fix for stats pills */
+        .stat-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            color: var(--saffron-dark);
+        }
+
+        /* Fix for leaderboard */
+        .leaderboard-table th {
+            background: var(--saffron-light);
+            color: var(--saffron-dark);
+        }
+
+        .leaderboard-table td {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Fix for rule admin */
+        .rule-condition-item {
+            background: var(--input-bg);
+            color: var(--text-primary);
+        }
+
+        .condition-row {
+            background: var(--input-bg);
+        }
+
+        /* Modal styles for dark mode */
+        .modal-content {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            color: var(--text-secondary);
+        }
+
+        .modal-close:hover {
+            background: var(--input-bg);
+        }
+
+        /*. for light dark theme  style */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background-color: var(--cream); color: var(--text-dark); line-height: 1.6; padding-top: 60px; overflow-x: hidden; }
         h1, h2, .spiritual-text { font-family: 'Lora', serif; }
@@ -1523,9 +1703,17 @@
 <body>
 
 <div id="status-box"></div>
-<div class="persistent-header">|| Hare Krishna ||</div>
+    <div class="persistent-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 20px;">
+            <span style="font-weight: 600; letter-spacing: 0.5px;">🕉️ || Hare Krishna ||</span>
+            <button id="theme-toggle" onclick="app.toggleTheme()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; color: white; font-size: 1.2rem; cursor: pointer; padding: 8px 16px; width: auto; display: flex; align-items: center; gap: 8px;">
+                <span id="theme-icon">🌙</span>
+                <span id="theme-text" style="font-size: 0.9rem;">Dark</span>
+            </button>
+        </div>
+    </div>
 
-<div class="container">
+    <div class="container">
     <div id="header-area" class="hidden" style="text-align:center; margin-bottom:20px;">
         <h2 id="welcome-name" class="spiritual-text">Welcome</h2>
         <div id="user-meta" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:15px;">
@@ -2167,12 +2355,12 @@ const MarksCalculator = {
         if (dbConfig.soul?.activities || dbConfig.body?.activities) {
             return dbConfig;
         }
-        
+
         // Handle database format (with rules wrapper)
         if (dbConfig.rules) {
             console.log('🔄 Normalizing database config format');
             const rules = dbConfig.rules;
-            
+
             return {
                 soul: {
                     activities: (rules.soul || []).map(rule => ({
@@ -2199,12 +2387,12 @@ const MarksCalculator = {
                 }
             };
         }
-        
+
         // Fallback to default
         console.warn('Using default config');
         return this.defaultConfig;
     },
-    
+
     // ============================================
     // UPDATE your getConfig function (around line 2150)
     // ============================================
@@ -2213,10 +2401,10 @@ const MarksCalculator = {
             voice = app.currentUser.voice;
         }
         if (!voice) voice = 'all';
-        
+
         const now = Date.now();
         const cacheKey = voice;
-    
+
         // Check cache
         if (this.configCache[cacheKey] && 
             this.lastFetchTime[cacheKey] && 
@@ -2224,17 +2412,17 @@ const MarksCalculator = {
             console.log(`📦 Using cached config for ${voice}`);
             return this.configCache[cacheKey];
         }
-    
+
         // Load fresh config
         const config = await this.loadConfig(voice);
-        
+
         // ✅ NORMALIZE the config
         const normalizedConfig = this.normalizeConfig(config);
-        
+
         // Update cache
         this.configCache[cacheKey] = normalizedConfig;
         this.lastFetchTime[cacheKey] = now;
-        
+
         return normalizedConfig;
     },
  
@@ -3925,15 +4113,65 @@ const app = {
     activeVoice: 'All',
     usersData: [],
     rawRecords: [],
-
+    
     init: function() {
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        
+        // Update button state
+        const toggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        
+        if (toggleBtn && themeIcon && themeText) {
+            if (savedTheme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+                toggleBtn.style.background = 'rgba(0,0,0,0.3)';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+                toggleBtn.style.background = 'rgba(255,255,255,0.2)';
+            }
+        }
+        
         const saved = localStorage.getItem('sadhana_session');
         if (saved) {
             this.currentUser = JSON.parse(saved);
             this.activeVoice = this.currentUser.voice;
             this.showView('dashboard');
-        } else { this.showView('login'); }
+        } else { 
+            this.showView('login'); 
+        }
         LeaderboardModule.init();
+    },
+
+    toggleTheme: function() {
+        const currentTheme = document.body.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+
+        // Update button with better UI
+        const toggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+
+        if (toggleBtn && themeIcon && themeText) {
+            if (newTheme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+                toggleBtn.style.background = 'rgba(0,0,0,0.3)';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+                toggleBtn.style.background = 'rgba(255,255,255,0.2)';
+            }
+        }
+
+        this.notify(`✨ Switched to ${newTheme} theme`);
     },
 
 
