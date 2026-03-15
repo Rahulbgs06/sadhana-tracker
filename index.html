@@ -61,6 +61,17 @@
 
         .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 0.8rem; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
         .stat-item b { color: var(--saffron); }
+                /* Admin Card - Fixed */
+        .dashboard-card.admin-card {
+            border-color: var(--border);
+            background: var(--white);
+        }
+
+        .dashboard-card.admin-card:hover {
+            border-color: var(--saffron);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 153, 51, 0.15);
+        }
 
         /* ============================================
            DASHBOARD ENHANCEMENTS - Spiritual & Responsive
@@ -410,6 +421,1101 @@
             margin-top: 15px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
         }
 
+    /* ============================================
+       ENHANCED DASHBOARD STYLES
+    ============================================ */
+
+    .dashboard-table-container {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        margin-top: 20px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow-x: auto;
+    }
+
+    .dashboard-summary-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 25px;
+        padding: 15px;
+        background: linear-gradient(135deg, var(--saffron-light) 0%, #fff 100%);
+        border-radius: 16px;
+        border: 1px solid var(--saffron);
+    }
+
+    .summary-card {
+        text-align: center;
+        padding: 12px 8px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
+
+    .summary-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(255, 153, 51, 0.2);
+    }
+
+    .summary-card .label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .summary-card .value {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--saffron-dark);
+        line-height: 1.2;
+    }
+
+    .summary-card .unit {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-left: 2px;
+    }
+
+    .summary-card .trend {
+        font-size: 0.7rem;
+        display: block;
+        margin-top: 4px;
+        color: #48bb78;
+    }
+
+    .dashboard-main-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        min-width: 1300px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .dashboard-main-table thead tr:first-child th {
+        background: var(--saffron);
+        color: white;
+        font-size: 0.85rem;
+        padding: 12px 8px;
+        text-align: center;
+        border-right: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .dashboard-main-table thead tr:last-child th {
+        background: var(--saffron-light);
+        color: var(--saffron-dark);
+        padding: 10px 8px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        border-bottom: 2px solid var(--saffron);
+    }
+
+    .dashboard-main-table td {
+        padding: 12px 8px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+    }
+
+    .dashboard-main-table tbody tr {
+        transition: background-color 0.2s;
+        cursor: pointer;
+    }
+
+    .dashboard-main-table tbody tr:hover {
+        background-color: #fff9f0;
+    }
+
+    .dashboard-main-table tbody tr.expanded {
+        background-color: #fff3e0;
+        border-left: 4px solid var(--saffron);
+    }
+
+    .metric-badge {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 6px 8px;
+        min-width: 70px;
+        border: 1px solid #edf2f7;
+    }
+
+    .metric-badge .count {
+        font-weight: 700;
+        color: var(--saffron-dark);
+        font-size: 1rem;
+        line-height: 1.3;
+    }
+
+    .metric-badge .label {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        margin-top: 2px;
+        white-space: nowrap;
+    }
+
+    .metric-badge.soul {
+        background: #fef3c7;
+        border-color: #fbbf24;
+    }
+
+    .metric-badge.body {
+        background: #e6fffa;
+        border-color: #2c7a7b;
+    }
+
+    .progress-bar-container {
+        width: 80px;
+        height: 24px;
+        background: #edf2f7;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--saffron), #ffb366);
+        border-radius: 12px;
+        transition: width 0.4s ease;
+    }
+
+    .progress-bar-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        z-index: 1;
+        white-space: nowrap;
+    }
+
+    .icon-indicator {
+        font-size: 1.3rem;
+        line-height: 1;
+        filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+    }
+
+    .icon-indicator.good { color: #48bb78; }
+    .icon-indicator.warning { color: #ecc94b; }
+    .icon-indicator.bad { color: #f56565; }
+
+    .view-details-btn {
+        background: var(--saffron-light);
+        color: var(--saffron-dark);
+        border: 1px solid var(--saffron);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .view-details-btn:hover {
+        background: var(--saffron);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(255, 153, 51, 0.3);
+    }
+
+    .today-report-panel {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 20px;
+        margin: 10px 0;
+        border: 2px solid var(--saffron-light);
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .today-report-panel h4 {
+        color: var(--saffron-dark);
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.1rem;
+    }
+
+    .today-report-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    .today-metric {
+        background: white;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .today-metric .label {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .today-metric .value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--saffron-dark);
+    }
+
+    .today-metric .sub-value {
+        font-size: 0.8rem;
+        color: #48bb78;
+        margin-left: 5px;
+    }
+
+    .close-panel {
+        background: white;
+        border: 1px solid var(--border);
+        padding: 8px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        margin-top: 10px;
+    }
+
+    .close-panel:hover {
+        background: #fee2e2;
+        border-color: #f56565;
+        color: #c53030;
+    }
+
+    .date-range-indicator {
+        font-size: 0.9rem;
+        color: var(--saffron-dark);
+        font-weight: 500;
+    }
+
+    .dashboard-loading {
+        text-align: center;
+        padding: 50px;
+        color: var(--saffron);
+        font-style: italic;
+        background: white;
+        border-radius: 16px;
+        border: 2px dashed var(--saffron-light);
+    }
+
+    .dashboard-empty {
+        text-align: center;
+        padding: 50px;
+        color: var(--text-muted);
+        background: #f8fafc;
+        border-radius: 16px;
+        border: 2px dashed var(--border);
+        font-size: 1rem;
+    }
+
+    /* Tooltip */
+    [data-tooltip] {
+        position: relative;
+        cursor: help;
+    }
+
+    [data-tooltip]:hover:after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2d3748;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        white-space: nowrap;
+        z-index: 1000;
+        margin-bottom: 5px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-summary-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+            
+        /* ============================================
+            LEADERBOARD MODULE STYLES - COMPLETE
+        ============================================ */
+
+        /* Leaderboard medal styles */
+        .leaderboard-rank {
+            font-size: 1.1rem;
+        }
+
+        .leaderboard-rank strong {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Optional: Add subtle glow for top rank */
+        .rank-1 .leaderboard-rank {
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+
+        .rank-2 .leaderboard-rank {
+            text-shadow: 0 0 5px rgba(192, 192, 192, 0.3);
+        }
+
+        .rank-3 .leaderboard-rank {
+            text-shadow: 0 0 5px rgba(205, 127, 50, 0.3);
+        }
+
+        .leaderboard-container {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--saffron);
+            box-shadow: var(--shadow);
+        }
+
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .leaderboard-title {
+            font-family: 'Lora', serif;
+            font-size: 1.5rem;
+            color: var(--saffron-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .leaderboard-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .leaderboard-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .leaderboard-select:hover {
+            border-color: var(--saffron);
+        }
+
+        .leaderboard-table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-top: 15px;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .leaderboard-table th {
+            background: var(--saffron-light);
+            color: var(--saffron-dark);
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .leaderboard-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .leaderboard-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .leaderboard-rank {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Rank background colors - ONLY for High to Low sort */
+        .rank-1 {
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+
+        .rank-2 {
+            background-color: rgba(192, 192, 192, 0.1);
+        }
+
+        .rank-3 {
+            background-color: rgba(205, 127, 50, 0.1);
+        }
+
+        .leaderboard-soul {
+            color: var(--saffron-dark);
+            font-weight: 600;
+        }
+
+        .leaderboard-body {
+            color: #2c7a7b;
+            font-weight: 600;
+        }
+
+        .leaderboard-your-rank {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f9ff;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px dashed var(--saffron);
+            font-weight: 500;
+        }
+
+        .leaderboard-your-rank span {
+            font-weight: 700;
+            color: var(--saffron-dark);
+            font-size: 1.1rem;
+        }
+
+        .leaderboard-month-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .leaderboard-month-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .leaderboard-month-btn:hover {
+            background: var(--saffron-light);
+            border-color: var(--saffron);
+        }
+
+        .leaderboard-month-btn.active {
+            background: var(--saffron);
+            color: white;
+            border-color: var(--saffron);
+        }
+
+        .leaderboard-archive {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--border);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .leaderboard-archive a {
+            color: var(--saffron-dark);
+            text-decoration: none;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .leaderboard-archive a:hover {
+            text-decoration: underline;
+        }
+
+        .leaderboard-empty {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .leaderboard-loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--saffron);
+            font-weight: 500;
+        }
+
+        .leaderboard-loading:after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .leaderboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .leaderboard-controls {
+                width: 100%;
+            }
+
+            .leaderboard-select {
+                width: 100%;
+            }
+
+            .leaderboard-month-selector {
+                flex-wrap: wrap;
+            }
+
+            .leaderboard-month-btn {
+                flex: 1 1 auto;
+                text-align: center;
+            }
+        }
+    
+/* ============================================
+   MARKS ADMIN MODULE STYLES
+============================================ */
+
+.admin-container {
+    padding: 20px;
+}
+
+/* Voice selector */
+.voice-selector {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.voice-selector select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.voice-selector select:hover {
+    border-color: var(--saffron);
+}
+
+.voice-selector select:focus {
+    outline: none;
+    border-color: var(--saffron);
+    box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.1);
+}
+
+/* Rule Tabs */
+.rule-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: var(--saffron-dark);
+    background: var(--saffron-light);
+}
+
+.tab-btn.active {
+    color: var(--saffron-dark);
+    border-bottom: 3px solid var(--saffron);
+    background: var(--saffron-light);
+}
+
+/* Rule Creator */
+.rule-creator {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 2px solid var(--saffron-light);
+    box-shadow: 0 4px 12px rgba(255, 153, 51, 0.1);
+}
+
+.creator-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+/* Form elements */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--saffron);
+    box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.1);
+}
+
+.form-select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+}
+
+/* Condition Builder */
+.condition-builder {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.condition-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.condition-row select,
+.condition-row input {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.condition-row select {
+    width: 140px;
+}
+
+.condition-row input[type="text"] {
+    width: 120px;
+}
+
+.condition-row input[type="number"] {
+    width: 80px;
+}
+
+.conditions-list {
+    margin-top: 20px;
+}
+
+.condition-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 4px solid var(--saffron);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.condition-text {
+    flex: 1;
+    font-weight: 500;
+}
+
+.condition-marks {
+    font-weight: 700;
+    color: var(--saffron-dark);
+    min-width: 60px;
+}
+
+.condition-actions {
+    display: flex;
+    gap: 5px;
+}
+
+/* Rules Container */
+.rules-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+    margin: 25px 0;
+}
+
+.rule-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+}
+
+.rule-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(255, 153, 51, 0.15);
+    border-color: var(--saffron);
+}
+
+.rule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.rule-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--saffron-dark);
+}
+
+.rule-field {
+    background: var(--saffron-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--saffron-dark);
+}
+
+.rule-conditions {
+    margin: 15px 0;
+}
+
+.rule-condition-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    margin-bottom: 5px;
+}
+
+.rule-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--border);
+}
+
+.rule-max {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-right: auto;
+}
+
+.rule-max span {
+    font-weight: 700;
+    color: var(--saffron-dark);
+}
+
+/* Action buttons */
+.btn-icon {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+}
+
+.btn-icon:hover {
+    transform: translateY(-1px);
+}
+
+.btn-icon.edit {
+    background: var(--saffron-light);
+    color: var(--saffron-dark);
+    border: 1px solid var(--saffron);
+}
+
+.btn-icon.edit:hover {
+    background: var(--saffron);
+    color: white;
+}
+
+.btn-icon.delete {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+}
+
+.btn-icon.delete:hover {
+    background: #ef5350;
+    color: white;
+    border-color: #d32f2f;
+}
+
+.btn-small {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: white;
+    cursor: pointer;
+    min-width: 30px;
+}
+
+.btn-small:hover {
+    background: var(--saffron-light);
+}
+
+.btn-small.btn-danger {
+    color: #d32f2f;
+    border-color: #ffcdd2;
+}
+
+.btn-small.btn-danger:hover {
+    background: #ffebee;
+}
+
+/* Add button */
+.add-button {
+    background: var(--saffron-light);
+    border: 2px dashed var(--saffron);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--saffron-dark);
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.add-button:hover {
+    background: var(--saffron);
+    color: white;
+    border-color: var(--saffron-dark);
+}
+
+.add-button .plus-icon {
+    font-size: 1.2rem;
+    margin-right: 8px;
+}
+
+/* Admin actions */
+.admin-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--saffron-light);
+}
+
+.modal-title {
+    font-size: 1.3rem;
+    color: var(--saffron-dark);
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 5px 10px;
+    border-radius: 50%;
+}
+
+.modal-close:hover {
+    background: #f0f0f0;
+    color: var(--text-dark);
+}
+
+.modal-footer {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+
+/* History section */
+.history-timeline {
+    margin-top: 20px;
+}
+
+.history-entry {
+    padding: 15px;
+    border-left: 3px solid var(--saffron);
+    background: #f8f9fa;
+    margin-bottom: 10px;
+    border-radius: 0 8px 8px 0;
+}
+
+.history-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.history-user {
+    font-weight: 600;
+    color: var(--saffron-dark);
+}
+
+.history-reason {
+    margin-top: 5px;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+/* Loading spinner */
+.loading-spinner {
+    text-align: center;
+    padding: 40px;
+    color: var(--saffron);
+}
+
+.loading-spinner:after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .creator-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .condition-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .condition-row select,
+    .condition-row input {
+        width: 100% !important;
+    }
+    
+    .rules-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+}
+    
     </style>
     <!-- Prevent favicon 404 -->
     <link rel="icon" href="data:image/x-icon;,">    
@@ -489,7 +1595,7 @@
                 <div class="card-footer">Search →</div>
             </div>
 
-            <!-- Sadhana Dashboard Card -->
+            <!-- Sadhana Dashboard Card /remove featured as class/ -->
             <div class="dashboard-card featured" onclick="app.showView('sadhana-dashboard')">
                 <div class="card-icon">🕉️</div>
                 <div class="card-title">Sadhana Dashboard</div>
@@ -506,12 +1612,30 @@
                 <div class="card-footer">Explore →</div>
             </div>
 
+            <!-- Add this in your dashboard-grid, after other cards -->
+            <div class="dashboard-card featured" onclick="app.showView('leaderboard')">
+                <div class="card-icon">🏆</div>
+                <div class="card-title">Leaderboard</div>
+                <div class="card-desc">See how you rank among devotees</div>
+                <div class="card-footer">View Rankings →</div>
+                <div class="featured-badge">New</div>
+            </div>
+
             <!-- User Management Card (Admin Only) -->
             <div id="admin-menu" class="dashboard-card admin-card hidden" onclick="app.showView('user-mgmt')">
                 <div class="card-icon">👥</div>
                 <div class="card-title">User Management</div>
                 <div class="card-desc">Manage devotees and permissions</div>
                 <div class="card-footer">Admin →</div>
+            </div>
+
+                <!-- Marks Admin Module -->
+            <div class="dashboard-card featured admin-only hidden" onclick="app.showView('admin-panel')">
+                <div class="card-icon">🛠️</div>
+                <div class="card-title">Marks Admin</div>
+                <div class="card-desc">Configure scoring rules</div>
+                <div class="card-footer">Admin Only →</div>
+                <div class="featured-badge">New</div>
             </div>
         </div>
 
@@ -626,14 +1750,17 @@
         <div id="search-results" class="table-container"></div>
         <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">Back</button>
     </div>
-    <!-- NEW: SADHANA DASHBOARD -->
+
+    <!-- VIEW: SADHANA DASHBOARD -->
     <div id="view-sadhana-dashboard" class="card hidden">
         <h2 class="spiritual-text">Sadhana Dashboard</h2>
+
+        <!-- Filters Row -->
         <div class="nav-grid mt-20">
             <div class="form-group">
                 <label>Report Period</label>
                 <select id="dash-report-type" onchange="app.loadSadhanaDashboard()">
-                    <option value="weekly">Weekly</option>
+                    <option value="weekly">Weekly (Mon-Sun)</option>
                     <option value="monthly">Monthly</option>
                 </select>
             </div>
@@ -648,11 +1775,21 @@
                 </select>
             </div>
         </div>
+
+        <!-- Date Range Display -->
+        <div class="date-range-indicator" style="text-align: center; margin: 15px 0; padding: 10px; background: var(--saffron-light); border-radius: 8px;">
+            <span style="font-weight: 600;">📅 Period:</span>
+            <span id="dashboard-date-range">Loading...</span>
+        </div>
+
+        <!-- Dashboard Content -->
         <div id="dashboard-report-content" class="mt-20"></div>
-        <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">Back</button>
+
+        <!-- Back Button -->
+        <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">← Back</button>
     </div>
 
-    <!-- VIEW: ANALYTICS -->
+        <!-- VIEW: ANALYTICS -->
     <div id="view-reports" class="card hidden">
         <h2 class="spiritual-text">Analytics</h2>
         <div class="nav-grid mt-20">
@@ -675,10 +1812,2055 @@
         <button class="btn btn-excel" onclick="app.exportToExcel()">📥 Export XLSX</button>
         <div id="report-content" class="mt-20"></div>
         <button class="btn btn-outline" onclick="app.showView('dashboard')">Back</button>
-    </div>
-</div>
+    </div>    
 
+       <!-- VIEW: LEADERBOARD -->
+    <div id="view-leaderboard" class="card hidden">
+        <h2 class="spiritual-text">🏆 Devotee Leaderboard</h2>
+
+        <div id="leaderboard-content" class="mt-20">
+            <!-- Leaderboard will load here -->
+            <div class="leaderboard-loading">Loading leaderboard</div>
+        </div>
+
+        <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">
+            ← Back to Dashboard
+        </button>
+    </div>
+
+    <!-- VIEW: ADMIN PANEL - MARKS CONFIGURATION -->
+    <div id="view-admin-panel" class="card hidden">
+        <div class="admin-container">
+            <h2 class="spiritual-text">🛠️ Marks Configuration Admin</h2>
+
+            <!-- Voice Selector -->
+            <div class="voice-selector">
+                <label for="admin-voice-select">Select Voice</label>
+                <select id="admin-voice-select" onchange="RuleAdmin.loadConfig()">
+                    <option value="all">🌐 Global Default</option>
+                </select>
+            </div>
+
+            <!-- Loading State -->
+            <div id="admin-loading" class="loading-spinner hidden">
+                Loading configuration...
+            </div>
+
+            <!-- Add after existing admin-actions div -->
+            <div class="admin-actions" style="margin-top: 10px;">
+                <button class="btn btn-outline" onclick="RuleAdmin.loadDefaults()" style="background: #48bb78; color: white; border: none;">
+                    📋 Load Default Rules
+                </button>
+                <button class="btn btn-outline" onclick="RuleAdmin.showDefaultComparison()" style="background: #4299e1; color: white; border: none;">
+                    👁️ Preview Defaults
+                </button>
+            </div>
+
+            <!-- Rule Definition Tabs -->
+            <div class="rule-tabs">
+                <button class="tab-btn active" onclick="RuleAdmin.switchTab('soul')">🧘 Soul Rules</button>
+                <button class="tab-btn" onclick="RuleAdmin.switchTab('body')">🏃 Body Rules</button>
+                <button class="tab-btn" onclick="RuleAdmin.switchTab('japa')">📿 Japa Rules</button>
+            </div>
+
+            <!-- Rule Creator Panel -->
+            <div class="rule-creator">
+                <h3>✨ Create New Rule</h3>
+                <div class="creator-grid">
+                    <div class="form-group">
+                        <label>Rule Name</label>
+                        <input type="text" id="new-rule-name" class="form-input" placeholder="e.g., Early Wakeup">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Based On Field</label>
+                        <select id="new-rule-field" class="form-select" onchange="RuleAdmin.updateRuleType()">
+                            <option value="wakeup_time">⏰ Wakeup Time</option>
+                            <option value="to_bed_time">🌙 To Bed Time</option>
+                            <option value="temp_hall_rech">🛕 Temple Reach</option>
+                            <option value="chanting_end_time">🔚 Chant End</option>
+                            <option value="sleep_time">😴 Sleep Time</option>
+                            <option value="rounds">📿 Japa Rounds</option>
+                            <option value="hearing_minutes">🎧 Hearing (min)</option>
+                            <option value="reading_minutes">📖 Reading (min)</option>
+                            <option value="study_minutes">📚 Study (min)</option>
+                            <option value="day_rest_marks">😴 Day Rest (min)</option>
+                            <option value="time_wasted">⏳ Time Wasted</option>
+                            <option value="morning_class">🧘 Morning Class</option>
+                            <option value="mangala_aarti">🪔 Mangala Arti</option>
+                            <option value="cleanliness">🧹 Cleanliness</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Max Marks</label>
+                        <input type="number" id="new-rule-max" class="form-input" value="25" min="1" max="100">
+                    </div>
+                </div>
+
+                <!-- Condition Builder -->
+                <div class="condition-builder">
+                    <h4>➕ Add Condition</h4>
+
+                    <!-- Active Condition Input -->
+                    <div class="condition-row" id="active-condition-row">
+                        <select id="cond-operator" class="form-select" style="width: 140px;">
+                            <option value="<">Less than (&lt;)</option>
+                            <option value="<=">Less than or equal (&lt;=)</option>
+                            <option value="=">Equal to (=)</option>
+                            <option value=">">Greater than (>)</option>
+                            <option value=">=">Greater than or equal (>=)</option>
+                        </select>
+
+                        <input type="text" id="cond-value1" class="form-input" placeholder="Value" style="width: 120px;">
+
+                        <span id="between-and" style="display: none;">and</span>
+                        <input type="text" id="cond-value2" class="form-input" style="display: none; width: 120px;" placeholder="Value">
+
+                        <span>→</span>
+
+                        <input type="number" id="cond-marks" class="form-input" placeholder="Marks" value="25" min="0" style="width: 80px;">
+
+                        <button class="btn-small" onclick="RuleAdmin.addCondition()">➕ Add</button>
+                    </div>
+
+                    <!-- Conditions List -->
+                    <div id="conditions-list" class="conditions-list"></div>
+                </div>
+
+                <div class="creator-actions">
+                    <button class="btn btn-primary" onclick="RuleAdmin.saveNewRule()">💾 Create Rule</button>
+                    <button class="btn btn-outline" onclick="RuleAdmin.clearCreator()">↻ Clear</button>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ✅ CRITICAL: Activity Editors (MISSING IN YOUR CODE) -->
+            <!-- ============================================ -->
+
+            <!-- Soul Activities Container -->
+            <div class="category-section">
+                <div class="category-header">
+                    <span class="category-icon">🧘</span>
+                    <h3 class="category-title">Soul Activities</h3>
+                </div>
+                <div id="soul-activities-editor" class="activities-grid"></div>
+            </div>
+
+            <!-- Japa Slabs Container -->
+            <div class="category-section">
+                <div class="category-header">
+                    <span class="category-icon">📿</span>
+                    <h3 class="category-title">Japa Rounds</h3>
+                </div>
+                <div id="japa-slabs-editor" class="japa-container"></div>
+            </div>
+
+            <!-- Body Activities Container -->
+            <div class="category-section">
+                <div class="category-header">
+                    <span class="category-icon">🏃</span>
+                    <h3 class="category-title">Body Activities</h3>
+                </div>
+                <div id="body-activities-editor" class="activities-grid"></div>
+            </div>
+
+            <!-- Rules List Container -->
+            <div id="rules-container" class="rules-container"></div>
+
+            <!-- Action Buttons -->
+            <div class="admin-actions">
+                <button class="btn btn-primary" onclick="RuleAdmin.previewChanges()">Preview Changes</button>
+                <button class="btn btn-outline" onclick="RuleAdmin.resetChanges()">Reset</button>
+                <button class="btn btn-outline" onclick="RuleAdmin.loadHistory(RuleAdmin.currentVoice)">View History</button>
+            </div>
+
+            <!-- Preview Modal -->
+            <div id="preview-modal" class="modal-overlay hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Preview Changes</h3>
+                        <button class="modal-close" onclick="RuleAdmin.closePreview()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="preview-content"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" onclick="RuleAdmin.saveChanges()">Confirm Save</button>
+                        <button class="btn btn-outline" onclick="RuleAdmin.closePreview()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Section -->
+            <div id="history-section" class="hidden">
+                <div class="category-section">
+                    <div class="category-header">
+                        <span class="category-icon">📜</span>
+                        <h3 class="category-title">Change History</h3>
+                    </div>
+                    <div id="history-content" class="history-timeline"></div>
+                </div>
+            </div>
+
+            <!-- Back Button -->
+            <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')" style="width: 100%;">
+                ← Back to Dashboard
+            </button>
+        </div>
+    </div>
+   
 <script>
+// ============================================
+// MARKS CALCULATOR - DYNAMIC CONFIG VERSION
+// ============================================
+// This can be used anywhere: dashboard, leaderboard, reports
+// Now loads configuration from database based on voice
+// ============================================
+
+const MarksCalculator = {
+    // Cache for loaded configs
+    configCache: {},
+    lastFetchTime: {},
+    cacheDuration: 5 * 60 * 1000, // 5 minutes cache
+    
+    // Default config in case API fails (your existing config)
+    defaultConfig: {
+        soul: {
+            activities: [
+                { name: 'hearing', maxMarks: 5 },
+                { name: 'reading', maxMarks: 5 },
+                { name: 'cleanliness', maxMarks: 5 },
+                { name: 'morningClass', maxMarks: 5 },
+                { name: 'mangalaArti', maxMarks: 5 }
+            ],
+            japa: {
+                maxMarks: 25,
+                slabs: [
+                    { min: 16, marks: 25 },
+                    { min: 15, marks: 20 },
+                    { min: 14, marks: 15 },
+                    { min: 13, marks: 10 },
+                    { min: 12, marks: 5 },
+                    { min: 0, marks: 0 }
+                ]
+            },
+            maxTotal: 50
+        },
+        
+        body: {
+            activities: [
+                {
+                    name: 'toBed',
+                    maxMarks: 25,
+                    type: 'time',
+                    slabs: [
+                        { maxTime: '21:30', marks: 25 },
+                        { maxTime: '22:00', marks: 20 },
+                        { maxTime: '22:30', marks: 15 },
+                        { maxTime: '23:00', marks: 10 },
+                        { maxTime: '23:30', marks: 5 },
+                        { maxTime: '00:00', marks: 0 }
+                    ],
+                    negativeAfter: '00:00',
+                    negativeMarks: -5
+                },
+                {
+                    name: 'wakeUp',
+                    maxMarks: 25,
+                    type: 'time',
+                    slabs: [
+                        { maxTime: '04:30', marks: 25 },
+                        { maxTime: '05:00', marks: 20 },
+                        { maxTime: '05:30', marks: 15 },
+                        { maxTime: '06:00', marks: 10 },
+                        { maxTime: '06:30', marks: 5 },
+                        { maxTime: '07:00', marks: 0 }
+                    ],
+                    negativeAfter: '07:00',
+                    negativeMarks: -5
+                },
+                {
+                    name: 'dayRest',
+                    maxMarks: 25,
+                    type: 'duration',
+                    slabs: [
+                        { maxMinutes: 15, marks: 25 },
+                        { maxMinutes: 30, marks: 20 },
+                        { maxMinutes: 45, marks: 15 },
+                        { maxMinutes: 60, marks: 10 },
+                        { maxMinutes: 75, marks: 5 }
+                    ],
+                    defaultMarks: 0
+                }
+            ],
+            maxTotal: 75
+        }
+    },
+
+        // ============================================
+        // NEW: Load configuration from API
+        // ============================================
+    loadConfig: async function(voice) {
+        // If voice is not provided, try to get from current user
+        if (!voice && app && app.currentUser) {
+            voice = app.currentUser.voice;
+        }
+
+        if (!voice) voice = 'all';
+
+        console.log(`📥 Loading marks config for voice: ${voice}`);
+
+        try {
+            // Try to get from API
+            const url = `${app.API_BASE_URL}/api/public/marks-config/${encodeURIComponent(voice)}`;
+            const res = await fetch(url);
+
+            if (!res.ok) {
+                throw new Error(`API returned ${res.status}`);
+            }
+
+            const result = await res.json();
+
+            // Handle different response formats from database
+            if (result.success) {
+                // Case 1: { success: true, data: { rules: {...} } }
+                if (result.data) {
+                    // Check if data has rules property
+                    if (result.data.rules) {
+                        console.log(`✅ Loaded config for ${voice} from database`);
+                        return result.data;  // Return full data object with rules
+                    } 
+                    // Case 2: data is directly the config
+                    else {
+                        console.log(`✅ Loaded config for ${voice} from database`);
+                        return result.data;
+                    }
+                }
+            }
+
+            // Case 3: Direct response with rules
+            if (result.rules) {
+                console.log(`✅ Loaded config for ${voice} from database`);
+                return result;
+            }
+
+            // Case 4: Response is already the config
+            if (result.soul || result.body) {
+                console.log(`✅ Loaded config for ${voice} from database`);
+                return result;
+            }
+
+            throw new Error('Invalid response format');
+
+        } catch (error) {
+            console.warn(`⚠️ Failed to load config for ${voice}, using default:`, error);
+            return this.defaultConfig;
+        }
+    },
+
+        // ============================================
+        // NEW: Get configuration (with caching)
+        // ============================================
+     getConfig: async function(voice) {
+        if (!voice && app && app.currentUser) {
+            voice = app.currentUser.voice;
+        }
+
+        if (!voice) voice = 'all';
+
+        const now = Date.now();
+        const cacheKey = voice;
+
+        // Check if we have cached config and it's still valid
+        if (this.configCache[cacheKey] && 
+            this.lastFetchTime[cacheKey] && 
+            (now - this.lastFetchTime[cacheKey] < this.cacheDuration)) {
+            console.log(`📦 Using cached config for ${voice}`);
+            return this.configCache[cacheKey];
+        }
+
+        // Load fresh config
+        const config = await this.loadConfig(voice);
+
+        // Ensure config has the expected structure
+        const validatedConfig = this.validateConfigStructure(config);
+
+        // Update cache
+        this.configCache[cacheKey] = validatedConfig;
+        this.lastFetchTime[cacheKey] = now;
+
+        return validatedConfig;
+    },
+
+    // Add this helper function to validate config structure
+    validateConfigStructure: function(config) {
+        // If config already has the right structure, return it
+        if (config.soul && config.body) {
+            return config;
+        }
+
+        // If config has rules property, extract it
+        if (config.rules) {
+            return config.rules;
+        }
+
+        // If config is completely different, merge with default
+        return {
+            soul: config.soul || this.defaultConfig.soul,
+            body: config.body || this.defaultConfig.body,
+            japa: config.japa || this.defaultConfig.japa
+        };
+    },
+
+    // ============================================
+    // NEW: Clear cache (call after admin updates)
+    // ============================================
+    clearCache: function(voice) {
+        if (voice) {
+            console.log(`🧹 Clearing cache for ${voice}`);
+            delete this.configCache[voice];
+            delete this.lastFetchTime[voice];
+        } else {
+            console.log('🧹 Clearing entire config cache');
+            this.configCache = {};
+            this.lastFetchTime = {};
+        }
+    },
+
+    // ============================================
+    // Helper: Convert time to minutes
+    // ============================================
+    timeToMinutes: function(timeStr) {
+        if (!timeStr) return null;
+        const parts = timeStr.split(':');
+        const hours = parseInt(parts[0]) || 0;
+        const minutes = parseInt(parts[1]) || 0;
+        return hours * 60 + minutes;
+    },
+
+    // ============================================
+    // Calculate soul score for a devotee
+    // ============================================
+    calculateSoulScore: function(devoteeData, config) {
+        // Use provided config or try to get from cache
+        const soulConfig = config?.soul || this.defaultConfig.soul;
+        
+        // Calculate activities (max 25)
+        let activityMarks = 0;
+        for (let i = 0; i < soulConfig.activities.length; i++) {
+            const activity = soulConfig.activities[i];
+            if (activity.enabled === false) continue; // Skip disabled activities
+            
+            if (devoteeData[activity.name] == 1 || 
+                devoteeData[activity.name] === true) {
+                activityMarks += activity.maxMarks;
+            }
+        }
+        
+        // Calculate japa (max 25)
+        const rounds = parseInt(devoteeData.rounds) || 0;
+        let japaMarks = 0;
+        for (let i = 0; i < soulConfig.japa.slabs.length; i++) {
+            const slab = soulConfig.japa.slabs[i];
+            if (rounds >= slab.min) {
+                japaMarks = slab.marks;
+                break;
+            }
+        }
+        
+        const totalMarks = activityMarks + japaMarks;
+        const percentage = Math.round(
+            (totalMarks / soulConfig.maxTotal) * 100
+        );
+        
+        return {
+            activities: activityMarks,
+            japa: japaMarks,
+            total: totalMarks,
+            percentage: percentage,
+            maxPossible: soulConfig.maxTotal
+        };
+    },
+
+    // ============================================
+    // Calculate time-based marks
+    // ============================================
+    calculateTimeMarks: function(timeStr, activity) {
+        if (!timeStr) return 0;
+        
+        const timeMinutes = this.timeToMinutes(timeStr);
+        
+        for (let i = 0; i < activity.slabs.length; i++) {
+            const slab = activity.slabs[i];
+            const slabMinutes = this.timeToMinutes(slab.maxTime);
+            if (timeMinutes <= slabMinutes) {
+                return slab.marks;
+            }
+        }
+        
+        if (activity.negativeAfter && 
+            timeMinutes > this.timeToMinutes(activity.negativeAfter)) {
+            return activity.negativeMarks || 0;
+        }
+        
+        return 0;
+    },
+
+    // ============================================
+    // Calculate duration-based marks
+    // ============================================
+    calculateDurationMarks: function(minutes, activity) {
+        const mins = parseInt(minutes) || 0;
+        
+        for (let i = 0; i < activity.slabs.length; i++) {
+            const slab = activity.slabs[i];
+            if (mins <= slab.maxMinutes) {
+                return slab.marks;
+            }
+        }
+        
+        return activity.defaultMarks || 0;
+    },
+
+    // ============================================
+    // Calculate body score for a devotee
+    // ============================================
+    calculateBodyScore: function(devoteeData, config) {
+        // Use provided config or try to get from cache
+        const bodyConfig = config?.body || this.defaultConfig.body;
+        
+        let totalMarks = 0;
+        
+        for (let i = 0; i < bodyConfig.activities.length; i++) {
+            const activity = bodyConfig.activities[i];
+            const value = devoteeData[activity.name];
+            
+            if (!value) continue;
+            
+            if (activity.type === 'time') {
+                totalMarks += this.calculateTimeMarks(value, activity);
+            } else if (activity.type === 'duration') {
+                totalMarks += this.calculateDurationMarks(value, activity);
+            }
+        }
+        
+        const percentage = Math.round(
+            (totalMarks / bodyConfig.maxTotal) * 100
+        );
+        
+        return {
+            total: totalMarks,
+            percentage: percentage,
+            maxPossible: bodyConfig.maxTotal
+        };
+    },
+
+    // ============================================
+    // Complete score for a devotee (ASYNC VERSION)
+    // ============================================
+    calculateCompleteScore: async function(devoteeData) {
+        // Get config for this devotee's voice
+        const voice = devoteeData.voice || (app?.currentUser?.voice) || 'all';
+        const config = await this.getConfig(voice);
+        
+        const soul = this.calculateSoulScore(devoteeData, config);
+        const body = this.calculateBodyScore(devoteeData, config);
+        
+        return {
+            name: devoteeData.name,
+            group: devoteeData.group,
+            voice: voice,
+            soul: soul,
+            body: body,
+            soulPercentage: soul.percentage,
+            bodyPercentage: body.percentage
+        };
+    },
+
+    // ============================================
+    // Score for leaderboard entry (from API data)
+    // ============================================
+    calculateFromApiData: async function(apiData) {
+        // Skip invalid data
+        if (!apiData || !apiData.name) {
+            console.warn('Invalid apiData:', apiData);
+            return null;
+        }
+
+        const scoreData = {
+            name: apiData.name,
+            group: apiData.user_group || apiData.group || 'Unknown',
+            voice: apiData.voice_name || apiData.voice || 'Unknown',
+
+            // Soul activities - try multiple possible field names
+            hearing: (apiData.totalHearing > 0 || apiData.hearing_minutes > 0) ? 1 : 0,
+            reading: (apiData.totalReading > 0 || apiData.reading_minutes > 0) ? 1 : 0,
+            cleanliness: (apiData.cleanSuccess > 0 || apiData.cleanliness == 1) ? 1 : 0,
+            morningClass: (apiData.morningClassSuccess > 0 || apiData.morning_class == 1) ? 1 : 0,
+            mangalaArti: (apiData.mangalaArtiSuccess > 0 || apiData.mangala_aarti == 1) ? 1 : 0,
+
+            // Japa
+            rounds: apiData.totalRounds || apiData.rounds || 0,
+
+            // Body activities
+            toBed: apiData.avgToBed || apiData.to_bed_time,
+            wakeUp: apiData.avgWakeup || apiData.wakeup_time,
+            dayRest: apiData.totalRest || apiData.day_rest_marks || 0
+        };
+
+        return await this.calculateCompleteScore(scoreData);
+    },
+
+    // ============================================
+    // Synchronous version (uses default config)
+    // ============================================
+    calculateCompleteScoreSync: function(devoteeData) {
+        // Use default config (for places where async is difficult)
+        const soul = this.calculateSoulScore(devoteeData, this.defaultConfig);
+        const body = this.calculateBodyScore(devoteeData, this.defaultConfig);
+        
+        return {
+            name: devoteeData.name,
+            group: devoteeData.group,
+            voice: devoteeData.voice || 'all',
+            soul: soul,
+            body: body,
+            soulPercentage: soul.percentage,
+            bodyPercentage: body.percentage
+        };
+    },
+
+    // ADD this function after loadHistory
+    getChangeSummary: function() {
+        const summary = {
+            soul: { added: 0, modified: 0, deleted: 0 },
+            body: { added: 0, modified: 0, deleted: 0 },
+            japa: { added: 0, modified: 0, deleted: 0 }
+        };
+        
+        ['soul', 'body', 'japa'].forEach(tab => {
+            const oldRules = this.originalRules[tab] || [];
+            const newRules = this.rules[tab] || [];
+            
+            // Find added rules
+            newRules.forEach(rule => {
+                const exists = oldRules.some(old => old.id === rule.id);
+                if (!exists) {
+                    summary[tab].added++;
+                } else {
+                    const oldRule = oldRules.find(old => old.id === rule.id);
+                    if (JSON.stringify(oldRule) !== JSON.stringify(rule)) {
+                        summary[tab].modified++;
+                    }
+                }
+            });
+            
+            // Find deleted rules
+            oldRules.forEach(rule => {
+                const exists = newRules.some(newRule => newRule.id === rule.id);
+                if (!exists) {
+                    summary[tab].deleted++;
+                }
+            });
+        });
+        
+        return summary;
+    },
+};
+
+// ============================================
+// LEADERBOARD MODULE - COMPLETELY FIXED
+// ============================================
+
+const LeaderboardModule = {
+    
+    // State
+    currentData: [],
+    currentMonth: 'current',
+    currentSort: 'high-to-low',
+    availableMonths: ['current'],
+    
+    // Initialize
+    init: async function() {
+        await this.getAvailableMonths();
+    },
+
+    // Get available months from API
+    getAvailableMonths: async function() {
+        try {
+            const res = await fetch(`${app.API_BASE_URL}/api/leaderboard/months`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (res.ok) {
+                const months = await res.json();
+                this.availableMonths = months;
+                return months;
+            }
+        } catch (e) {
+            console.log('Error fetching months:', e);
+        }
+
+        // Fallback to default months
+        const months = ['current'];
+        const now = new Date();
+
+        for (let i = 1; i <= 3; i++) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const monthStr = d.toISOString().slice(0, 7);
+            months.push(monthStr);
+        }
+
+        this.availableMonths = months;
+        return months;
+    },
+    
+    // Format month for display
+    formatMonth: function(monthStr) {
+        if (monthStr === 'current') {
+            const now = new Date();
+            return now.toLocaleString('default', { 
+                month: 'long', 
+                year: 'numeric' 
+            }) + ' (Current)';
+        }
+        
+        const [year, month] = monthStr.split('-');
+        const date = new Date(year, month - 1, 1);
+        return date.toLocaleString('default', { 
+            month: 'long', 
+            year: 'numeric' 
+        });
+    },
+    
+    // Load leaderboard data - FIXED with multiple endpoints and better error handling
+    load: async function(month = 'current', sortType = 'high-to-low') {
+    this.currentMonth = month;
+    this.currentSort = sortType;
+    
+    const container = document.getElementById('leaderboard-content');
+    if (!container) return;
+    
+    container.innerHTML = '<div class="leaderboard-loading">Loading leaderboard</div>';
+    
+    try {
+        // VOICE FILTER LOGIC
+        let voiceFilter = 'All';
+        console.log('Current user:', app.currentUser);
+        
+        if (app.currentUser) {
+            if (app.currentUser.role === 'devotee') {
+                voiceFilter = app.currentUser.voice;
+                console.log('Devotee mode - filtering by voice:', voiceFilter);
+            } else {
+                voiceFilter = app.activeVoice || 'All';
+                console.log('Admin mode - using voice:', voiceFilter);
+            }
+        }
+        
+        // Get group filter
+        const groupFilter = document.getElementById('dash-group-filter')?.value || 'All';
+        
+        // TRY MULTIPLE ENDPOINTS - UPDATED WITH NEW LEADERBOARD ENDPOINT
+        let apiData = [];
+        
+        // Create endpoints array based on user role
+        let endpoints = [];
+        
+        // For devotees, use the new leaderboard endpoint first
+        if (app.currentUser && app.currentUser.role === 'devotee') {
+            endpoints = [
+                // NEW DEDICATED LEADERBOARD ENDPOINT (gets all users in same voice)
+                `${app.API_BASE_URL}/api/leaderboard?month=${month}&group=${groupFilter}`,
+                
+                // Fallback to existing endpoints
+                `${app.API_BASE_URL}/api/dashboard/report?voice=${voiceFilter}&type=monthly&group=${groupFilter}`,
+                `${app.API_BASE_URL}/api/reports?voice=${voiceFilter}&range=monthly`
+            ];
+        } else {
+            // For admin, keep existing logic
+            endpoints = [
+                `${app.API_BASE_URL}/api/dashboard/report?voice=${voiceFilter}&type=monthly&group=${groupFilter}`,
+                `${app.API_BASE_URL}/api/reports?voice=${voiceFilter}&range=monthly`
+            ];
+        }
+        
+        for (let endpoint of endpoints) {
+            try {
+                console.log('Trying endpoint:', endpoint);
+                const res = await fetch(endpoint, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    
+                    // Check if data is an array
+                    if (Array.isArray(data) && data.length > 0) {
+                        apiData = data;
+                        console.log('✅ Success with:', endpoint, 'got', data.length, 'records');
+                        break;
+                    }
+                    
+                    // Check if data has a 'data' property that's an array (for new endpoint)
+                    if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+                        apiData = data.data;
+                        console.log('✅ Success with:', endpoint, 'got', data.data.length, 'records');
+                        break;
+                    }
+                }
+            } catch (e) {
+                console.log('Endpoint failed:', endpoint, e.message);
+            }
+        }
+        
+        // If still no data, try to get from cached dashboard data
+        if (apiData.length === 0 && window.sadhanaDashboardData) {
+            console.log('Using cached dashboard data');
+            apiData = window.sadhanaDashboardData;
+        }
+        
+        console.log('Final API data length:', apiData.length);
+        
+        if (apiData.length === 0) {
+            console.log('No data available');
+            container.innerHTML = '<div class="leaderboard-empty">No data available. Please add some sadhana entries first.</div>';
+            return;
+        }
+        
+        // Calculate scores with better error handling
+        const scoredData = [];
+        for (let i = 0; i < apiData.length; i++) {
+            try {
+                const score = await MarksCalculator.calculateFromApiData(apiData[i]);
+                if (score && score.name) {
+                    scoredData.push(score);
+                }
+            } catch (e) {
+                console.error('Error calculating score for:', apiData[i], e);
+            }
+        }
+        
+        console.log('Scored data:', scoredData.length, 'devotees');
+        
+        if (scoredData.length === 0) {
+            container.innerHTML = '<div class="leaderboard-empty">Could not calculate scores for any devotees</div>';
+            return;
+        }
+        
+        this.currentData = scoredData;
+        this.render(container, scoredData, sortType);
+        
+    } catch (error) {
+        console.error('Leaderboard load error:', error);
+        container.innerHTML = '<div class="leaderboard-empty">Failed to load leaderboard. Please try again.</div>';
+    }
+    },    
+    // Sort data
+    sortData: function(data, sortType) {
+        const sorted = [...data];
+        
+        if (sortType === 'high-to-low') {
+            sorted.sort((a, b) => {
+                if (b.soulPercentage !== a.soulPercentage) {
+                    return b.soulPercentage - a.soulPercentage;
+                }
+                return b.bodyPercentage - a.bodyPercentage;
+            });
+        } else {
+            sorted.sort((a, b) => {
+                if (a.soulPercentage !== b.soulPercentage) {
+                    return a.soulPercentage - b.soulPercentage;
+                }
+                return a.bodyPercentage - b.bodyPercentage;
+            });
+        }
+        
+        return sorted;
+    },
+    
+    // Render leaderboard
+    render: function(container, data, sortType) {
+        const sortedData = this.sortData(data, sortType);
+        
+        let html = `
+            <div class="leaderboard-container">
+                <div class="leaderboard-header">
+                    <div class="leaderboard-title">
+                        <span>🏆 Devotee Leaderboard</span>
+                    </div>
+        `;
+        
+        // Show voice for devotee
+        if (app.currentUser && app.currentUser.role === 'devotee') {
+            html += `
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-left:10px; display:inline-block;">
+                    (Voice: ${app.currentUser.voice})
+                </div>
+            `;
+        }
+        
+        html += `
+                    <div class="leaderboard-controls">
+        `;
+        
+        // Show voice for admin
+        if (app.currentUser && app.currentUser.role !== 'devotee') {
+            html += `
+                <div style="font-size:0.9rem; color:var(--saffron-dark); margin-right:10px;">
+                    Voice: ${app.activeVoice || 'All'}
+                </div>
+            `;
+        }
+        
+        html += `
+                        <select class="leaderboard-select" id="leaderboard-sort" 
+                                onchange="LeaderboardModule.changeSort(this.value)">
+                            <option value="high-to-low" ${sortType === 'high-to-low' ? 'selected' : ''}>
+                                High to Low
+                            </option>
+                            <option value="low-to-high" ${sortType === 'low-to-high' ? 'selected' : ''}>
+                                Low to High
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="leaderboard-month-selector">
+                    <button class="leaderboard-month-btn ${this.currentMonth === 'current' ? 'active' : ''}"
+                            onclick="LeaderboardModule.load('current', '${sortType}')">
+                        Current Month
+                    </button>
+        `;
+        
+        // Add month buttons for past months
+        for (let i = 1; i < this.availableMonths.length; i++) {
+            const month = this.availableMonths[i];
+            html += `
+                    <button class="leaderboard-month-btn ${this.currentMonth === month ? 'active' : ''}"
+                            onclick="LeaderboardModule.load('${month}', '${sortType}')">
+                        ${this.formatMonth(month)}
+                    </button>
+            `;
+        }
+        
+        html += `</div>`;
+        
+        if (sortedData.length === 0) {
+            html += '<div class="leaderboard-empty">No data available for this period</div>';
+        } else {
+            html += `
+                    <div class="leaderboard-table-container">
+                        <table class="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Devotee</th>
+                                    <th>Group</th>
+                                    <th>Soul %</th>
+                                    <th>Body %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+
+            // Table rows loop with rank badges
+            for (let i = 0; i < sortedData.length; i++) {
+                const d = sortedData[i];
+                const rank = i + 1;
+                let rankDisplay = rank;
+                let rankClass = '';
+
+                // Add medal emojis for top 3 when sorting high-to-low
+                if (sortType === 'high-to-low') {
+                    if (rank === 1) {
+                        rankDisplay = '🥇 1';
+                        rankClass = 'rank-1';
+                    } else if (rank === 2) {
+                        rankDisplay = '🥈 2';
+                        rankClass = 'rank-2';
+                    } else if (rank === 3) {
+                        rankDisplay = '🥉 3';
+                        rankClass = 'rank-3';
+                    }
+                }
+
+                html += `
+                    <tr class="${rankClass}">
+                        <td class="leaderboard-rank"><strong>${rankDisplay}</strong></td>
+                        <td><strong>${d.name || 'Unknown'}</strong></td>
+                        <td>${d.group || '-'}</td>
+                        <td class="leaderboard-soul">${d.soulPercentage || 0}%</td>
+                        <td class="leaderboard-body">${d.bodyPercentage || 0}%</td>
+                    </tr>
+                `;
+            }
+            
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+            `;
+            
+            // Find current user's rank
+            if (app.currentUser) {
+                const userIndex = sortedData.findIndex(
+                    d => d.name === app.currentUser.name
+                );
+                
+                if (userIndex >= 0) {
+                    const userRank = userIndex + 1;
+                    html += `
+                        <div class="leaderboard-your-rank">
+                            👤 Your Rank: <span>#${userRank}</span> out of ${sortedData.length}
+                            (Soul: ${sortedData[userIndex].soulPercentage}%, 
+                             Body: ${sortedData[userIndex].bodyPercentage}%)
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="leaderboard-your-rank">
+                            👤 You are not ranked in this period
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        html += `
+                <div class="leaderboard-archive">
+                    📁 View Archives: 
+                    <a onclick="LeaderboardModule.load('2026-02', '${sortType}')">February 2026</a> |
+                    <a onclick="LeaderboardModule.load('2026-01', '${sortType}')">January 2026</a> |
+                    <a onclick="LeaderboardModule.load('2025-12', '${sortType}')">December 2025</a>
+                </div>
+            </div>`;
+        
+        container.innerHTML = html;
+    },
+    
+    // Change sort
+    changeSort: function(sortType) {
+        console.log('Sort changed to:', sortType);
+        this.currentSort = sortType;
+        this.load(this.currentMonth, sortType);
+    }
+};
+
+// ============================================
+// RULE ADMIN - COMPLETELY FIXED VERSION
+// ============================================
+// ============================================
+// RULE ADMIN - COMPLETELY FIXED WITH DYNAMIC IDS
+// ============================================
+const RuleAdmin = {
+    currentVoice: 'all',
+    currentTab: 'soul',
+    rules: {},
+    originalRules: {},
+    editingRuleIndex: null,
+    editingRuleTab: null,
+    
+    init: function() {
+        this.loadVoices();
+    },
+    
+    loadVoices: async function() {
+        try {
+            const res = await fetch(`${app.API_BASE_URL}/api/admin/voices-with-config`, {
+                headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+            });
+            if (!res.ok) throw new Error('Failed to load voices');
+            
+            const result = await res.json();
+            const select = document.getElementById('admin-voice-select');
+            if (!select) return;
+            
+            select.innerHTML = '<option value="all">🌐 Global Default</option>';
+            if (result.data?.voices) {
+                result.data.voices.forEach(voice => {
+                    select.innerHTML += `<option value="${voice.voice_name}">🔊 ${voice.voice_name}</option>`;
+                });
+            }
+        } catch (error) {
+            console.error('Error loading voices:', error);
+            app.notify('Failed to load voices', true);
+        }
+    },
+    
+    loadConfig: async function() {
+        const voice = document.getElementById('admin-voice-select')?.value || 'all';
+        this.currentVoice = voice;
+        
+        document.getElementById('admin-loading')?.classList.remove('hidden');
+        
+        try {
+            const res = await fetch(`${app.API_BASE_URL}/api/admin/marks-config/${voice}`, {
+                headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+            });
+            
+            if (!res.ok) throw new Error('Failed to load config');
+            
+            const result = await res.json();
+            
+            // Handle response format
+            if (result.success && result.data) {
+                if (result.data.rules) {
+                    this.rules = result.data.rules;
+                } else {
+                    this.rules = result.data;
+                }
+            } else if (result.rules) {
+                this.rules = result.rules;
+            } else {
+                this.rules = this.getDefaultRules();
+            }
+            
+            this.originalRules = JSON.parse(JSON.stringify(this.rules));
+            this.renderRules();
+            this.loadHistory(voice);
+            
+        } catch (error) {
+            console.error('Error loading config:', error);
+            this.rules = this.getDefaultRules();
+            this.renderRules();
+            app.notify('Using default rules', false);
+        } finally {
+            document.getElementById('admin-loading')?.classList.add('hidden');
+        }
+    },
+    
+    getDefaultRules: function() {
+        return {
+            soul: [
+                {
+                    id: 'hearing',
+                    name: 'Hearing',
+                    field: 'hearing_minutes',
+                    type: 'boolean',
+                    maxMarks: 5,
+                    conditions: [
+                        { operator: '>', value: 0, marks: 5 }
+                    ]
+                },
+                {
+                    id: 'reading',
+                    name: 'Reading',
+                    field: 'reading_minutes',
+                    type: 'boolean',
+                    maxMarks: 5,
+                    conditions: [
+                        { operator: '>', value: 0, marks: 5 }
+                    ]
+                },
+                {
+                    id: 'cleanliness',
+                    name: 'Cleanliness',
+                    field: 'cleanliness',
+                    type: 'boolean',
+                    maxMarks: 5,
+                    conditions: [
+                        { operator: '=', value: 1, marks: 5 }
+                    ]
+                },
+                {
+                    id: 'morningClass',
+                    name: 'Morning Class',
+                    field: 'morning_class',
+                    type: 'boolean',
+                    maxMarks: 5,
+                    conditions: [
+                        { operator: '=', value: 1, marks: 5 }
+                    ]
+                },
+                {
+                    id: 'mangalaArti',
+                    name: 'Mangala Arti',
+                    field: 'mangala_aarti',
+                    type: 'boolean',
+                    maxMarks: 5,
+                    conditions: [
+                        { operator: '=', value: 1, marks: 5 }
+                    ]
+                }
+            ],
+            body: [
+                {
+                    id: 'earlyWakeup',
+                    name: 'Early Wakeup',
+                    field: 'wakeup_time',
+                    type: 'time',
+                    maxMarks: 25,
+                    conditions: [
+                        { operator: '<=', value: '04:30', marks: 25 },
+                        { operator: '<=', value: '05:00', marks: 20 },
+                        { operator: '<=', value: '05:30', marks: 15 },
+                        { operator: '<=', value: '06:00', marks: 10 },
+                        { operator: '<=', value: '06:30', marks: 5 }
+                    ]
+                },
+                {
+                    id: 'earlyToBed',
+                    name: 'Early to Bed',
+                    field: 'to_bed_time',
+                    type: 'time',
+                    maxMarks: 25,
+                    conditions: [
+                        { operator: '<=', value: '21:30', marks: 25 },
+                        { operator: '<=', value: '22:00', marks: 20 },
+                        { operator: '<=', value: '22:30', marks: 15 },
+                        { operator: '<=', value: '23:00', marks: 10 },
+                        { operator: '<=', value: '23:30', marks: 5 }
+                    ]
+                },
+                {
+                    id: 'templeReach',
+                    name: 'Temple Reach',
+                    field: 'temp_hall_rech',
+                    type: 'time',
+                    maxMarks: 25,
+                    conditions: [
+                        { operator: '<=', value: '04:30', marks: 25 },
+                        { operator: '<=', value: '05:00', marks: 20 },
+                        { operator: '<=', value: '05:30', marks: 15 },
+                        { operator: '<=', value: '06:00', marks: 10 },
+                        { operator: '<=', value: '06:30', marks: 5 }
+                    ]
+                },
+                {
+                    id: 'dayRest',
+                    name: 'Day Rest',
+                    field: 'day_rest_marks',
+                    type: 'duration',
+                    maxMarks: 25,
+                    conditions: [
+                        { operator: '<=', value: 15, marks: 25 },
+                        { operator: '<=', value: 30, marks: 20 },
+                        { operator: '<=', value: 45, marks: 15 },
+                        { operator: '<=', value: 60, marks: 10 },
+                        { operator: '<=', value: 75, marks: 5 }
+                    ]
+                },
+                {
+                    id: 'study',
+                    name: 'Study',
+                    field: 'study_minutes',
+                    type: 'duration',
+                    maxMarks: 25,
+                    conditions: [
+                        { operator: '<=', value: 30, marks: 25 },
+                        { operator: '<=', value: 60, marks: 20 },
+                        { operator: '<=', value: 90, marks: 15 },
+                        { operator: '<=', value: 120, marks: 10 }
+                    ]
+                }
+            ],
+            japa: [
+                {
+                    id: 'japaRounds',
+                    name: 'Japa Rounds',
+                    field: 'rounds',
+                    type: 'slab',
+                    maxMarks: 25,
+                    conditions: [
+                        { operator: '>=', value: 16, marks: 25 },
+                        { operator: '>=', value: 15, marks: 20 },
+                        { operator: '>=', value: 14, marks: 15 },
+                        { operator: '>=', value: 13, marks: 10 },
+                        { operator: '>=', value: 12, marks: 5 }
+                    ]
+                }
+            ]
+        };
+    },
+    
+    switchTab: function(tab) {
+        this.currentTab = tab;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        this.renderRules();
+    },
+    
+    renderRules: function() {
+        const container = document.getElementById('rules-container');
+        if (!container) return;
+        
+        const rules = this.rules[this.currentTab] || [];
+        let html = '';
+        
+        rules.forEach((rule, index) => {
+            html += this.renderRuleCard(rule, index);
+        });
+        
+        container.innerHTML = html;
+    },
+
+    renderRuleCard: function(rule, index) {
+        const fieldNames = {
+            'wakeup_time': '⏰ Wakeup Time',
+            'to_bed_time': '🌙 To Bed Time',
+            'temp_hall_rech': '🛕 Temple Reach',
+            'chanting_end_time': '🔚 Chant End',
+            'sleep_time': '😴 Sleep Time',
+            'rounds': '📿 Japa Rounds',
+            'hearing_minutes': '🎧 Hearing',
+            'reading_minutes': '📖 Reading',
+            'study_minutes': '📚 Study',
+            'day_rest_marks': '😴 Day Rest',
+            'time_wasted': '⏳ Time Wasted',
+            'morning_class': '🧘 Morning Class',
+            'mangala_aarti': '🪔 Mangala Arti',
+            'cleanliness': '🧹 Cleanliness'
+        };
+
+        let conditionsHtml = '';
+        if (rule.conditions && rule.conditions.length > 0) {
+            rule.conditions.forEach((cond, cIdx) => {
+                let condText = '';
+                
+                // Format operator symbol for display
+                let operatorSymbol = cond.operator;
+                if (cond.operator === '<=') operatorSymbol = '≤';
+                else if (cond.operator === '>=') operatorSymbol = '≥';
+                
+                // Format value based on type
+                let displayValue = cond.value;
+                if (rule.type === 'time' && displayValue && displayValue.includes(':')) {
+                    // Show only HH:MM for time fields
+                    const parts = displayValue.split(':');
+                    displayValue = `${parts[0]}:${parts[1]}`;
+                }
+                
+                // Build condition text
+                if (rule.type === 'time') {
+                    condText = `${operatorSymbol} ${displayValue} → ${cond.marks} marks`;
+                } else if (rule.type === 'duration') {
+                    condText = `${operatorSymbol} ${cond.value} min → ${cond.marks} marks`;
+                } else if (rule.type === 'boolean') {
+                    condText = `${operatorSymbol} ${cond.value === 1 ? 'Yes' : 'No'} → ${cond.marks} marks`;
+                } else {
+                    condText = `${operatorSymbol} ${cond.value} rounds → ${cond.marks} marks`;
+                }
+
+                conditionsHtml += `
+                    <div class="rule-condition-item">
+                        <span>${condText}</span>
+                        <div class="condition-actions">
+                            <button class="btn-small" onclick="RuleAdmin.editCondition(${index}, ${cIdx})">✏️</button>
+                            <button class="btn-small btn-danger" onclick="RuleAdmin.deleteCondition(${index}, ${cIdx})">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            conditionsHtml = '<div class="rule-condition-item" style="justify-content: center; color: var(--text-muted);">No conditions added yet</div>';
+        }
+
+        return `
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-name">${rule.name}</span>
+                    <span class="rule-field">${fieldNames[rule.field] || rule.field}</span>
+                </div>
+
+                <div class="rule-conditions">
+                    ${conditionsHtml}
+                    <button class="add-button" onclick="RuleAdmin.showAddCondition(${index})">
+                        ➕ Add Condition
+                    </button>
+                </div>
+
+                <div class="rule-footer">
+                    <span class="rule-max">Max: <span>${rule.maxMarks}</span> marks</span>
+                    <button class="btn-icon edit" onclick="RuleAdmin.editRule(${index})">✏️ Edit</button>
+                    <button class="btn-icon delete" onclick="RuleAdmin.deleteRule(${index})">🗑️ Delete</button>
+                </div>
+            </div>
+        `;
+    },
+
+    // FIXED: Uses dynamic IDs to prevent conflicts
+    showAddCondition: function(ruleIndex) {
+        const rule = this.rules[this.currentTab][ruleIndex];
+        if (!rule) {
+            app.notify('Rule not found', true);
+            return;
+        }
+
+        // Generate unique IDs for this modal instance
+        const timestamp = Date.now();
+        const modalId = 'cond-modal-' + timestamp;
+        const operatorId = 'cond-operator-' + timestamp;
+        const valueId = 'cond-value-' + timestamp;
+        const marksId = 'cond-marks-' + timestamp;
+
+        let inputHtml = '';
+        if (rule.type === 'time') {
+            inputHtml = `<input type="time" id="${valueId}" step="1" class="form-input" value="00:00">`;
+        } else if (rule.type === 'duration' || rule.type === 'slab') {
+            inputHtml = `<input type="number" id="${valueId}" min="0" class="form-input" value="0">`;
+        } else {
+            inputHtml = `<input type="number" id="${valueId}" min="0" max="1" step="1" class="form-input" value="0">`;
+        }
+
+        const modalHtml = `
+            <div class="modal-overlay" id="${modalId}">
+                <div class="modal-content">
+                    <h3>Add Condition for "${rule.name}"</h3>
+
+                    <div class="form-group">
+                        <label>Operator</label>
+                        <select id="${operatorId}" class="form-select">
+                            <option value="<" selected>Less than (<)</option>
+                            <option value="<=">Less than or equal (≤)</option>
+                            <option value="=">Equal to (=)</option>
+                            <option value=">">Greater than (>)</option>
+                            <option value=">=">Greater than or equal (≥)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Value</label>
+                        ${inputHtml}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Marks (max ${rule.maxMarks})</label>
+                        <input type="number" id="${marksId}" min="0" max="${rule.maxMarks}" class="form-input" value="25">
+                    </div>
+
+                    <div class="modal-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="RuleAdmin.saveCondition('${modalId}', '${operatorId}', '${valueId}', '${marksId}', ${ruleIndex})">Add Condition</button>
+                        <button class="btn btn-outline" onclick="RuleAdmin.closeModal('${modalId}')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    },
+
+        // FIXED: Uses dynamic IDs to get correct values
+    saveCondition: function(modalId, operatorId, valueId, marksId, ruleIndex) {
+        console.log('Saving condition...');
+
+        // Get elements using their unique IDs
+        const operatorSelect = document.getElementById(operatorId);
+        const valueInput = document.getElementById(valueId);
+        const marksInput = document.getElementById(marksId);
+
+        if (!operatorSelect || !valueInput || !marksInput) {
+            app.notify('Error: Form elements not found', true);
+            return;
+        }
+
+        const operator = operatorSelect.value;
+        const value = valueInput.value;
+        const marks = parseInt(marksInput.value);
+
+        console.log('Selected values:', { operator, value, marks });
+
+        // FIX: Check if marks is NaN (not a number) or empty
+        if (!operator || !value || marks === null || isNaN(marks)) {
+            app.notify('Please fill all fields with valid values', true);
+            return;
+        }
+
+        const rule = this.rules[this.currentTab][ruleIndex];
+        if (!rule) {
+            app.notify('Rule not found', true);
+            this.closeModal(modalId);
+            return;
+        }
+
+        // Process value based on rule type
+        let processedValue = value;
+        if (rule.type === 'duration' || rule.type === 'slab') {
+            processedValue = parseInt(value);
+        }
+
+        // Add the condition - marks will now be whatever user entered
+        rule.conditions.push({
+            operator: operator,
+            value: processedValue,
+            marks: marks  // This will now be the actual value, not 0
+        });
+
+        console.log('Updated rule conditions:', rule.conditions);
+
+        // Sort conditions based on type
+        if (rule.type === 'time') {
+            rule.conditions.sort((a, b) => a.value.localeCompare(b.value));
+        } else if (rule.type === 'duration') {
+            rule.conditions.sort((a, b) => a.value - b.value);
+        } else if (rule.type === 'slab') {
+            rule.conditions.sort((a, b) => b.value - a.value);
+        }
+
+        this.closeModal(modalId);
+        this.renderRules();
+        app.notify(`✅ Condition added with ${marks} marks`);
+    },
+
+        // FIXED: Uses dynamic IDs for edit condition
+    editCondition: function(ruleIndex, condIndex) {
+        console.log('Editing condition at:', { ruleIndex, condIndex });
+
+        const rule = this.rules[this.currentTab][ruleIndex];
+        if (!rule) {
+            app.notify('Rule not found', true);
+            return;
+        }
+
+        const cond = rule.conditions[condIndex];
+        if (!cond) {
+            app.notify('Condition not found', true);
+            return;
+        }
+
+        console.log('Condition data:', cond);
+
+        // Remove any existing modals
+        const existingModals = document.querySelectorAll('.modal-overlay');
+        existingModals.forEach(modal => modal.remove());
+
+        // Generate unique IDs
+        const timestamp = Date.now();
+        const modalId = 'cond-modal-' + timestamp;
+        const operatorId = 'cond-operator-' + timestamp;
+        const valueId = 'cond-value-' + timestamp;
+        const marksId = 'cond-marks-' + timestamp;
+
+        // Create input based on rule type
+        let inputHtml = '';
+        if (rule.type === 'time') {
+            inputHtml = `<input type="time" id="${valueId}" value="${cond.value}" step="1" class="form-input">`;
+        } else {
+            inputHtml = `<input type="number" id="${valueId}" value="${cond.value}" min="0" class="form-input">`;
+        }
+
+        // Create modal HTML with pre-selected operator
+        const modalHtml = `
+            <div class="modal-overlay" id="${modalId}">
+                <div class="modal-content">
+                    <h3>Edit Condition</h3>
+
+                    <div class="form-group">
+                        <label>Operator</label>
+                        <select id="${operatorId}" class="form-select">
+                            <option value="<" ${cond.operator === '<' ? 'selected' : ''}>Less than (<)</option>
+                            <option value="<=" ${cond.operator === '<=' ? 'selected' : ''}>Less than or equal (≤)</option>
+                            <option value="=" ${cond.operator === '=' ? 'selected' : ''}>Equal to (=)</option>
+                            <option value=">" ${cond.operator === '>' ? 'selected' : ''}>Greater than (>)</option>
+                            <option value=">=" ${cond.operator === '>=' ? 'selected' : ''}>Greater than or equal (≥)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Value</label>
+                        ${inputHtml}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Marks</label>
+                        <input type="number" id="${marksId}" value="${cond.marks}" min="0" max="${rule.maxMarks}" class="form-input">
+                    </div>
+
+                    <div class="modal-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="RuleAdmin.updateCondition('${modalId}', '${operatorId}', '${valueId}', '${marksId}', ${ruleIndex}, ${condIndex})">Update Condition</button>
+                        <button class="btn btn-outline" onclick="RuleAdmin.closeModal('${modalId}')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    },
+    
+        // FIXED: Uses dynamic IDs for update
+    updateCondition: function(modalId, operatorId, valueId, marksId, ruleIndex, condIndex) {
+        console.log('Updating condition...');
+
+        // Get elements
+        const operatorSelect = document.getElementById(operatorId);
+        const valueInput = document.getElementById(valueId);
+        const marksInput = document.getElementById(marksId);
+
+        if (!operatorSelect || !valueInput || !marksInput) {
+            app.notify('Error: Form elements not found', true);
+            return;
+        }
+
+        const operator = operatorSelect.value;
+        const value = valueInput.value;
+        const marks = parseInt(marksInput.value);
+
+        console.log('Update values:', { operator, value, marks });
+
+        if (!operator || !value || marks === null || isNaN(marks)) {
+            app.notify('Please fill all fields with valid values', true);
+            return;
+        }
+
+        const rule = this.rules[this.currentTab][ruleIndex];
+        if (!rule) {
+            app.notify('Rule not found', true);
+            this.closeModal(modalId);
+            return;
+        }
+
+        // Update the condition
+        rule.conditions[condIndex] = {
+            operator: operator,
+            value: rule.type === 'time' ? value : parseInt(value),
+            marks: marks
+        };
+
+        console.log('Updated condition:', rule.conditions[condIndex]);
+
+        this.closeModal(modalId);
+        this.renderRules();
+        app.notify('✅ Condition updated successfully');
+    },
+    
+    deleteCondition: function(ruleIndex, condIndex) {
+        if (!confirm('Delete this condition?')) return;
+        
+        const rule = this.rules[this.currentTab][ruleIndex];
+        rule.conditions.splice(condIndex, 1);
+        this.renderRules();
+        app.notify('Condition deleted');
+    },
+    
+    closeModal: function(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) modal.remove();
+    },
+    
+    updateRuleType: function() {
+        const field = document.getElementById('new-rule-field').value;
+        const marksInput = document.getElementById('new-rule-max');
+
+        if (field.includes('class') || field.includes('arti') || field.includes('clean')) {
+            marksInput.value = 5;
+            marksInput.max = 5;
+        } else if (field === 'rounds') {
+            marksInput.value = 25;
+            marksInput.max = 25;
+        } else {
+            if (!marksInput.value || marksInput.value === '5') {
+                marksInput.value = 25;
+            }
+            marksInput.max = 100;
+        }
+    },
+    
+    addCondition: function() {
+        app.notify('Please click "Add Condition" on a specific rule card', true);
+    },
+
+    saveNewRule: function() {
+        console.log('Saving rule...');
+
+        const nameInput = document.getElementById('new-rule-name');
+        const fieldSelect = document.getElementById('new-rule-field');
+        const maxInput = document.getElementById('new-rule-max');
+
+        const name = nameInput?.value;
+        const field = fieldSelect?.value;
+        const maxMarks = parseInt(maxInput?.value);
+
+        if (!name || !field || !maxMarks) {
+            app.notify('Please fill all fields', true);
+            return;
+        }
+
+        let type = 'duration';
+        if (field.includes('time') || field.includes('wakeup') || field.includes('bed') || field.includes('sleep') || field.includes('chant')) {
+            type = 'time';
+        } else if (field.includes('class') || field.includes('arti') || field.includes('clean')) {
+            type = 'boolean';
+        } else if (field === 'rounds') {
+            type = 'slab';
+        }
+
+        // Check if we're editing an existing rule
+        if (this.editingRuleIndex !== null && this.editingRuleTab === this.currentTab) {
+            // Update existing rule - PRESERVE CONDITIONS
+            const rule = this.rules[this.currentTab][this.editingRuleIndex];
+            if (rule) {
+                rule.name = name;
+                rule.field = field;
+                rule.maxMarks = maxMarks;
+                rule.type = type;
+                // Conditions are preserved automatically
+                app.notify('✅ Rule updated successfully');
+                
+                this.editingRuleIndex = null;
+                this.editingRuleTab = null;
+
+                const createBtn = document.querySelector('.creator-actions .btn-primary');
+                if (createBtn) {
+                    createBtn.textContent = '💾 Create Rule';
+                    createBtn.style.background = '';
+                }
+            }
+        } else {
+            // Create new rule with EMPTY conditions array
+            const newRule = {
+                id: 'rule_' + Date.now(),
+                name: name,
+                field: field,
+                type: type,
+                maxMarks: maxMarks,
+                conditions: []  // Start with empty conditions
+            };
+
+            if (!this.rules[this.currentTab]) {
+                this.rules[this.currentTab] = [];
+            }
+
+            this.rules[this.currentTab].push(newRule);
+            app.notify('✅ Rule created. Now add conditions using the "Add Condition" button on the rule card!');
+        }
+
+        // Refresh the rules display
+        this.renderRules();
+
+        // Clear input fields
+        nameInput.value = '';
+        fieldSelect.selectedIndex = 0;
+        maxInput.value = '25';
+    },
+
+    clearCreator: function() {
+        console.log('Clear button clicked');
+
+        const nameInput = document.getElementById('new-rule-name');
+        const fieldSelect = document.getElementById('new-rule-field');
+        const maxInput = document.getElementById('new-rule-max');
+
+        if (nameInput) nameInput.value = '';
+        if (fieldSelect) fieldSelect.selectedIndex = 0;
+        if (maxInput) maxInput.value = '25';
+
+        // Clear editing state
+        this.editingRuleIndex = null;
+        this.editingRuleTab = null;
+
+        const createBtn = document.querySelector('.creator-actions .btn-primary');
+        if (createBtn) {
+            createBtn.textContent = '💾 Create Rule';
+            createBtn.style.background = '';
+        }
+
+        app.notify('Form cleared');
+    },
+
+    editRule: function(index) {
+        console.log('Editing rule at index:', index);
+        
+        const rule = this.rules[this.currentTab][index];
+        if (!rule) {
+            app.notify('Rule not found', true);
+            return;
+        }
+        
+        // Populate form with rule data
+        const nameInput = document.getElementById('new-rule-name');
+        const fieldSelect = document.getElementById('new-rule-field');
+        const maxInput = document.getElementById('new-rule-max');
+        
+        if (nameInput) nameInput.value = rule.name || '';
+        
+        if (fieldSelect) {
+            fieldSelect.value = rule.field;
+            this.updateRuleType();
+        }
+        
+        if (maxInput) maxInput.value = rule.maxMarks || 25;
+        
+        // Store editing state
+        this.editingRuleIndex = index;
+        this.editingRuleTab = this.currentTab;
+        
+        // Change button text
+        const createBtn = document.querySelector('.creator-actions .btn-primary');
+        if (createBtn) {
+            createBtn.textContent = '✏️ Update Rule';
+            createBtn.style.background = '#3182ce';
+        }
+        
+        // Show conditions in the conditions list
+        const conditionsList = document.getElementById('conditions-list');
+        if (conditionsList) {
+            if (rule.conditions && rule.conditions.length > 0) {
+                let conditionsHtml = '';
+                rule.conditions.forEach((cond, idx) => {
+                    let operatorSymbol = cond.operator;
+                    if (cond.operator === '<=') operatorSymbol = '≤';
+                    else if (cond.operator === '>=') operatorSymbol = '≥';
+                    
+                    conditionsHtml += `
+                        <div class="condition-item">
+                            <span class="condition-text">${operatorSymbol} ${cond.value} → ${cond.marks} marks</span>
+                            <div class="condition-actions">
+                                <button class="btn-small" onclick="RuleAdmin.editCondition(${index}, ${idx})">✏️</button>
+                                <button class="btn-small btn-danger" onclick="RuleAdmin.deleteCondition(${index}, ${idx})">🗑️</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                conditionsList.innerHTML = conditionsHtml;
+            } else {
+                conditionsList.innerHTML = '<div class="no-conditions">No conditions added yet. Click "Add Condition" to add one.</div>';
+            }
+        }
+        
+        app.notify('Edit the rule and click "Update Rule" to save changes');
+    },
+    
+    deleteRule: function(index) {
+        if (!confirm('Delete this rule?')) return;
+        this.rules[this.currentTab].splice(index, 1);
+        this.renderRules();
+        app.notify('Rule deleted');
+    },
+    
+    previewChanges: function() {
+        const changes = JSON.stringify(this.rules) !== JSON.stringify(this.originalRules);
+        
+        if (!changes) {
+            app.notify('No changes to save', true);
+            return;
+        }
+        
+        let html = '<h4>📋 Changes to be saved:</h4>';
+        html += '<div style="max-height: 300px; overflow-y: auto; margin: 15px 0; padding: 10px; background: #f8f9fa; border-radius: 8px;">';
+        
+        // Count changes
+        const soulChanges = this.countChanges('soul');
+        const bodyChanges = this.countChanges('body');
+        const japaChanges = this.countChanges('japa');
+        
+        if (soulChanges.total > 0) {
+            html += `<p><strong>🧘 Soul Rules:</strong> +${soulChanges.added} added, ${soulChanges.modified} modified, -${soulChanges.deleted} deleted</p>`;
+        }
+        if (bodyChanges.total > 0) {
+            html += `<p><strong>🏃 Body Rules:</strong> +${bodyChanges.added} added, ${bodyChanges.modified} modified, -${bodyChanges.deleted} deleted</p>`;
+        }
+        if (japaChanges.total > 0) {
+            html += `<p><strong>📿 Japa Rules:</strong> +${japaChanges.added} added, ${japaChanges.modified} modified, -${japaChanges.deleted} deleted</p>`;
+        }
+        
+        html += '</div>';
+        html += `<div class="form-group">
+            <label>Reason for change (optional):</label>
+            <input type="text" id="change-reason" class="form-input" placeholder="e.g., Updated rules">
+        </div>`;
+        
+        document.getElementById('preview-content').innerHTML = html;
+        document.getElementById('preview-modal').classList.remove('hidden');
+    },
+    
+    countChanges: function(tab) {
+        const oldRules = this.originalRules[tab] || [];
+        const newRules = this.rules[tab] || [];
+        
+        return {
+            added: newRules.filter(r => !oldRules.some(or => or.id === r.id)).length,
+            deleted: oldRules.filter(r => !newRules.some(nr => nr.id === r.id)).length,
+            modified: newRules.filter(r => {
+                const old = oldRules.find(or => or.id === r.id);
+                return old && JSON.stringify(old) !== JSON.stringify(r);
+            }).length,
+            total: newRules.length
+        };
+    },
+    
+    saveChanges: async function() {
+        const reason = document.getElementById('change-reason')?.value || '';
+        
+        try {
+            const configData = {
+                rules: this.rules
+            };
+            
+            const res = await fetch(`${app.API_BASE_URL}/api/admin/marks-config`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    voiceName: this.currentVoice,
+                    configData: configData,
+                    changeReason: reason,
+                    confirmed: true
+                })
+            });
+            
+            if (!res.ok) throw new Error('Failed to save');
+            
+            app.notify('✅ Rules saved successfully');
+            this.originalRules = JSON.parse(JSON.stringify(this.rules));
+            this.closePreview();
+            
+        } catch (error) {
+            console.error('Error saving:', error);
+            app.notify('❌ Failed to save', true);
+        }
+    },
+    
+    closePreview: function() {
+        document.getElementById('preview-modal').classList.add('hidden');
+    },
+    
+    loadHistory: async function(voice) {
+        try {
+            const res = await fetch(`${app.API_BASE_URL}/api/admin/marks-config-history/${voice}`, {
+                headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+            });
+            if (!res.ok) throw new Error('Failed to load history');
+            
+            const result = await res.json();
+            const historyContent = document.getElementById('history-content');
+            const historySection = document.getElementById('history-section');
+            
+            if (result.data?.length > 0) {
+                let html = '';
+                result.data.forEach(entry => {
+                    const date = new Date(entry.changed_at).toLocaleString();
+                    html += `
+                        <div class="history-entry">
+                            <div class="history-date">${date}</div>
+                            <div class="history-user">by ${entry.changed_by_name || 'Unknown'}</div>
+                            <div class="history-reason">${entry.change_reason || 'No reason'}</div>
+                        </div>
+                    `;
+                });
+                historyContent.innerHTML = html;
+                historySection.classList.remove('hidden');
+            } else {
+                historySection.classList.add('hidden');
+            }
+        } catch (error) {
+            console.error('Error loading history:', error);
+        }
+    },
+    
+    resetChanges: function() {
+        if (confirm('Reset all changes?')) {
+            this.rules = JSON.parse(JSON.stringify(this.originalRules));
+            this.renderRules();
+            app.notify('Changes reset');
+        }
+    },
+        // Load defaults directly (overwrites current rules)
+    loadDefaults: function() {
+        if (confirm('Load default rules? This will replace your current rules.')) {
+            this.rules = this.getDefaultRules();
+            this.renderRules();
+            app.notify('✅ Default rules loaded');
+        }
+    },
+
+        // Show comparison modal
+    showDefaultComparison: function() {
+        const defaults = this.getDefaultRules();
+        
+        // Generate unique ID for this modal
+        const modalId = 'default-modal-' + Date.now();
+        
+        let html = '<h4>📋 Default Rules Preview</h4>';
+        html += '<div style="max-height: 400px; overflow-y: auto;">';
+        
+        // Soul rules
+        html += '<h5 style="color: var(--saffron-dark); margin-top: 15px;">🧘 Soul Rules</h5>';
+        defaults.soul.forEach(rule => {
+            html += `<div style="background: #f8f9fa; padding: 10px; margin: 5px 0; border-radius: 5px;">`;
+            html += `<strong>${rule.name}</strong> (Max: ${rule.maxMarks} marks)`;
+            html += '<ul style="margin: 5px 0 0 20px;">';
+            rule.conditions.forEach(cond => {
+                let operator = cond.operator;
+                if (cond.operator === '<=') operator = '≤';
+                else if (cond.operator === '>=') operator = '≥';
+                html += `<li>${operator} ${cond.value} → ${cond.marks} marks</li>`;
+            });
+            html += '</ul></div>';
+        });
+        
+        // Body rules
+        html += '<h5 style="color: var(--saffron-dark); margin-top: 15px;">🏃 Body Rules</h5>';
+        defaults.body.forEach(rule => {
+            html += `<div style="background: #f8f9fa; padding: 10px; margin: 5px 0; border-radius: 5px;">`;
+            html += `<strong>${rule.name}</strong> (Max: ${rule.maxMarks} marks)`;
+            html += '<ul style="margin: 5px 0 0 20px;">';
+            rule.conditions.forEach(cond => {
+                let operator = cond.operator;
+                if (cond.operator === '<=') operator = '≤';
+                else if (cond.operator === '>=') operator = '≥';
+                html += `<li>${operator} ${cond.value} → ${cond.marks} marks</li>`;
+            });
+            html += '</ul></div>';
+        });
+        
+        // Japa rules
+        html += '<h5 style="color: var(--saffron-dark); margin-top: 15px;">📿 Japa Rules</h5>';
+        defaults.japa.forEach(rule => {
+            html += `<div style="background: #f8f9fa; padding: 10px; margin: 5px 0; border-radius: 5px;">`;
+            html += `<strong>${rule.name}</strong> (Max: ${rule.maxMarks} marks)`;
+            html += '<ul style="margin: 5px 0 0 20px;">';
+            rule.conditions.forEach(cond => {
+                let operator = cond.operator;
+                if (cond.operator === '<=') operator = '≤';
+                else if (cond.operator === '>=') operator = '≥';
+                html += `<li>${operator} ${cond.value} → ${cond.marks} marks</li>`;
+            });
+            html += '</ul></div>';
+        });
+        
+        html += '</div>';
+        html += '<div style="margin-top: 20px; text-align: right;">';
+        html += `<button class="btn btn-primary" onclick="RuleAdmin.closeModal('${modalId}')">Close</button>`;
+        html += '</div>';
+        
+        // Create modal with the generated ID
+        const modalHtml = `
+            <div class="modal-overlay" id="${modalId}">
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Default Rules</h3>
+                        <button class="modal-close" onclick="RuleAdmin.closeModal('${modalId}')">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        ${html}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    },
+
+    closeModal: function(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) modal.remove();
+    },
+
+};
+
+// Make RuleAdmin globally available
+window.RuleAdmin = RuleAdmin;
+
+/*=================================================
+        APP OBJECT
+===================================================*/
 const app = {
     // Auto-detect API URL based on environment
     API_BASE_URL: (function() {
@@ -705,6 +3887,7 @@ const app = {
             this.activeVoice = this.currentUser.voice;
             this.showView('dashboard');
         } else { this.showView('login'); }
+        LeaderboardModule.init();
     },
 
 
@@ -717,38 +3900,127 @@ const app = {
     },
 
     showView: function(id) {
-        ['login', 'register', 'dashboard', 'tracking', 'search', 'reports', 'user-mgmt','sadhana-dashboard'].forEach(v => {
-            document.getElementById('view-' + v).classList.add('hidden');
-        });
-        document.getElementById('view-' + id).classList.remove('hidden');
-        // added dashboard function call
-        if (id === 'sadhana-dashboard') {
-        // Only allow devotees or admins
+    console.log('🔍 showView called with id:', id);
+    
+    // List of all views
+    const views = ['login', 'register', 'dashboard', 'tracking', 'search', 'reports', 'user-mgmt', 'sadhana-dashboard', 'leaderboard', 'admin-panel'];
+    
+    // Check each element before hiding
+    console.log('Checking views:');
+    views.forEach(v => {
+        const el = document.getElementById('view-' + v);
+        if (el) {
+            console.log('✅ view-' + v + ' exists');
+        } else {
+            console.error('❌ view-' + v + ' DOES NOT EXIST!');
+        }
+    });
+    
+    // Safely hide all views (only if they exist)
+    views.forEach(v => {
+        const el = document.getElementById('view-' + v);
+        if (el) {
+            el.classList.add('hidden');
+        } else {
+            console.warn('⚠️ Skipping view-' + v + ' - element not found');
+        }
+    });
+    
+    // Show the requested view
+    const targetEl = document.getElementById('view-' + id);
+    if (targetEl) {
+        targetEl.classList.remove('hidden');
+        console.log('✅ Showing view-' + id);
+    } else {
+        console.error('❌ Target view view-' + id + ' not found!');
+        // Fallback to dashboard or login
+        if (this.currentUser) {
+            const dashboardEl = document.getElementById('view-dashboard');
+            if (dashboardEl) dashboardEl.classList.remove('hidden');
+        } else {
+            const loginEl = document.getElementById('view-login');
+            if (loginEl) loginEl.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    // Rest of your code continues here...
+    // (keep all your existing if conditions below this line)
+    
+    if (id === 'sadhana-dashboard') {
         if (!this.currentUser || !['devotee','developer', 'admin'].includes(this.currentUser.role)) {
-        this.notify("Access Denied", true); return;} 
+            this.notify("Access Denied", true); 
+            return;
+        } 
         this.loadSadhanaDashboard(); 
+    }
+    
+    if (id === 'leaderboard') {
+        if (!this.currentUser) {
+            this.notify("Please login first", true);
+            this.showView('login');
+            return;
         }
-
-        if (id !== 'login' && id !== 'register') {
-            document.getElementById('header-area').classList.remove('hidden');
-            this.updateHeader();
-        } else { document.getElementById('header-area').classList.add('hidden'); }
+        setTimeout(() => {
+            if (typeof LeaderboardModule !== 'undefined') {
+                LeaderboardModule.load('current', 'high-to-low');
+            }
+        }, 100);
+    }
+    
+    if (id === 'admin-panel') {
+        if (!this.currentUser || !['developer', 'admin'].includes(this.currentUser.role)) {
+            this.notify("Access Denied", true);
+            this.showView('dashboard');
+            return;
+        }
+        setTimeout(() => {
+            if (typeof RuleAdmin !== 'undefined') {   // ← FIXED: Changed to RuleAdmin
+            RuleAdmin.init();                      // ← FIXED: Changed to RuleAdmin
+            RuleAdmin.loadConfig();                // ← FIXED: Changed to RuleAdmin
+         } else {
+            console.error('RuleAdmin not found!');
+            this.notify('Admin module not loaded', true);
+            }
+        }, 100);
+    }
+    
+    if (id !== 'login' && id !== 'register') {
+        const headerArea = document.getElementById('header-area');
+        if (headerArea) headerArea.classList.remove('hidden');
+        this.updateHeader();
+    } else { 
+        const headerArea = document.getElementById('header-area');
+        if (headerArea) headerArea.classList.add('hidden');
+    }
+    
+    const isAdmin = this.currentUser && this.currentUser.role !== 'devotee';
+    document.querySelectorAll('.admin-only').forEach(el => {
+        if (el) el.classList.toggle('hidden', !isAdmin);
+    });
+    
+    if (id === 'tracking') {
+        const sdDate = document.getElementById('sd-date');
+        if (sdDate) sdDate.value = new Date().toISOString().split('T')[0];
         
-        const isAdmin = this.currentUser && this.currentUser.role !== 'devotee';
-        document.querySelectorAll('.admin-only').forEach(el => el.classList.toggle('hidden', !isAdmin));
-
-        if (id === 'tracking') {
-            document.getElementById('sd-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('whatsapp-section').classList.add('hidden');
-        }
-        if (id === 'user-mgmt') this.loadUsers();
-        if (id === 'reports' || id === 'search') { this.loadPickers(); this.generateReport(); this.performSearch(); }
-        if (id === 'register') this.fetchVoices('reg-voice');
-        // ✅ NEW CODE - YAHAN PE ADD KIYA
-        if (id === 'dashboard') {
-            this.updateDashboardInfo();
-        }
-    },
+        const whatsappSection = document.getElementById('whatsapp-section');
+        if (whatsappSection) whatsappSection.classList.add('hidden');
+    }
+    
+    if (id === 'user-mgmt') this.loadUsers();
+    
+    if (id === 'reports' || id === 'search') { 
+        this.loadPickers(); 
+        this.generateReport(); 
+        this.performSearch(); 
+    }
+    
+    if (id === 'register') this.fetchVoices('reg-voice');
+    
+    if (id === 'dashboard') {
+        this.updateDashboardInfo();
+    }
+},
         // ✅ YAHAN PE YEH FUNCTION ADD KARO (kisi bhi existing function ke baad)
     updateDashboardInfo: function() {
         // Update date
@@ -806,17 +4078,6 @@ const app = {
             select.innerHTML = html;
         } catch (e) {}
     },
-
-    /*loadPickers: async function() {
-        if (this.currentUser.role === 'devotee') return;
-        const res = await fetch(`${this.API_BASE_URL}/api/users/all?voice=${this.activeVoice}`, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
-        const users = await res.json();
-        const html = '<option value="All">All Devotees</option>' + users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
-        ['search-user-picker', 'report-user-picker'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = html;
-        });
-    },*/
      // updated loadpickers for voices by data shown in flter
     loadPickers: async function() {
     if (this.currentUser.role === 'devotee') return;
@@ -1177,43 +4438,10 @@ const app = {
     document.getElementById('whatsapp-section').classList.remove('hidden');
     },
 
-
-    /*generateSummary: function(e) {
-    let msg = `*|| Hare Krishna ||*\n 🪔 *Sadhana Summary*\n` +
-              `👤 *Devotee:* ${this.currentUser.name}\n` +
-              `🏠 *Voice:* ${this.currentUser.voice}\n` + // Voice field added with home emoji
-              `🏷️ *Group:* ${this.currentUser.group}\n` + // Group field added
-              `📅 *Date:* ${e.date}\n` +
-              `🌅 *Wakeup:* ${e.wakeup || '-'}\n` +
-              `📿 *Rounds:* ${e.rounds}\n` +
-              `🔚 *End:* ${e.chantEnd || '-'}\n` +
-              `🎧 *Hear:* ${e.hearing}m | 📖 *Read:* ${e.reading}m | 📝 *Study:* ${e.study}m\n` +
-              `🛌 *Day Rest:* ${e.dayRestMinutes || e.dayRest || '0'}m|| '-'} | 🌙 *Sleep:* ${e.sleep || '-'}`;
-
-    document.getElementById('whatsapp-preview').value = msg;
-    document.getElementById('whatsapp-section').classList.remove('hidden');
-    },*/
-
     sendToWhatsApp: function() {
         const text = encodeURIComponent(document.getElementById('whatsapp-preview').value);
         window.open(`https://wa.me/${this.MASTER_NUMBER}?text=${text}`, '_blank');
     },
-
-    /*performSearch: async function() {
-        const date = document.getElementById('search-date').value;
-        const name = (document.getElementById('search-name')) ? document.getElementById('search-name').value : "";
-        const userId = (document.getElementById('search-user-picker')) ? document.getElementById('search-user-picker').value : "All";
-        const url = `${this.API_BASE_URL}/api/search?voice=${this.activeVoice}&date=${date}&name=${encodeURIComponent(name)}&userId=${userId}`;
-        try {
-            const res = await fetch(url, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
-            const data = await res.json();
-            let html = '<div class="table-container"><table><thead><tr><th>Devotee</th><th>Rounds</th><th>Wake</th><th>End</th><th>Reading</th><th>Rest</th><th>Sleep</th></tr></thead><tbody>';
-            data.forEach(r => {
-                html += `<tr><td>${r.name}</td><td>${r.rounds}</td><td>${r.wakeup_time || '-'}</td><td>${r.chanting_end_time || '-'}</td><td>${r.reading_minutes}m</td><td>${r.day_rest_time || '-'}</td><td>${r.sleep_time || '-'}</td></tr>`;
-            });
-            document.getElementById('search-results').innerHTML = (html + '</tbody></table></div>');
-        } catch (e) {}
-    },*/
 
     performSearch: async function() {
     const date = document.getElementById('search-date').value;
@@ -1298,120 +4526,636 @@ const app = {
         this.notify("Failed to load Day Report", true);
     }
     },
+//--------------------new addition of sadhna and other function-----------------//
 
-/*
-    loadSadhanaDashboard: async function() {
+// ============================================
+// ENHANCED DASHBOARD FUNCTIONS
+// Add these to your app object
+// ============================================
+
+// Get proper date range based on period
+getDateRange: function(type) {
+    const today = new Date();
+    let start, end;
+    
+    if (type === 'weekly') {
+        // Get Monday (start of week)
+        const day = today.getDay(); // 0 = Sunday
+        const diff = day === 0 ? 6 : day - 1; // Days to subtract to get Monday
+        
+        start = new Date(today);
+        start.setDate(today.getDate() - diff);
+        start.setHours(0, 0, 0, 0);
+        
+        end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        end.setHours(23, 59, 59, 999);
+    } else {
+        // Monthly - first and last day of month
+        start = new Date(today.getFullYear(), today.getMonth(), 1);
+        start.setHours(0, 0, 0, 0);
+        
+        end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        end.setHours(23, 59, 59, 999);
+    }
+    
+    const formatDate = (date) => {
+        return date.toLocaleDateString('en-IN', { 
+            day: 'numeric', 
+            month: 'short',
+            year: 'numeric'
+        });
+    };
+    
+    return {
+        start: formatDate(start),
+        end: formatDate(end),
+        startISO: start.toISOString().split('T')[0],
+        endISO: end.toISOString().split('T')[0]
+    };
+},
+
+// Load Sadhana Dashboard with proper date ranges
+loadSadhanaDashboard: async function() {
     const type = document.getElementById('dash-report-type').value;
     const group = document.getElementById('dash-group-filter').value;
+    
+    // Get proper date range
+    const dateRange = this.getDateRange(type);
+    
+    // Show date range in UI
+    const rangeDisplay = document.getElementById('dashboard-date-range');
+    if (rangeDisplay) {
+        rangeDisplay.innerHTML = `${dateRange.start} to ${dateRange.end}`;
+    }
+    
+    // Determine voice filter
+    let voiceFilter;
+    if (this.currentUser.role === 'devotee') {
+        voiceFilter = this.currentUser.voice;
+    } else { 
+        voiceFilter = this.activeVoice;
+    }
+
     const container = document.getElementById('dashboard-report-content');
-    container.innerHTML = '<p class="text-center">Loading transcendental data...</p>';
+    container.innerHTML = '<div class="dashboard-loading">Loading transcendental data...</div>';
 
     try {
-        const url = `${this.API_BASE_URL}/api/dashboard/report?voice=${this.activeVoice}&type=${type}&group=${group}`;
-        const res = await fetch(url, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
+        // Use dashboard/report endpoint with proper params
+        const url = `${this.API_BASE_URL}/api/dashboard/report?voice=${voiceFilter}&type=${type}&group=${group}`;
+        const res = await fetch(url, {
+            headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+        });
+
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        window.sadhanaDashboardData = data;
+
+        if (!data.length) {
+            container.innerHTML = '<div class="dashboard-empty">No records found for this period.</div>';
+            return;
+        }
+
+        // Calculate scores using MarksCalculator for each user
+        const enhancedData = await this.enhanceDataWithMarksCalculator(data, type);
+        
+        // Render the enhanced table
+        container.innerHTML = this.renderDashboardTable(enhancedData, type, dateRange);
+        
+        // Attach handlers
+        this.attachDashboardHandlers();
+
+    } catch(e) {
+        console.error('Dashboard error:', e);
+        this.notify("Dashboard load failed: " + e.message, true);
+        container.innerHTML = '<div class="dashboard-empty">Failed to load dashboard.</div>';
+    }
+},
+
+// Enhance data with MarksCalculator scores
+enhanceDataWithMarksCalculator: async function(data, type) {
+    const totalDays = type === 'weekly' ? 7 : 30;
+    const enhancedData = [];
+    
+    for (const d of data) {
+        // Prepare data for MarksCalculator
+        const devoteeData = {
+            name: d.name,
+            group: d.group,
+            voice: d.voice,
+            
+            // Soul activities
+            hearing: d.totalHearing > 0 ? 1 : 0,
+            reading: d.totalReading > 0 ? 1 : 0,
+            cleanliness: d.cleanSuccess > 0 ? 1 : 0,
+            morningClass: d.morningClassSuccess > 0 ? 1 : 0,
+            mangalaArti: d.mangalaArtiSuccess > 0 ? 1 : 0,
+            
+            // Japa
+            rounds: d.totalRounds || 0,
+            
+            // Body activities
+            toBed: d.avgSleep, // Using sleep as toBed
+            wakeUp: d.avgWakeup,
+            dayRest: d.totalRest || 0
+        };
+        
+        // Get scores from MarksCalculator
+        const scores = await MarksCalculator.calculateCompleteScore(devoteeData);
+        
+        enhancedData.push({
+            ...d,
+            soulScore: scores.soul,
+            bodyScore: scores.body,
+            soulPercentage: scores.soulPercentage,
+            bodyPercentage: scores.bodyPercentage,
+            totalDays: totalDays
+        });
+    }
+    
+    return enhancedData;
+},
+
+// Render the enhanced dashboard table
+renderDashboardTable: function(data, type, dateRange) {
+    const totalDays = type === 'weekly' ? 7 : 30;
+    
+    // Calculate summary stats using MarksCalculator scores
+    const totalActive = data.length;
+    const totalRounds = data.reduce((sum, d) => sum + (d.totalRounds || 0), 0);
+    const avgHearing = Math.round(data.reduce((sum, d) => sum + (d.totalHearing || 0), 0) / totalActive) || 0;
+    const avgReading = Math.round(data.reduce((sum, d) => sum + (d.totalReading || 0), 0) / totalActive) || 0;
+    const avgStudy = Math.round(data.reduce((sum, d) => sum + (d.totalStudy || 0), 0) / totalActive) || 0;
+    
+    const avgSoul = Math.round(data.reduce((sum, d) => sum + (d.soulPercentage || 0), 0) / totalActive) || 0;
+    const avgBody = Math.round(data.reduce((sum, d) => sum + (d.bodyPercentage || 0), 0) / totalActive) || 0;
+    
+    const avgRest = Math.round(data.reduce((sum, d) => sum + (d.totalRest || 0), 0) / totalActive) || 0;
+    const avgWaste = Math.round(data.reduce((sum, d) => sum + (d.totalWaste || 0), 0) / totalActive) || 0;
+
+    // Generate table rows
+    let tableRows = '';
+    data.forEach((d, index) => {
+        // Calculate daily averages
+        const avgDailyHearing = Math.round((d.totalHearing || 0) / totalDays);
+        const avgDailyReading = Math.round((d.totalReading || 0) / totalDays);
+        const avgDailyStudy = Math.round((d.totalStudy || 0) / totalDays);
+        const avgDailyRest = Math.round((d.totalRest || 0) / totalDays);
+        const avgDailyWaste = Math.round((d.totalWaste || 0) / totalDays);
+        
+        // Create progress bars
+        const wakeBar = this.createProgressBar(d.wakeSuccess, totalDays, `${d.wakeSuccess}/${totalDays}`);
+        const templeBar = this.createProgressBar(d.templeSuccess, totalDays, `${d.templeSuccess}/${totalDays}`);
+        const roundsBar = this.createProgressBar(d.roundSuccess, totalDays, `${d.roundSuccess}/${totalDays}`);
+        const sleepBar = this.createProgressBar(d.sleepSuccess, totalDays, `${d.sleepSuccess}/${totalDays}`);
+        
+        // Create soul and body percentage bars
+        const soulBar = this.createProgressBar(d.soulPercentage, 100, `${d.soulPercentage}%`, 'soul');
+        const bodyBar = this.createProgressBar(d.bodyPercentage, 100, `${d.bodyPercentage}%`, 'body');
+        
+        // Labels
+        const hearingLabel = this.getMinutesLabel(avgDailyHearing);
+        const readingLabel = this.getMinutesLabel(avgDailyReading);
+        const studyLabel = this.getMinutesLabel(avgDailyStudy);
+        const restLabel = this.getMinutesLabel(avgDailyRest);
+        const wasteLabel = this.getMinutesLabel(avgDailyWaste, true);
+        
+        // Icons with tooltips
+        const morningIcon = this.getActivityIcon(d.morningClassSuccess, totalDays);
+        const mangalaIcon = this.getActivityIcon(d.mangalaArtiSuccess, totalDays);
+        const cleanIcon = this.getActivityIcon(d.cleanSuccess, totalDays);
+        
+        const morningCount = `${d.morningClassSuccess}/${totalDays}`;
+        const mangalaCount = `${d.mangalaArtiSuccess}/${totalDays}`;
+        const cleanCount = `${d.cleanSuccess}/${totalDays}`;
+
+        tableRows += `
+            <tr class="user-row" data-user-id="${index}" data-user-name="${d.name}">
+                <td>
+                    <strong>${d.name}</strong>
+                    <div style="font-size:0.7rem; color:var(--text-muted);">${d.group}</div>
+                </td>
+                
+                <!-- Morning Discipline -->
+                <td>
+                    <div class="metric-badge">
+                        <span class="count">${wakeBar}</span>
+                        <span class="label">${d.wakeSuccess}/${totalDays}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="metric-badge">
+                        <span class="count">${templeBar}</span>
+                        <span class="label">${d.templeSuccess}/${totalDays}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="metric-badge">
+                        <span class="count">${roundsBar}</span>
+                        <span class="label">${d.roundSuccess}/${totalDays}</span>
+                    </div>
+                </td>
+                
+                <!-- Spiritual Effort -->
+                <td>
+                    <div class="metric-badge">
+                        <span class="count" style="font-size:1rem;">${avgDailyHearing}m</span>
+                        <span class="label">${hearingLabel}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="metric-badge">
+                        <span class="count" style="font-size:1rem;">${avgDailyReading}m</span>
+                        <span class="label">${readingLabel}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="metric-badge">
+                        <span class="count" style="font-size:1rem;">${avgDailyStudy}m</span>
+                        <span class="label">${studyLabel}</span>
+                    </div>
+                </td>
+                
+                <!-- Temple Activities -->
+                <td>
+                    <div class="metric-badge" data-tooltip="Attended ${morningCount} days">
+                        <span class="icon-indicator ${this.getIconClass(d.morningClassSuccess, totalDays)}">${morningIcon}</span>
+                        <span class="label">${morningCount}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="metric-badge" data-tooltip="Attended ${mangalaCount} days">
+                        <span class="icon-indicator ${this.getIconClass(d.mangalaArtiSuccess, totalDays)}">${mangalaIcon}</span>
+                        <span class="label">${mangalaCount}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="metric-badge" data-tooltip="Cleaned ${cleanCount} days">
+                        <span class="icon-indicator ${this.getIconClass(d.cleanSuccess, totalDays)}">${cleanIcon}</span>
+                        <span class="label">${cleanCount}</span>
+                    </div>
+                </td>
+                
+                <!-- Lifestyle -->
+                <td>
+                    <div class="metric-badge">
+                        <span class="count">${sleepBar}</span>
+                        <span class="label">${d.sleepSuccess}/${totalDays}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="metric-badge">
+                        <span class="count" style="font-size:1rem;">${avgDailyRest}m</span>
+                        <span class="label">${restLabel}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="metric-badge">
+                        <span class="count" style="font-size:1rem;">${avgDailyWaste}m</span>
+                        <span class="label ${avgDailyWaste > 30 ? 'text-warning' : ''}">${wasteLabel}</span>
+                    </div>
+                </td>
+                
+                <!-- Soul & Body % -->
+                <td>
+                    <div class="metric-badge soul">
+                        <span class="count">${soulBar}</span>
+                        <span class="label">${this.getScoreLabel(d.soulPercentage)}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="metric-badge body">
+                        <span class="count">${bodyBar}</span>
+                        <span class="label">${this.getScoreLabel(d.bodyPercentage)}</span>
+                    </div>
+                </td>
+                
+                <!-- Actions -->
+                <td>
+                    <button class="view-details-btn" onclick="app.showTodayReport('${d.name}', ${index})">
+                        👁️ <span style="display:none;">View</span>
+                    </button>
+                </td>
+            </tr>
+            <tr class="today-report-row hidden" id="today-report-${index}">
+                <td colspan="16">
+                    <div class="today-report-panel" id="today-panel-${index}">
+                        <h4>📋 Today's Report for ${d.name}</h4>
+                        <div class="today-report-grid" id="today-grid-${index}">
+                            Loading today's data...
+                        </div>
+                        <button class="close-panel" onclick="app.hideTodayReport(${index})">Close</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    // Return complete HTML
+    return `
+        <div class="dashboard-table-container">
+            <div class="dashboard-summary-stats">
+                <div class="summary-card">
+                    <span class="label">Active Devotees</span>
+                    <span class="value">${totalActive}</span>
+                </div>
+                <div class="summary-card">
+                    <span class="label">Total Rounds</span>
+                    <span class="value">${totalRounds}</span>
+                </div>
+                <div class="summary-card">
+                    <span class="label">Avg Hearing</span>
+                    <span class="value">${avgHearing}<span class="unit">m</span></span>
+                </div>
+                <div class="summary-card">
+                    <span class="label">Avg Reading</span>
+                    <span class="value">${avgReading}<span class="unit">m</span></span>
+                </div>
+                <div class="summary-card">
+                    <span class="label">Avg Study</span>
+                    <span class="value">${avgStudy}<span class="unit">m</span></span>
+                </div>
+                <div class="summary-card">
+                    <span class="label">Avg Rest</span>
+                    <span class="value">${avgRest}<span class="unit">m</span></span>
+                </div>
+                <div class="summary-card">
+                    <span class="label">Avg Waste</span>
+                    <span class="value">${avgWaste}<span class="unit">m</span></span>
+                </div>
+                <div class="summary-card">
+                    <span class="label">Avg Soul %</span>
+                    <span class="value">${avgSoul}%</span>
+                    <span class="trend">${this.getTrendLabel(avgSoul)}</span>
+                </div>
+                <div class="summary-card">
+                    <span class="label">Avg Body %</span>
+                    <span class="value">${avgBody}%</span>
+                    <span class="trend">${this.getTrendLabel(avgBody)}</span>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="dashboard-main-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Devotee</th>
+                            <th colspan="3">🌅 Morning Discipline</th>
+                            <th colspan="3">📿 Spiritual Effort (Daily)</th>
+                            <th colspan="3">🛕 Temple Activities</th>
+                            <th colspan="3">😴 Lifestyle</th>
+                            <th colspan="2">📊 Scores</th>
+                            <th rowspan="2"></th>
+                        </tr>
+                        <tr>
+                            <th>Wake 4:30</th>
+                            <th>Temple</th>
+                            <th>16 Rounds</th>
+                            <th>Hear</th>
+                            <th>Read</th>
+                            <th>Study</th>
+                            <th>Class</th>
+                            <th>Arti</th>
+                            <th>Clean</th>
+                            <th>Sleep 9:30</th>
+                            <th>Rest</th>
+                            <th>Waste</th>
+                            <th>Soul %</th>
+                            <th>Body %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+},
+
+// Create progress bar
+createProgressBar: function(value, max, text, type = 'default') {
+    const percentage = Math.min((value / max) * 100, 100);
+    let barColor = 'var(--saffron)';
+    
+    if (type === 'soul') {
+        if (percentage >= 80) barColor = '#48bb78';
+        else if (percentage >= 60) barColor = '#ecc94b';
+        else barColor = '#f56565';
+    } else if (type === 'body') {
+        if (percentage >= 80) barColor = '#2c7a7b';
+        else if (percentage >= 60) barColor = '#3182ce';
+        else barColor = '#f56565';
+    }
+    
+    return `
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: ${percentage}%; background: ${barColor};"></div>
+            <span class="progress-bar-text">${text}</span>
+        </div>
+    `;
+},
+
+// Get minutes label
+getMinutesLabel: function(minutes, isWaste = false) {
+    if (isWaste) {
+        if (minutes === 0) return 'None';
+        if (minutes <= 15) return 'Minimal';
+        if (minutes <= 30) return 'Moderate';
+        return 'High';
+    }
+    
+    if (minutes >= 60) return 'Excellent';
+    if (minutes >= 45) return 'Good';
+    if (minutes >= 30) return 'Average';
+    if (minutes >= 15) return 'Fair';
+    if (minutes > 0) return 'Low';
+    return 'None';
+},
+
+// Get activity icon
+getActivityIcon: function(success, totalDays) {
+    const percentage = (success / totalDays) * 100;
+    if (percentage >= 70) return '✅';
+    if (percentage >= 30) return '⚠️';
+    return '❌';
+},
+
+// Get icon class
+getIconClass: function(success, totalDays) {
+    const percentage = (success / totalDays) * 100;
+    if (percentage >= 70) return 'good';
+    if (percentage >= 30) return 'warning';
+    return 'bad';
+},
+
+// Get score label
+getScoreLabel: function(score) {
+    if (score >= 90) return 'Excellent';
+    if (score >= 75) return 'Good';
+    if (score >= 60) return 'Average';
+    if (score >= 40) return 'Fair';
+    return 'Needs Work';
+},
+
+// Get trend label
+getTrendLabel: function(score) {
+    if (score >= 80) return '🔥 Excellent';
+    if (score >= 60) return '👍 Good';
+    if (score >= 40) return '⚖️ Average';
+    return '⚠️ Needs Work';
+},
+
+// Show today's report
+showTodayReport: async function(userName, userId) {
+    document.querySelectorAll('.today-report-row').forEach(row => {
+        row.classList.add('hidden');
+    });
+    
+    const panel = document.getElementById(`today-report-${userId}`);
+    if (panel) {
+        panel.classList.remove('hidden');
+        await this.loadTodayReport(userName, userId);
+    }
+},
+
+// Hide today's report
+hideTodayReport: function(userId) {
+    const panel = document.getElementById(`today-report-${userId}`);
+    if (panel) {
+        panel.classList.add('hidden');
+    }
+},
+
+// Load today's report data
+loadTodayReport: async function(userName, userId) {
+    const grid = document.getElementById(`today-grid-${userId}`);
+    if (!grid) return;
+    
+    grid.innerHTML = '<div class="dashboard-loading">Loading today\'s data...</div>';
+    
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        const url = `${this.API_BASE_URL}/api/search?voice=${this.activeVoice}&date=${today}&name=${encodeURIComponent(userName)}`;
+        
+        const res = await fetch(url, {
+            headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+        });
+        
+        if (!res.ok) throw new Error('Failed to load');
+        
         const data = await res.json();
         
-        if (!data.length) { container.innerHTML = '<p class="text-center">No records found.</p>'; return; }
+        if (data.length === 0) {
+            grid.innerHTML = '<div class="dashboard-empty">No entry for today yet.</div>';
+            return;
+        }
         
-        container.innerHTML = data.map(d => this.renderDevoteeDashboardCard(d, type)).join('');
-    } catch (e) { this.notify("Dashboard load failed", true); }
-    },*/
-
-    /*renderDevoteeDashboardCard: function(d, type) {
-        const totalDays = type === 'weekly' ? 7 : 30;
-        const getBar = (count) => {
-            const filled = Math.min(Math.round((count / totalDays) * 9), 9);
-            return "█".repeat(filled) + "░".repeat(9 - filled);
+        const record = data[0];
+        
+        // Calculate today's scores using MarksCalculator
+        const todayData = {
+            name: record.name,
+            group: record.user_group,
+            voice: record.voice_name,
+            hearing: record.hearing_minutes > 0 ? 1 : 0,
+            reading: record.reading_minutes > 0 ? 1 : 0,
+            cleanliness: record.cleanliness == 1 ? 1 : 0,
+            morningClass: record.morning_class == 1 ? 1 : 0,
+            mangalaArti: record.mangala_aarti == 1 ? 1 : 0,
+            rounds: record.rounds || 0,
+            toBed: record.sleep_time,
+            wakeUp: record.wakeup_time,
+            dayRest: record.day_rest_minutes || 0
         };
+        
+        const scores = await MarksCalculator.calculateCompleteScore(todayData);
+        
+        grid.innerHTML = `
+            <div class="today-metric">
+                <span class="label">Wakeup</span>
+                <span class="value">${record.wakeup_time || '-'}</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Rounds</span>
+                <span class="value">${record.rounds || 0}</span>
+                <span class="sub-value">${scores.soul.japa}/${scores.soul.maxPossible}</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Temple</span>
+                <span class="value">${record.temp_hall_rech || '-'}</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Hearing</span>
+                <span class="value">${record.hearing_minutes || 0}m</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Reading</span>
+                <span class="value">${record.reading_minutes || 0}m</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Study</span>
+                <span class="value">${record.study_minutes || 0}m</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Morning Class</span>
+                <span class="value">${record.morning_class ? '✅ Yes' : '❌ No'}</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Mangala Arti</span>
+                <span class="value">${record.mangala_aarti ? '✅ Yes' : '❌ No'}</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Cleanliness</span>
+                <span class="value">${record.cleanliness ? '✅ Yes' : '❌ No'}</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Sleep</span>
+                <span class="value">${record.sleep_time || '-'}</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Day Rest</span>
+                <span class="value">${record.day_rest_time || '0'}</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Time Wasted</span>
+                <span class="value">${record.time_wasted || '0'}m</span>
+            </div>
+            <div class="today-metric" style="grid-column: span 2; background: #fef3c7;">
+                <span class="label">Soul Score</span>
+                <span class="value">${scores.soulPercentage}%</span>
+                <span class="sub-value">(${scores.soul.total}/${scores.soul.maxPossible})</span>
+            </div>
+            <div class="today-metric" style="grid-column: span 2; background: #e6fffa;">
+                <span class="label">Body Score</span>
+                <span class="value">${scores.bodyPercentage}%</span>
+                <span class="sub-value">(${scores.body.total}/${scores.body.maxPossible})</span>
+            </div>
+        `;
+        
+    } catch (error) {
+        console.error('Error loading today report:', error);
+        grid.innerHTML = '<div class="dashboard-empty">Failed to load today\'s data</div>';
+    }
+},
 
-        // Scoring logic (matching your body/soul percent intent)
-        const bodyScore = Math.round((d.wakeSuccess + d.templeSuccess + d.sleepSuccess) / (totalDays * 7) * 100);
-        const soulScore = Math.round((d.roundSuccess + d.morningClassSuccess + d.mangalaArtiSuccess) / (totalDays * 7) * 100);
+// Attach click handlers
+attachDashboardHandlers: function() {
+    document.querySelectorAll('.user-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+            
+            const userId = row.dataset.userId;
+            const userName = row.dataset.userName;
+            this.showTodayReport(userName, userId);
+        });
+    });
+},
 
-        return `
-            <div class="card" style="border-left: 5px solid var(--saffron); padding: 15px; margin-bottom: 15px;">
-                <div style="text-align: center;">
-                    <h3 class="spiritual-text">${type === 'weekly' ? 'Weekly' : 'Monthly'} Sadhana Report</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-muted)">${d.name} | ${d.voice} | ${d.group}</p>
-                </div>
-                <div style="display: flex; justify-content: center; flex-wrap: wrap;">
-                    <div class="score-badge bg-body">[ Body Score: ${bodyScore}% ]</div>
-                    <div class="score-badge bg-soul">[ Soul Score: ${soulScore}% ]</div>
-                    <div class="score-badge bg-total">[ Total Rounds: ${d.totalRounds} ]</div>
-                </div>
-                <div class="report-section">
-                    <div class="report-title">Morning Discipline</div>
-                    <div class="progress-row"><span>Wake Before 4:30</span> <span class="ascii-bar">${getBar(d.wakeSuccess)}</span> <span>${d.wakeSuccess}/${totalDays}</span></div>
-                    <div class="progress-row"><span>Temple Reach</span> <span class="ascii-bar">${getBar(d.templeSuccess)}</span> <span>${d.templeSuccess}/${totalDays}</span></div>
-                    <div class="progress-row"><span>16 Rounds</span> <span class="ascii-bar">${getBar(d.roundSuccess)}</span> <span>${d.roundSuccess}/${totalDays}</span></div>
-                </div>
-                <div class="report-section">
-                    <div class="report-title">Temple Participation</div>
-                    <div class="progress-row"><span>Morning Class</span> <span class="ascii-bar">${getBar(d.morningClassSuccess)}</span></div>
-                    <div class="progress-row"><span>Mangala Arti</span> <span class="ascii-bar">${getBar(d.mangalaArtiSuccess)}</span></div>
-                    <div class="progress-row"><span>Cleanliness</span> <span class="ascii-bar">${getBar(d.cleanSuccess)}</span></div>
-                </div>
-                <div class="report-section">
-                    <div class="report-title">Spiritual Effort</div>
-                    <div class="pill-box">
-                        <span class="lifestyle-pill">Hearing: ${d.avgHearing}m</span>
-                        <span class="lifestyle-pill">Reading: ${d.avgReading}m</span>
-                        <span class="lifestyle-pill">Study: ${d.avgStudy}m</span>
-                    </div>
-                </div>
-                <div class="report-section">
-                    <div class="report-title">Lifestyle Balance</div>
-                    <div class="pill-box">
-                        <span class="lifestyle-pill">Sleep: ${d.avgSleep}</span>
-                        <span class="lifestyle-pill">Rest: ${d.avgRest}m</span>
-                        <span class="lifestyle-pill">Waste: ${d.avgWaste}</span>
-                    </div>
-                </div>
-                <button class="btn btn-whatsapp btn-action" style="width:100%" onclick="window.open('https://wa.me/?text=' + encodeURIComponent('*Sadhana Report for ${d.name}*\\nBody: ${bodyScore}%\\nSoul: ${soulScore}%'))">[ Share WhatsApp Report ]</button>
-            </div>`;
-    },*/
-
-    loadSadhanaDashboard: async function() {
-        const type = document.getElementById('dash-report-type').value;
-        const group = document.getElementById('dash-group-filter').value;
-
-        // Determine voice filter based on user role
-        let voiceFilter;
-        if (this.currentUser.role === 'devotee') {
-            voiceFilter = this.currentUser.voice; // restrict to own voice
-        } else { 
-            voiceFilter = this.activeVoice; // admin can switch/filter
-        }
-
-        const container = document.getElementById('dashboard-report-content');
-        container.innerHTML = '<p class="text-center">Loading transcendental data...</p>';
-
-        try {
-            const url = `${this.API_BASE_URL}/api/dashboard/report?voice=${voiceFilter}&type=${type}&group=${group}`;
-            const res = await fetch(url, {
-                headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
-            });
-
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
-            }
-
-            const data = await res.json();
-
-            if (!data.length) {
-                container.innerHTML = '<p class="text-center">No records found.</p>';
-                return;
-            }
-
-            container.innerHTML = data.map(d => this.renderDevoteeDashboardCard(d, type)).join('');
-
-        } catch(e) {
-            console.error('Dashboard error:', e);
-            this.notify("Dashboard load failed: " + e.message, true);
-            container.innerHTML = '<p class="text-center text-error">Failed to load dashboard.</p>';
-        }
-    },
-
+//--------------------ending of new functi on-----------------//
 
     //reder function new
     renderDevoteeDashboardCard: function(d, type) {
@@ -1668,6 +5412,7 @@ const app = {
     }*/
 
     handleLogout: function() { localStorage.clear(); location.reload(); },
+
     handleVoiceSwitch: function(selectedVoice) {
        this.activeVoice = selectedVoice;       // Update active voice
        
@@ -1687,11 +5432,30 @@ const app = {
        if (!document.getElementById('view-user-mgmt').classList.contains('hidden')) {
            this.loadUsers();                      // Reload user management if visible
        }
+        if (!document.getElementById('view-leaderboard').classList.contains('hidden')) {
+        if (typeof LeaderboardModule !== 'undefined') {
+            LeaderboardModule.load('current', LeaderboardModule.currentSort); //Reload leader board
+        }
+    }
        
        this.notify(`Switched to voice: ${selectedVoice}`);
-    }  ,
+    },
+        // Show leaderboard view
+    showLeaderboard: function() {
+        this.showView('leaderboard');
+
+        // Load leaderboard data
+        setTimeout(() => {
+            LeaderboardModule.load('current', 'high-to-low');
+        }, 100);
+    },
+
 };
+// Make LeaderboardModule globally available
+window.LeaderboardModule = LeaderboardModule;
+
 document.addEventListener('DOMContentLoaded', () => app.init());
+
 </script>
 </body>
 </html>
