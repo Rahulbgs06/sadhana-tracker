@@ -13,28 +13,42 @@
             /* Light theme (default) */
             --bg-primary: #f5f0e7;
             --bg-card: #ffffff;
+            --bg-input: #ffffff;
+            --bg-table-header: #ffebcc;
             --text-primary: #2c3e50;
             --text-secondary: #5a6b7c;
+            --text-muted: #666666;
             --border-color: #e2e8f0;
-            --input-bg: #ffffff;
-            --input-border: #e2e8f0;
             --saffron: #ff9933;
             --saffron-dark: #cc7a29;
             --saffron-light: #ffebcc;
+            --success-bg: #e6fffa;
+            --success-text: #2c7a7b;
+            --warning-bg: #fef3c7;
+            --warning-text: #92400e;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
             --shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         [data-theme="dark"] {
-            --bg-primary: #0a0c10;        /* Much darker background */
-            --bg-card: #1a1e24;            /* Dark card background */
-            --text-primary: #e5e7eb;        /* Light text */
-            --text-secondary: #9ca3af;      /* Muted text */
-            --border-color: #2d3748;        /* Dark border */
-            --input-bg: #232a33;            /* Dark input background */
-            --input-border: #3a4452;        /* Input border */
-            --saffron: #fbbf24;              /* Brighter saffron for dark mode */
+            --bg-primary: #0f1117;        /* Very dark background */
+            --bg-card: #1e2128;            /* Dark card background */
+            --bg-input: #2d313a;            /* Dark input background */
+            --bg-table-header: #2d313a;     /* Dark table header */
+            --text-primary: #f0f0f0;        /* Almost white text */
+            --text-secondary: #c0c0c0;      /* Light gray text */
+            --text-muted: #a0a0a0;           /* Medium gray text */
+            --border-color: #3a3f4b;        /* Dark border */
+            --saffron: #fbbf24;              /* Brighter saffron */
             --saffron-dark: #f59e0b;
             --saffron-light: #2d3748;
+            --success-bg: #1e3a3a;
+            --success-text: #81e6d9;
+            --warning-bg: #422006;
+            --warning-text: #fbbf24;
+            --danger-bg: #3b1e1e;
+            --danger-text: #fca5a5;
             --shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         /* Remove default outline and add clean focus effect */
@@ -1695,6 +1709,294 @@
         padding: 20px;
     }
 }
+        /* ============================================
+           COMPLETE DARK THEME OVERRIDES - FORCE EVERYTHING
+        ============================================ */
+
+        [data-theme="dark"] {
+            /* Force background colors */
+            background-color: var(--bg-primary) !important;
+        }
+
+        /* Force ALL cards and containers to use theme variables */
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .form-card,
+        [data-theme="dark"] .dashboard-card,
+        [data-theme="dark"] .stat-pill,
+        [data-theme="dark"] .table-container,
+        [data-theme="dark"] .leaderboard-container,
+        [data-theme="dark"] .today-report-panel,
+        [data-theme="dark"] .rule-card,
+        [data-theme="dark"] .rule-creator,
+        [data-theme="dark"] .voice-selector,
+        [data-theme="dark"] .modal-content,
+        [data-theme="dark"] .condition-builder,
+        [data-theme="dark"] .metric-badge,
+        [data-theme="dark"] .summary-card,
+        [data-theme="dark"] .spiritual-banner,
+        [data-theme="dark"] .user-info-strip,
+        [data-theme="dark"] .welcome-banner,
+        [data-theme="dark"] .quick-stats .stat-pill,
+        [data-theme="dark"] .dashboard-table-container,
+        [data-theme="dark"] .leaderboard-table-container,
+        [data-theme="dark"] .admin-container,
+        [data-theme="dark"] .rule-tabs,
+        [data-theme="dark"] .condition-row,
+        [data-theme="dark"] .conditions-list,
+        [data-theme="dark"] .rule-condition-item,
+        [data-theme="dark"] .history-entry,
+        [data-theme="dark"] .modal-overlay .modal-content {
+            background-color: var(--bg-card) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        /* Force ALL inputs to dark */
+        [data-theme="dark"] input,
+        [data-theme="dark"] select,
+        [data-theme="dark"] textarea,
+        [data-theme="dark"] .form-input,
+        [data-theme="dark"] .form-select,
+        [data-theme="dark"] .tracking-input {
+            background-color: var(--bg-input) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        /* Force ALL buttons */
+        [data-theme="dark"] .btn-primary {
+            background: var(--saffron) !important;
+            color: #000000 !important;
+        }
+
+        [data-theme="dark"] .btn-outline {
+            background: transparent !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme="dark"] .btn-outline:hover {
+            background: var(--bg-input) !important;
+        }
+
+        [data-theme="dark"] .btn-whatsapp {
+            background: #25D366 !important;
+            color: white !important;
+        }
+
+        [data-theme="dark"] .btn-logout {
+            background: var(--bg-card) !important;
+            border: 1px solid #742a2a !important;
+            color: #fca5a5 !important;
+        }
+
+        /* Force table styles */
+        [data-theme="dark"] table,
+        [data-theme="dark"] .dashboard-main-table,
+        [data-theme="dark"] .leaderboard-table {
+            background-color: var(--bg-card) !important;
+        }
+
+        [data-theme="dark"] th {
+            background-color: var(--bg-table-header) !important;
+            color: var(--saffron) !important;
+        }
+
+        [data-theme="dark"] td {
+            border-bottom: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        /* Force spiritual banner */
+        [data-theme="dark"] .spiritual-banner {
+            background: linear-gradient(135deg, var(--saffron-light) 0%, var(--bg-card) 100%) !important;
+            border: 1px solid var(--saffron) !important;
+        }
+
+        [data-theme="dark"] .banner-text {
+            color: var(--saffron) !important;
+        }
+
+        [data-theme="dark"] .banner-subtext {
+            color: var(--text-secondary) !important;
+        }
+
+        /* Force badges and pills */
+        [data-theme="dark"] .badge,
+        [data-theme="dark"] .metric-badge,
+        [data-theme="dark"] .effort-pill {
+            background-color: var(--bg-input) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        [data-theme="dark"] .badge.success {
+            background: var(--success-bg) !important;
+            color: var(--success-text) !important;
+        }
+
+        [data-theme="dark"] .badge.warning {
+            background: var(--warning-bg) !important;
+            color: var(--warning-text) !important;
+        }
+
+        /* Force progress bars */
+        [data-theme="dark"] .progress-bar-container,
+        [data-theme="dark"] .progress-track {
+            background: var(--bg-input) !important;
+        }
+
+        [data-theme="dark"] .progress-fill {
+            background: var(--saffron) !important;
+        }
+
+        /* Force footer */
+        [data-theme="dark"] .footer,
+        [data-theme="dark"] .spiritual-footer {
+            color: var(--text-secondary) !important;
+            border-top-color: var(--border-color) !important;
+        }
+
+        [data-theme="dark"] .footer-mantra {
+            color: var(--saffron-dark) !important;
+        }
+
+        /* Force voice switcher */
+        [data-theme="dark"] .voice-switcher,
+        [data-theme="dark"] #global-voice-switcher {
+            background: var(--bg-input) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        /* Force admin panel */
+        [data-theme="dark"] .rule-tabs .tab-btn {
+            color: var(--text-secondary) !important;
+        }
+
+        [data-theme="dark"] .rule-tabs .tab-btn.active {
+            color: var(--saffron) !important;
+            border-bottom-color: var(--saffron) !important;
+            background: var(--bg-input) !important;
+        }
+
+        /* Force user info strip */
+        [data-theme="dark"] .user-info-strip {
+            background: var(--bg-card) !important;
+        }
+
+        [data-theme="dark"] .user-badge {
+            background: var(--bg-input) !important;
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme="dark"] .date-badge {
+            background: var(--bg-input) !important;
+            color: var(--text-secondary) !important;
+        }
+
+        /* Force quick stats */
+        [data-theme="dark"] .stat-pill {
+            background: var(--bg-card) !important;
+        }
+
+        [data-theme="dark"] .stat-label {
+            color: var(--text-secondary) !important;
+        }
+
+        [data-theme="dark"] .stat-value {
+            color: var(--saffron) !important;
+        }
+
+        /* Force status box */
+        [data-theme="dark"] #status-box {
+            background: var(--bg-card) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        [data-theme="dark"] .status-success {
+            background: var(--success-bg) !important;
+            color: var(--success-text) !important;
+        }
+
+        [data-theme="dark"] .status-error {
+            background: var(--danger-bg) !important;
+            color: var(--danger-text) !important;
+        }
+
+        /* Force modal */
+        [data-theme="dark"] .modal-overlay {
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        [data-theme="dark"] .modal-content {
+            background: var(--bg-card) !important;
+            color: var(--text-primary) !important;
+        }
+
+        [data-theme="dark"] .modal-close {
+            color: var(--text-secondary) !important;
+        }
+
+        [data-theme="dark"] .modal-close:hover {
+            background: var(--bg-input) !important;
+        }
+
+        /* Force leaderboard specific */
+        [data-theme="dark"] .leaderboard-rank-1 {
+            background: rgba(255, 215, 0, 0.2) !important;
+        }
+
+        [data-theme="dark"] .leaderboard-rank-2 {
+            background: rgba(192, 192, 192, 0.2) !important;
+        }
+
+        [data-theme="dark"] .leaderboard-rank-3 {
+            background: rgba(205, 127, 50, 0.2) !important;
+        }
+
+        [data-theme="dark"] .leaderboard-your-rank {
+            background: var(--bg-input) !important;
+            border-color: var(--saffron) !important;
+        }
+
+        /* Force links */
+        [data-theme="dark"] a,
+        [data-theme="dark"] .card-footer {
+            color: var(--saffron) !important;
+        }
+
+        [data-theme="dark"] a:hover {
+            color: var(--saffron-dark) !important;
+        }
+
+        /* Force icons */
+        [data-theme="dark"] .icon-indicator.good {
+            color: var(--success-text) !important;
+        }
+
+        [data-theme="dark"] .icon-indicator.warning {
+            color: var(--warning-text) !important;
+        }
+
+        [data-theme="dark"] .icon-indicator.bad {
+            color: var(--danger-text) !important;
+        }
+
+        /* Force any remaining white elements */
+        [data-theme="dark"] [class*="bg-white"],
+        [data-theme="dark"] [style*="background: white"],
+        [data-theme="dark"] [style*="background: #fff"],
+        [data-theme="dark"] [style*="background: #ffffff"] {
+            background: var(--bg-card) !important;
+        }
+
+        [data-theme="dark"] [style*="color: white"],
+        [data-theme="dark"] [style*="color: #fff"],
+        [data-theme="dark"] [style*="color: #ffffff"] {
+            color: var(--text-primary) !important;
+        }
     
     </style>
     <!-- Prevent favicon 404 -->
@@ -4113,17 +4415,17 @@ const app = {
     activeVoice: 'All',
     usersData: [],
     rawRecords: [],
-    
+
     init: function() {
         // Load saved theme
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.body.setAttribute('data-theme', savedTheme);
-        
+
         // Update button state
         const toggleBtn = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
         const themeText = document.getElementById('theme-text');
-        
+
         if (toggleBtn && themeIcon && themeText) {
             if (savedTheme === 'dark') {
                 themeIcon.textContent = '☀️';
@@ -4135,7 +4437,7 @@ const app = {
                 toggleBtn.style.background = 'rgba(255,255,255,0.2)';
             }
         }
-        
+
         const saved = localStorage.getItem('sadhana_session');
         if (saved) {
             this.currentUser = JSON.parse(saved);
@@ -4150,30 +4452,31 @@ const app = {
     toggleTheme: function() {
         const currentTheme = document.body.getAttribute('data-theme') || 'light';
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-
+        
         document.body.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-
-        // Update button with better UI
+        
+        // Update button
         const toggleBtn = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
         const themeText = document.getElementById('theme-text');
-
+        
         if (toggleBtn && themeIcon && themeText) {
             if (newTheme === 'dark') {
                 themeIcon.textContent = '☀️';
                 themeText.textContent = 'Light';
                 toggleBtn.style.background = 'rgba(0,0,0,0.3)';
+                toggleBtn.style.border = '1px solid #40475c';
             } else {
                 themeIcon.textContent = '🌙';
                 themeText.textContent = 'Dark';
                 toggleBtn.style.background = 'rgba(255,255,255,0.2)';
+                toggleBtn.style.border = '1px solid rgba(255,255,255,0.3)';
             }
         }
-
+        
         this.notify(`✨ Switched to ${newTheme} theme`);
     },
-
 
     notify: function(msg, isError = false) {
         const box = document.getElementById('status-box');
