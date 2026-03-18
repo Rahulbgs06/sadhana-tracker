@@ -8,6 +8,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <style>
+            :root {
+        /* Missing these from your CSS */
+        --cream: #f5f0e7;        /* Used in body background */
+        --white: #ffffff;         /* Used in cards */
+        --text-dark: #2c3e50;     /* Used in body */
+        --border: #e2e8f0;        /* Used everywhere */
+        --whatsapp: #25D366;       /* Used in WhatsApp button */
+        --input-bg: #ffffff;       /* Used in inputs */
+        --input-border: #e2e8f0;   /* Used in inputs */
+    }
+
         /*. findtheme for light dark theme  style */
         :root {
             /* Light theme (default) */
@@ -205,6 +216,21 @@
 
         .modal-close:hover {
             background: var(--input-bg);
+        }
+
+                /* Add to your CSS */
+        [data-theme="dark"] .error-field {
+            border: 2px solid #fc8181 !important;
+        }
+
+        [data-theme="dark"] .btn-excel {
+            background: #2f855a;
+            color: white;
+        }
+
+        [data-theme="dark"] .btn-whatsapp {
+            background: #25D366;
+            color: white;
         }
 
         /*. for light dark theme  style */
@@ -468,7 +494,7 @@
                 opacity: 0.7;
                 line-height: 1.6;
             }
-        
+            
             /* Animations */
             @keyframes gentlePulse {
                 0%, 100% { opacity: 1; transform: scale(1); }
@@ -564,6 +590,118 @@
         }
 
         /* --- SADHANA DASHBOARD SPECIFIC STYLES --- */
+        /* ============================================
+        MOBILE RESPONSIVE FIXES
+        ============================================ */
+
+        /* Make table horizontally scrollable on mobile */
+        @media (max-width: 768px) {
+            .dashboard-table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 10px -10px;
+                padding: 0 10px;
+                width: calc(100% + 20px);
+            }
+
+            .dashboard-main-table {
+                min-width: 1000px; /* Keep large for horizontal scroll */
+            }
+
+            /* Better card layouts on mobile */
+            .dashboard-summary-stats {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .summary-card {
+                padding: 8px 4px;
+            }
+
+            .summary-card .value {
+                font-size: 1.1rem;
+            }
+
+            /* Improve filter layout on mobile */
+            .nav-grid {
+                grid-template-columns: 1fr !important;
+                gap: 8px;
+            }
+
+            /* Make buttons more touch-friendly */
+            .view-details-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .btn, .btn-logout {
+                padding: 16px;
+                font-size: 1rem;
+            }
+
+            /* Add sticky first column for better context */
+            .dashboard-main-table th:first-child,
+            .dashboard-main-table td:first-child {
+                position: sticky;
+                left: 0;
+                background: var(--bg-card);
+                z-index: 10;
+                box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            }
+
+            .dashboard-main-table th:first-child {
+                background: var(--saffron);
+                color: white;
+                z-index: 20;
+            }
+
+            [data-theme="dark"] .dashboard-main-table td:first-child {
+                background: var(--bg-card);
+            }
+
+            /* Hint for scrolling */
+            .scroll-hint {
+                display: block;
+                text-align: center;
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                padding: 5px;
+                margin-bottom: 5px;
+                background: var(--bg-input);
+                border-radius: 20px;
+            }
+        }
+
+        /* Add scroll hint on mobile */
+        .scroll-hint {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .scroll-hint {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            .scroll-hint:before {
+                content: '⬅️';
+                animation: scrollHint 1.5s infinite;
+            }
+
+            .scroll-hint:after {
+                content: '➡️';
+                animation: scrollHint 1.5s infinite 0.5s;
+            }
+        }
+
+        @keyframes scrollHint {
+            0%, 100% { transform: translateX(0); opacity: 0.5; }
+            50% { transform: translateX(5px); opacity: 1; }
+        }
+
         /* --- ENHANCED SADHANA DASHBOARD STYLES --- */
         .dashboard-card { 
             background: #fff; border-radius: 20px; padding: 25px; 
@@ -1997,17 +2135,162 @@
         [data-theme="dark"] [style*="color: #ffffff"] {
             color: var(--text-primary) !important;
         }
-    
+
+            /*.   styles for regsiters voice options  */
+            /* Suggestions dropdown styling */
+    .suggestions-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        display: none;
+        z-index: 1000;
+        box-shadow: var(--shadow);
+        margin-top: 2px;
+    }
+
+    .suggestions-dropdown div {
+        padding: 8px 12px;
+        cursor: pointer;
+        border-bottom: 1px solid var(--border-color);
+        transition: background 0.2s;
+    }
+
+    .suggestions-dropdown div:hover {
+        background: var(--saffron-light);
+    }
+
+    .suggestions-dropdown div:last-child {
+        border-bottom: none;
+    }
+        /* Group Report Table Styles */
+        .group-report-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .group-report-table th {
+            background: var(--saffron);
+            color: white;
+            padding: 10px 8px;
+            text-align: center;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .group-report-table td {
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .group-report-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .group-report-table .activity-label {
+            font-weight: 600;
+            color: var(--saffron-dark);
+            text-align: left;
+            padding-left: 12px;
+        }
+
+        .group-report-table .negative-value {
+            color: #f56565;
+            font-weight: 600;
+        }
+
+        .group-report-table .positive-value {
+            color: #48bb78;
+        }
+
+        .group-header {
+            background: var(--saffron-light);
+            padding: 12px 15px;
+            margin: 20px 0 10px 0;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            color: var(--saffron-dark);
+            border-left: 5px solid var(--saffron);
+        }
+
+        .report-summary-box {
+            background: linear-gradient(135deg, var(--saffron-light), var(--bg-card));
+            border: 1px solid var(--saffron);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .summary-item {
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-item h4 {
+            color: var(--saffron-dark);
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .summary-item ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .summary-item li {
+            padding: 4px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .summary-item li:last-child {
+            border-bottom: none;
+        }
+
+        .rank-1 { color: #ffd700; font-weight: bold; }
+        .rank-2 { color: #c0c0c0; font-weight: bold; }
+        .rank-3 { color: #cd7f32; font-weight: bold; }
+
+        @media (max-width: 768px) {
+            .group-report-table {
+                font-size: 0.75rem;
+            }
+
+            .group-report-table th,
+            .group-report-table td {
+                padding: 6px 4px;
+            }
+        }
+
+
     </style>
     <!-- Prevent favicon 404 -->
     <link rel="icon" href="data:image/x-icon;,">    
 </head>
 <body>
-
 <div id="status-box"></div>
     <div class="persistent-header">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 20px;">
-            <span style="font-weight: 600; letter-spacing: 0.5px;">🕉️ || Hare Krishna ||</span>
+            <span style="font-weight: 600; letter-spacing: 0.5px;">🕉️ || Hare Krishna || 🕉️ </span>
             <button id="theme-toggle" onclick="app.toggleTheme()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 30px; color: white; font-size: 1.2rem; cursor: pointer; padding: 8px 16px; width: auto; display: flex; align-items: center; gap: 8px;">
                 <span id="theme-icon">🌙</span>
                 <span id="theme-text" style="font-size: 0.9rem;">Dark</span>
@@ -2044,11 +2327,40 @@
         <div class="form-group"><label>Email</label><input type="email" id="reg-email"></div>
         <div class="form-group"><label>Password (Min 6 chars)</label><input type="password" id="reg-pass"></div>
         <div class="nav-grid">
-            <div class="form-group"><label>Voice Name (Type Manual)</label><input type="text" id="reg-voice" placeholder="e.g. Surbhikunj"></div>
-            <div class="form-group"><label>Internal Group</label>
-                <select id="reg-group">
-                    <option>Yudhisthir</option><option>Bheem</option><option>Nakul</option><option>Sahdev</option>
-                </select>
+            <!-- VOICE FIELD with suggestions -->
+            <div class="form-group" style="position: relative;">
+                <label>Voice Name</label>
+                <div style="display: flex; gap: 5px;">
+                    <input type="text" id="reg-voice" placeholder="e.g. Vrindavan" 
+                           oninput="app.handleVoiceInput(this.value)" 
+                           onfocus="app.showAllVoices()"
+                           style="flex: 2;" autocomplete="off">
+                    <select id="reg-voice-quick" onchange="app.selectVoiceFromDropdown(this.value)" 
+                            style="flex: 1; padding: 12px;">
+                        <option value="">📋 Select Voice</option>
+                    </select>
+                </div>
+                <div id="voice-suggestions" class="suggestions-dropdown"></div>
+                <small style="color: var(--text-muted);">✏️ Type new OR select existing</small>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ✅ UPDATED: GROUP FIELD with suggestions -->
+            <!-- ============================================ -->
+            <div class="form-group" style="position: relative;">
+                <label>Internal Group</label>
+                <div style="display: flex; gap: 5px;">
+                    <input type="text" id="reg-group" placeholder="e.g. Yudhisthir" 
+                           oninput="app.handleGroupInput(this.value)" 
+                           onfocus="app.showAllGroups()"
+                           style="flex: 2;" autocomplete="off" value="Yudhisthir">
+                    <select id="reg-group-quick" onchange="app.selectGroupFromDropdown(this.value)" 
+                            style="flex: 1; padding: 12px;">
+                        <option value="">📋 Select Group</option>
+                    </select>
+                </div>
+                <div id="group-suggestions" class="suggestions-dropdown"></div>
+                <small style="color: var(--text-muted);">✏️ Type new OR select existing</small>
             </div>
         </div>
         <button class="btn btn-primary" onclick="app.handleRegister()">Create Account</button>
@@ -2060,11 +2372,11 @@
         <!-- Welcome Banner -->
         <div class="spiritual-banner">
             <div class="banner-content">
-                <span class="om-symbol">🕉️</span>
-                <h3 class="banner-text">Hare Krishna Hare Krishna</h3>
-                <span class="om-symbol">🕉️</span>
+                <span class="om-symbol"></span>
+                <h3 class="banner-text">Hare Krishna Hare Krishna Krishna Krishna Hare Hare</h3>
+                <span class="om-symbol">Hare Ram Hare Ram Ram Ram Hare Hare</span>
             </div>
-            <div class="banner-subtext">Krishna Krishna Hare Hare</div>
+            <div class="banner-subtext"></div>
         </div>
 
         <!-- Main Menu Grid -->
@@ -2095,12 +2407,13 @@
             </div>
 
             <!-- Analytics Card -->
-            <div class="dashboard-card" onclick="app.showView('reports')">
-                <div class="card-icon">📊</div>
-                <div class="card-title">Analytics</div>
-                <div class="card-desc">Insights and statistics</div>
-                <div class="card-footer">Explore →</div>
-            </div>
+        <div class="dashboard-card admin-only hidden" onclick="app.showView('reports')">
+            <div class="card-icon">📊</div>
+            <div class="card-title">Analytics</div>
+            <div class="card-desc">Insights and statistics (Admin only)</div>
+            <div class="card-footer">Admin →</div>
+            <div class="featured-badge">Admin</div>
+        </div>
 
             <!-- Add this in your dashboard-grid, after other cards -->
             <div class="dashboard-card featured" onclick="app.showView('leaderboard')">
@@ -2117,15 +2430,16 @@
                 <div class="card-title">User Management</div>
                 <div class="card-desc">Manage devotees and permissions</div>
                 <div class="card-footer">Admin →</div>
+                <div class="featured-badge">Admin</div>
             </div>
 
                 <!-- Marks Admin Module -->
-            <div class="dashboard-card featured admin-only hidden" onclick="app.showView('admin-panel')">
+            <div class="dashboard-card admin-only hidden" onclick="app.showView('admin-panel')">
                 <div class="card-icon">🛠️</div>
                 <div class="card-title">Marks Admin</div>
                 <div class="card-desc">Configure scoring rules</div>
                 <div class="card-footer">Admin Only →</div>
-                <div class="featured-badge">New</div>
+                <div class="featured-badge">Admin</div>
             </div>
         </div>
 
@@ -2244,7 +2558,7 @@
     <!-- VIEW: SADHANA DASHBOARD -->
     <div id="view-sadhana-dashboard" class="card hidden">
         <h2 class="spiritual-text">Sadhana Dashboard</h2>
-
+    
         <!-- Filters Row -->
         <div class="nav-grid mt-20">
             <div class="form-group">
@@ -2265,58 +2579,91 @@
                 </select>
             </div>
         </div>
-
+    
+        <!-- ============================================ -->
+        <!-- ✅ NEW: Hide/Show Toggle for Summary Stats -->
+        <!-- ============================================ -->
+        <div style="margin-bottom: 15px; text-align: right;">
+            <button id="toggle-summary-btn" onclick="app.toggleSummaryStats()" 
+                    style="background: var(--saffron-light); border: 1px solid var(--saffron); border-radius: 20px; padding: 8px 15px; font-size: 0.85rem; cursor: pointer; color: var(--text-primary); display: inline-flex; align-items: center; gap: 5px;">
+                <span id="toggle-icon">👁️</span> 
+                <span id="toggle-text">Hide Summary Stats</span>
+            </button>
+        </div>
+    
         <!-- Date Range Display -->
         <div class="date-range-indicator" style="text-align: center; margin: 15px 0; padding: 10px; background: var(--saffron-light); border-radius: 8px;">
             <span style="font-weight: 600;">📅 Period:</span>
             <span id="dashboard-date-range">Loading...</span>
         </div>
-
+    
+        <!-- Summary Stats Section (Collapsible) -->
+        <div id="summary-stats-container" class="dashboard-summary-stats">
+            <!-- Stats will be loaded here -->
+        </div>
+    
         <!-- Dashboard Content -->
         <div id="dashboard-report-content" class="mt-20"></div>
-
+    
         <!-- Back Button -->
         <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">← Back</button>
     </div>
 
-        <!-- VIEW: ANALYTICS -->
-    <div id="view-reports" class="card hidden">
-        <h2 class="spiritual-text">Analytics</h2>
+    <!-- VIEW: ANALYTICS -->
+<!-- VIEW: ANALYTICS -->
+<div id="view-reports" class="card hidden">
+    <h2 class="spiritual-text">Analytics</h2>
+    
+    <!-- Role-based access will show/hide this entire section -->
+    <div id="analytics-controls">
         <div class="nav-grid mt-20">
-            <div class="form-group"><label>Range</label>
-                <select id="report-range" onchange="app.generateReport()">
-                    <option value="all">Overall</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option>
+            <div class="form-group">
+                <label>Report Type</label>
+                <select id="report-range" onchange="app.handleReportChange()">
+                    <option value="weekly">Weekly Group Report</option>
+                    <option value="monthly">Monthly Group Report</option>
                 </select>
             </div>
-            <div class="form-group admin-only hidden">
-                <label>Mode</label>
-                <select id="report-mode" onchange="app.handleReportModeSwitch(this.value)">
-                    <option value="Overall">Overall</option><option value="UserWise">User Wise</option>
-                </select>
+            <div class="form-group">
+                <label> </label>
+                <button class="btn btn-primary" onclick="app.generateGroupReport(document.getElementById('report-range').value)" style="margin:0;">
+                    🚀 Generate Report
+                </button>
             </div>
         </div>
-        <div id="report-user-container" class="form-group hidden">
-            <label>Choose Devotee</label>
-            <select id="report-user-picker" onchange="app.generateReport()"></select>
+
+        <!-- Export/Copy Buttons (only show when report is generated) -->
+        <div id="report-actions" style="display: none; gap: 10px; margin: 15px 0;">
+            <button onclick="app.copyReportToClipboard()" class="btn btn-outline" style="width: auto; flex: 1;">
+                📋 Copy Table
+            </button>
+            <button onclick="app.exportReportToExcel()" class="btn btn-excel" style="width: auto; flex: 1;">
+                📥 Export Excel
+            </button>
         </div>
-        <button class="btn btn-excel" onclick="app.exportToExcel()">📥 Export XLSX</button>
-        <div id="report-content" class="mt-20"></div>
-        <button class="btn btn-outline" onclick="app.showView('dashboard')">Back</button>
-    </div>    
-
-       <!-- VIEW: LEADERBOARD -->
-    <div id="view-leaderboard" class="card hidden">
-        <h2 class="spiritual-text">🏆 Devotee Leaderboard</h2>
-
-        <div id="leaderboard-content" class="mt-20">
-            <!-- Leaderboard will load here -->
-            <div class="leaderboard-loading">Loading leaderboard</div>
-        </div>
-
-        <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">
-            ← Back to Dashboard
-        </button>
     </div>
+    
+    <!-- Report Content -->
+    <div id="report-content" class="mt-20"></div>
+    
+    <!-- Back Button -->
+    <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">← Back</button>
+</div>
+
+<!-- VIEW: LEADERBOARD - MISSING SECTION -->
+<div id="view-leaderboard" class="card hidden">
+    <h2 class="spiritual-text">🏆 Devotee Leaderboard</h2>
+    
+    <!-- Leaderboard Content -->
+    <div id="leaderboard-content" class="mt-20">
+        <div class="leaderboard-loading">Loading leaderboard...</div>
+    </div>
+    
+    <!-- Back Button -->
+    <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">
+        ← Back to Dashboard
+    </button>
+</div>
 
     <!-- VIEW: ADMIN PANEL - MARKS CONFIGURATION -->
     <div id="view-admin-panel" class="card hidden">
@@ -2513,162 +2860,104 @@ const MarksCalculator = {
     configCache: {},
     lastFetchTime: {},
     cacheDuration: 5 * 60 * 1000, // 5 minutes cache
+
+    // Clear cache manually
+    // MarksCalculator.clearCache();
     
     // Default config in case API fails (your existing config)
-    defaultConfig: {
-        soul: {
-            activities: [
-                { name: 'hearing', maxMarks: 5 },
-                { name: 'reading', maxMarks: 5 },
-                { name: 'cleanliness', maxMarks: 5 },
-                { name: 'morningClass', maxMarks: 5 },
-                { name: 'mangalaArti', maxMarks: 5 }
-            ],
-            japa: {
+defaultConfig: {
+    soul: {
+        activities: [
+            { name: 'hearing', maxMarks: 5 },
+            { name: 'reading', maxMarks: 5 },
+            { name: 'cleanliness', maxMarks: 5 },
+            { name: 'morningClass', maxMarks: 5 },
+            { name: 'mangalaArti', maxMarks: 5 },
+            { 
+                name: 'chantingEnd', 
                 maxMarks: 25,
+                type: 'time',
                 slabs: [
-                    { min: 16, marks: 25 },
-                    { min: 15, marks: 20 },
-                    { min: 14, marks: 15 },
-                    { min: 13, marks: 10 },
-                    { min: 12, marks: 5 },
-                    { min: 0, marks: 0 }
+                    { maxTime: '06:45', marks: 25 },
+                    { maxTime: '09:00', marks: 20 },
+                    { maxTime: '13:00', marks: 15 },
+                    { maxTime: '16:00', marks: 10 },
+                    { maxTime: '20:00', marks: 5 }
                 ]
+            }
+        ],
+    },
+
+    body: {
+        activities: [
+            {
+                name: 'toBed',
+                maxMarks: 25,
+                type: 'time',
+                slabs: [
+                    { maxTime: '21:30', marks: 25 },  // 9:30 PM
+                    { maxTime: '21:45', marks: 20 },  // 9:45 PM
+                    { maxTime: '22:00', marks: 15 },  // 10:00 PM
+                    { maxTime: '22:15', marks: 10 },  // 10:15 PM
+                    { maxTime: '22:30', marks: 5 },   // 10:30 PM
+                    { maxTime: '23:59', marks: 0 }    // After 10:30 PM
+                ],
+                // ❌ No negativeAfter or negativeMarks
             },
-            maxTotal: 50
-        },
-        
-        body: {
-            activities: [
-                {
-                    name: 'toBed',
-                    maxMarks: 25,
-                    type: 'time',
-                    slabs: [
-                        { maxTime: '21:30', marks: 25 },
-                        { maxTime: '22:00', marks: 20 },
-                        { maxTime: '22:30', marks: 15 },
-                        { maxTime: '23:00', marks: 10 },
-                        { maxTime: '23:30', marks: 5 },
-                        { maxTime: '00:00', marks: 0 }
-                    ],
-                    negativeAfter: '00:00',
-                    negativeMarks: -5
-                },
-                {
-                    name: 'wakeUp',
-                    maxMarks: 25,
-                    type: 'time',
-                    slabs: [
-                        { maxTime: '04:30', marks: 25 },
-                        { maxTime: '05:00', marks: 20 },
-                        { maxTime: '05:30', marks: 15 },
-                        { maxTime: '06:00', marks: 10 },
-                        { maxTime: '06:30', marks: 5 },
-                        { maxTime: '07:00', marks: 0 }
-                    ],
-                    negativeAfter: '07:00',
-                    negativeMarks: -5
-                },
-                {
-                    name: 'dayRest',
-                    maxMarks: 25,
-                    type: 'duration',
-                    slabs: [
-                        { maxMinutes: 15, marks: 25 },
-                        { maxMinutes: 30, marks: 20 },
-                        { maxMinutes: 45, marks: 15 },
-                        { maxMinutes: 60, marks: 10 },
-                        { maxMinutes: 75, marks: 5 }
-                    ],
-                    defaultMarks: 0
-                }
-            ],
-            maxTotal: 75
-        }
-    },
-
-        // ============================================
-        // NEW: Load configuration from API
-        // ============================================
-    loadConfig: async function(voice) {
-        // If voice is not provided, try to get from current user
-        if (!voice && app && app.currentUser) {
-            voice = app.currentUser.voice;
-        }
-
-        if (!voice) voice = 'all';
-
-        console.log(`📥 Loading marks config for voice: ${voice}`);
-
-        try {
-            // Try to get from API
-            const url = `${app.API_BASE_URL}/api/public/marks-config/${encodeURIComponent(voice)}`;
-            const res = await fetch(url);
-
-            if (!res.ok) {
-                throw new Error(`API returned ${res.status}`);
+            {
+                name: 'wakeUp',
+                maxMarks: 25,
+                type: 'time',
+                slabs: [
+                    { maxTime: '04:30', marks: 25 },
+                    { maxTime: '05:00', marks: 20 },
+                    { maxTime: '05:30', marks: 15 },
+                    { maxTime: '06:00', marks: 10 },
+                    { maxTime: '06:30', marks: 5 },
+                    { maxTime: '23:59', marks: 0 }
+                ],
+                // ❌ No negativeAfter or negativeMarks
+            },
+            {
+                name: 'dayRest',
+                maxMarks: 25,
+                type: 'duration',
+                slabs: [
+                    { maxMinutes: 30, marks: 25 },
+                    { maxMinutes: 45, marks: 20 },
+                    { maxMinutes: 60, marks: 15 },
+                    { maxMinutes: 75, marks: 10 },
+                    { maxMinutes: 90, marks: 5 }
+                ],
+                defaultMarks: 0
             }
-
-            const result = await res.json();
-
-            // Handle different response formats from database
-            if (result.success) {
-                // Case 1: { success: true, data: { rules: {...} } }
-                if (result.data) {
-                    // Check if data has rules property
-                    if (result.data.rules) {
-                        console.log(`✅ Loaded config for ${voice} from database`);
-                        return result.data;  // Return full data object with rules
-                    } 
-                    // Case 2: data is directly the config
-                    else {
-                        console.log(`✅ Loaded config for ${voice} from database`);
-                        return result.data;
-                    }
-                }
-            }
-
-            // Case 3: Direct response with rules
-            if (result.rules) {
-                console.log(`✅ Loaded config for ${voice} from database`);
-                return result;
-            }
-
-            // Case 4: Response is already the config
-            if (result.soul || result.body) {
-                console.log(`✅ Loaded config for ${voice} from database`);
-                return result;
-            }
-
-            throw new Error('Invalid response format');
-
-        } catch (error) {
-            console.warn(`⚠️ Failed to load config for ${voice}, using default:`, error);
-            return this.defaultConfig;
-        }
-    },
-
+        ],
+        maxTotal: 75  // 3 activities × 25 = 75
+    }
+},  
     // ============================================
-    // ADD THIS FUNCTION to MarksCalculator (around line 2100)
+    // FIXED: normalizeConfig - transform conditions to slabs
     // ============================================
     normalizeConfig: function(dbConfig) {
-        // If already in correct format, return as is
         if (dbConfig.soul?.activities || dbConfig.body?.activities) {
             return dbConfig;
-        }
+        }   
 
-        // Handle database format (with rules wrapper)
         if (dbConfig.rules) {
             console.log('🔄 Normalizing database config format');
-            const rules = dbConfig.rules;
+            const rules = dbConfig.rules;   
 
             return {
                 soul: {
                     activities: (rules.soul || []).map(rule => ({
-                        name: rule.field,
+                        name: rule.id,
                         maxMarks: rule.maxMarks,
-                        enabled: true
+                        type: rule.type,
+                        enabled: true,
+                        slabs: (rule.conditions || []).map(c => ({
+                            maxTime: c.value,
+                            marks: c.marks
+                        }))
                     })),
                     maxTotal: 50,
                     japa: {
@@ -2679,75 +2968,101 @@ const MarksCalculator = {
                     }
                 },
                 body: {
-                    activities: (rules.body || []).map(rule => ({
-                        name: rule.field,
-                        type: rule.type || 'duration',
-                        maxMarks: rule.maxMarks,
-                        slabs: rule.conditions || []
-                    })),
+                    activities: (rules.body || []).map(rule => {
+                        // Transform conditions to slabs format
+                        const slabs = (rule.conditions || []).map(c => {
+                            if (rule.type === 'time') {
+                                return {
+                                    maxTime: c.value,
+                                    marks: c.marks
+                                };
+                            } else if (rule.type === 'duration') {
+                                return {
+                                    maxMinutes: parseInt(c.value),
+                                    marks: c.marks
+                                };
+                            }
+                            return c;
+                        });
+
+                        return {
+                            name: rule.id,
+                            type: rule.type,
+                            maxMarks: rule.maxMarks,
+                            slabs: slabs
+                        };
+                    }),
                     maxTotal: 75
                 }
             };
-        }
+        }   
 
-        // Fallback to default
         console.warn('Using default config');
         return this.defaultConfig;
     },
 
     // ============================================
-    // UPDATE your getConfig function (around line 2150)
+    // FIXED: getConfig in MarksCalculator - uses PUBLIC endpoint directly
     // ============================================
-    getConfig: async function(voice) {
-        if (!voice && app && app.currentUser) {
-            voice = app.currentUser.voice;
+getConfig: async function(voice) {
+    if (!voice && app && app.currentUser) {
+        voice = app.currentUser.voice;
+    }
+    if (!voice) voice = 'all';
+
+    const now = Date.now();
+    const cacheKey = voice;
+
+    // Check cache
+    if (this.configCache[cacheKey] && 
+        this.lastFetchTime[cacheKey] && 
+        (now - this.lastFetchTime[cacheKey] < this.cacheDuration)) {
+        console.log(`📦 Using cached config for ${voice}`);
+        return this.configCache[cacheKey];
+    }
+
+    try {
+        // ✅ DIRECT FETCH - no this.loadConfig call!
+        const url = `${app.API_BASE_URL}/api/public/marks-config/${encodeURIComponent(voice)}`;
+        console.log(`📥 Fetching config from: ${url}`);
+
+        const res = await fetch(url);
+
+        if (!res.ok) {
+            // 🟢 ONLY THIS MESSAGE ADDED
+            console.warn(`⚠️ No marks configuration found for voice "${voice}". Using default rules.`);
+            if (app && app.notify) {
+                app.notify(`ℹ️ No scoring rules configured for "${voice}". Using default rules.`, false);
+            }
+            return this.defaultConfig;
         }
-        if (!voice) voice = 'all';
 
-        const now = Date.now();
-        const cacheKey = voice;
+        const result = await res.json();
 
-        // Check cache
-        if (this.configCache[cacheKey] && 
-            this.lastFetchTime[cacheKey] && 
-            (now - this.lastFetchTime[cacheKey] < this.cacheDuration)) {
-            console.log(`📦 Using cached config for ${voice}`);
-            return this.configCache[cacheKey];
+        // Extract config from response
+        let rawConfig = result;
+        if (result.success && result.data) {
+            rawConfig = result.data;
         }
 
-        // Load fresh config
-        const config = await this.loadConfig(voice);
-
-        // ✅ NORMALIZE the config
-        const normalizedConfig = this.normalizeConfig(config);
+        // Normalize the config
+        const normalizedConfig = this.normalizeConfig(rawConfig);
 
         // Update cache
         this.configCache[cacheKey] = normalizedConfig;
         this.lastFetchTime[cacheKey] = now;
 
         return normalizedConfig;
-    },
- 
 
-    // Add this helper function to validate config structure
-    validateConfigStructure: function(config) {
-        // If config already has the right structure, return it
-        if (config.soul && config.body) {
-            return config;
+    } catch (error) {
+        console.warn(`⚠️ Failed to load config for ${voice}, using default:`, error);
+        // 🟢 ONLY THIS MESSAGE ADDED
+        if (app && app.notify) {
+            app.notify(`⚠️ Using default scoring rules (config error)`, true);
         }
-
-        // If config has rules property, extract it
-        if (config.rules) {
-            return config.rules;
-        }
-
-        // If config is completely different, merge with default
-        return {
-            soul: config.soul || this.defaultConfig.soul,
-            body: config.body || this.defaultConfig.body,
-            japa: config.japa || this.defaultConfig.japa
-        };
-    },
+        return this.defaultConfig;
+    }
+},
 
     // ============================================
     // NEW: Clear cache (call after admin updates)
@@ -2776,87 +3091,102 @@ const MarksCalculator = {
     },
 
     // ============================================
-    // Calculate soul score for a devotee
+    // IMPROVED: calculateTimeMarks - handles multiple slab formats
     // ============================================
-    calculateSoulScore: function(devoteeData, config) {
-        // Use provided config or try to get from cache
-        const soulConfig = config?.soul || this.defaultConfig.soul;
-        
-        // Calculate activities (max 25)
-        let activityMarks = 0;
-        for (let i = 0; i < soulConfig.activities.length; i++) {
-            const activity = soulConfig.activities[i];
-            if (activity.enabled === false) continue; // Skip disabled activities
-            
-            if (devoteeData[activity.name] == 1 || 
-                devoteeData[activity.name] === true) {
-                activityMarks += activity.maxMarks;
+calculateTimeMarks: function(timeStr, activity) {
+    if (!timeStr) return 0;
+    
+    // 🟢 ADD THIS SAFETY CHECK AND MESSAGE
+    if (!activity || !activity.slabs || !Array.isArray(activity.slabs)) {
+        console.warn('⚠️ Rule missing slab definitions:', activity?.name || 'unknown rule');
+        // Only show notification once to avoid spam
+        if (!this._shownMissingSlabsWarning) {
+            if (app && app.notify) {
+                app.notify(`⚠️ Some scoring rules are misconfigured. Contact admin.`, true);
             }
+            this._shownMissingSlabsWarning = true;
         }
-        
-        // Calculate japa (max 25)
-        const rounds = parseInt(devoteeData.rounds) || 0;
-        let japaMarks = 0;
-        for (let i = 0; i < soulConfig.japa.slabs.length; i++) {
-            const slab = soulConfig.japa.slabs[i];
-            if (rounds >= slab.min) {
-                japaMarks = slab.marks;
-                break;
-            }
-        }
-        
-        const totalMarks = activityMarks + japaMarks;
-        const percentage = Math.round(
-            (totalMarks / soulConfig.maxTotal) * 100
-        );
-        
-        return {
-            activities: activityMarks,
-            japa: japaMarks,
-            total: totalMarks,
-            percentage: percentage,
-            maxPossible: soulConfig.maxTotal
-        };
-    },
+        return 0;
+    }
 
-    // ============================================
-    // Calculate time-based marks
-    // ============================================
-    calculateTimeMarks: function(timeStr, activity) {
-        if (!timeStr) return 0;
-        
-        const timeMinutes = this.timeToMinutes(timeStr);
-        
-        for (let i = 0; i < activity.slabs.length; i++) {
-            const slab = activity.slabs[i];
-            const slabMinutes = this.timeToMinutes(slab.maxTime);
+    const timeMinutes = this.timeToMinutes(timeStr);
+    console.log(`Time ${timeStr} = ${timeMinutes} minutes`);
+
+    // Check each slab - handle multiple possible formats
+    for (let i = 0; i < activity.slabs.length; i++) {
+        const slab = activity.slabs[i];
+
+        // Try different possible property names
+        const maxTime = slab.maxTime || slab.value;
+        const maxMinutes = slab.maxMinutes || (slab.value && !isNaN(slab.value) ? parseInt(slab.value) : null);
+
+        if (maxTime) {
+            const slabMinutes = this.timeToMinutes(maxTime);
+            console.log(`  Compare ${timeMinutes} <= ${slabMinutes} (${maxTime})?`);
             if (timeMinutes <= slabMinutes) {
+                console.log(`  ✅ Match! Marks: ${slab.marks}`);
+                return slab.marks;
+            }
+        } else if (maxMinutes !== null) {
+            console.log(`  Compare ${timeMinutes} <= ${maxMinutes} minutes?`);
+            if (timeMinutes <= maxMinutes) {
+                console.log(`  ✅ Match! Marks: ${slab.marks}`);
                 return slab.marks;
             }
         }
-        
-        if (activity.negativeAfter && 
-            timeMinutes > this.timeToMinutes(activity.negativeAfter)) {
-            return activity.negativeMarks || 0;
+    }
+
+    // If no match, check if there's a default/else condition
+    const elseSlab = activity.slabs.find(s => s.operator === '>' || s.default);
+    if (elseSlab) {
+        console.log(`  Using else/default: ${elseSlab.marks} marks`);
+        return elseSlab.marks || 0;
+    }
+
+    console.log('  ❌ No match, returning 0');
+    return 0;
+},
+    // ============================================
+    // FIXED: calculateDurationMarks with proper comparison
+    // ============================================
+    calculateDurationMarks: function(minutes, activity) {
+        const mins = parseInt(minutes) || 0;
+        console.log(`Duration: ${mins} minutes`);
+
+        for (let i = 0; i < activity.slabs.length; i++) {
+            const slab = activity.slabs[i];
+
+            if (slab.maxMinutes) {
+                console.log(`  Compare ${mins} <= ${slab.maxMinutes}?`);
+                if (mins <= slab.maxMinutes) {
+                    console.log(`  ✅ Match! Marks: ${slab.marks}`);
+                    return slab.marks;
+                }
+            }
         }
-        
+
+        console.log('  ❌ No match, returning 0');
         return 0;
     },
 
     // ============================================
-    // Calculate duration-based marks
+    // FIXED: timeToMinutes helper
     // ============================================
-    calculateDurationMarks: function(minutes, activity) {
-        const mins = parseInt(minutes) || 0;
-        
-        for (let i = 0; i < activity.slabs.length; i++) {
-            const slab = activity.slabs[i];
-            if (mins <= slab.maxMinutes) {
-                return slab.marks;
-            }
+    timeToMinutes: function(timeStr) {
+        if (!timeStr) return 0;
+
+        // Handle different time formats
+        let hours = 0, minutes = 0;
+
+        if (typeof timeStr === 'string') {
+            const parts = timeStr.split(':');
+            hours = parseInt(parts[0]) || 0;
+            minutes = parseInt(parts[1]) || 0;
         }
-        
-        return activity.defaultMarks || 0;
+
+        const total = hours * 60 + minutes;
+        console.log(`timeToMinutes: ${timeStr} -> ${total} minutes`);
+        return total;
     },
 
     // ============================================
@@ -2895,77 +3225,163 @@ const MarksCalculator = {
     // ============================================
     // Complete score for a devotee (ASYNC VERSION)
     // ============================================
-    calculateCompleteScore: async function(devoteeData) {
-        // Get config for this devotee's voice
-        const voice = devoteeData.voice || (app?.currentUser?.voice) || 'all';
-        const config = await this.getConfig(voice);
-        
-        const soul = this.calculateSoulScore(devoteeData, config);
-        const body = this.calculateBodyScore(devoteeData, config);
-        
-        return {
-            name: devoteeData.name,
-            group: devoteeData.group,
-            voice: voice,
-            soul: soul,
-            body: body,
-            soulPercentage: soul.percentage,
-            bodyPercentage: body.percentage
-        };
-    },
-
-    // ============================================
-    // Score for leaderboard entry (from API data)
-    // ============================================
-    calculateFromApiData: async function(apiData) {
-        // Skip invalid data
-        if (!apiData || !apiData.name) {
-            console.warn('Invalid apiData:', apiData);
-            return null;
+calculateCompleteScore: async function(devoteeData) {
+    const voice = devoteeData.voice || (app?.currentUser?.voice) || 'all';
+    const config = await this.getConfig(voice);
+    
+    // ✅ Soul - SIRF activities
+    const soul = this.calculateSoulScore(devoteeData, config);
+    
+    // ✅ Japa - ALAG se calculate ho raha hai (soul mein nahi)
+    const rounds = parseInt(devoteeData.rounds) || 0;
+    let japaMarks = 0;
+    if (config.japa) {
+        for (let i = 0; i < config.japa.slabs.length; i++) {
+            const slab = config.japa.slabs[i];
+            if (rounds >= slab.min) {
+                japaMarks = slab.marks;
+                break;
+            }
         }
+    }
+    const japaPercentage = Math.round((japaMarks / 25) * 100);
+    
+    // ✅ Body
+    const body = this.calculateBodyScore(devoteeData, config);
+    
+    return {
+        name: devoteeData.name,
+        group: devoteeData.group,
+        voice: voice,
+        soul: soul,                    // SIRF activities
+        japa: {                        // JAPA ALAG SE
+            total: japaMarks,
+            percentage: japaPercentage,
+            maxPossible: 25
+        },
+        body: body,
+        soulPercentage: soul.percentage,  // SIRF activities %
+        bodyPercentage: body.percentage
+        // ❌ soulPercentage mein japa included nahi hai
+    };
+},
 
-        const scoreData = {
-            name: apiData.name,
-            group: apiData.user_group || apiData.group || 'Unknown',
-            voice: apiData.voice_name || apiData.voice || 'Unknown',
+// ============================================
+// FIXED: calculateFromApiData - LEADERBOARD KE LIYE
+// ============================================
+calculateFromApiData: async function(apiData) {
+    if (!apiData || !apiData.name) return null;
 
-            // Soul activities - try multiple possible field names
-            hearing: (apiData.totalHearing > 0 || apiData.hearing_minutes > 0) ? 1 : 0,
-            reading: (apiData.totalReading > 0 || apiData.reading_minutes > 0) ? 1 : 0,
-            cleanliness: (apiData.cleanSuccess > 0 || apiData.cleanliness == 1) ? 1 : 0,
-            morningClass: (apiData.morningClassSuccess > 0 || apiData.morning_class == 1) ? 1 : 0,
-            mangalaArti: (apiData.mangalaArtiSuccess > 0 || apiData.mangala_aarti == 1) ? 1 : 0,
+    console.log('📊 Leaderboard API Data:', apiData);
 
-            // Japa
-            rounds: apiData.totalRounds || apiData.rounds || 0,
-
-            // Body activities
-            toBed: apiData.avgToBed || apiData.to_bed_time,
-            wakeUp: apiData.avgWakeup || apiData.wakeup_time,
-            dayRest: apiData.totalRest || apiData.day_rest_marks || 0
-        };
-
-        return await this.calculateCompleteScore(scoreData);
-    },
-
-    // ============================================
-    // Synchronous version (uses default config)
-    // ============================================
-    calculateCompleteScoreSync: function(devoteeData) {
-        // Use default config (for places where async is difficult)
-        const soul = this.calculateSoulScore(devoteeData, this.defaultConfig);
-        const body = this.calculateBodyScore(devoteeData, this.defaultConfig);
+    const totalDaysInPeriod = 30; // Always 30 for monthly leaderboard
+    const MAX_SOUL_PER_DAY = 50;
+    const MAX_BODY_PER_DAY = 75;
+    
+    // ✅ USE the new total fields from backend
+    const totalSoulMarks = apiData.total_soul_marks || 0;
+    const totalBodyMarks = apiData.total_body_marks || 0;
+    const entryCount = apiData.entry_count || 0;
+    
+    // ✅ Calculate percentages based on TOTAL possible for the month
+    const soulPercentage = Math.round((totalSoulMarks / (MAX_SOUL_PER_DAY * totalDaysInPeriod)) * 100);
+    const bodyPercentage = Math.round((totalBodyMarks / (MAX_BODY_PER_DAY * totalDaysInPeriod)) * 100);
+    
+    // For leaderboard display, we need individual activity data
+    // These come from the existing fields in API
+    const hearingDays = apiData.morningClassSuccess ? 1 : 0; // You may need to adjust based on what API sends
+    const readingDays = apiData.reading_days || 0;
+    const morningDays = apiData.morningClassSuccess || 0;
+    const mangalaDays = apiData.mangalaArtiSuccess || 0;
+    const cleanDays = apiData.cleanSuccess || 0;
+    
+    // Calculate average rounds per day
+    const avgRounds = entryCount > 0 ? Math.round((apiData.totalRounds || 0) / entryCount) : 0;
+    
+    return {
+        name: apiData.name,
+        group: apiData.group || apiData.user_group,
+        voice: apiData.voice || apiData.voice_name,
         
-        return {
-            name: devoteeData.name,
-            group: devoteeData.group,
-            voice: devoteeData.voice || 'all',
-            soul: soul,
-            body: body,
-            soulPercentage: soul.percentage,
-            bodyPercentage: body.percentage
-        };
-    },
+        // ✅ New calculated percentages
+        soulPercentage: soulPercentage,
+        bodyPercentage: bodyPercentage,
+        
+        // Detailed scores
+        soul: {
+            total: totalSoulMarks,
+            percentage: soulPercentage,
+            maxPossible: MAX_SOUL_PER_DAY * totalDaysInPeriod
+        },
+        body: {
+            total: totalBodyMarks,
+            percentage: bodyPercentage,
+            maxPossible: MAX_BODY_PER_DAY * totalDaysInPeriod
+        },
+        
+        // Individual activity data (for display)
+        hearing: hearingDays,
+        reading: readingDays,
+        morningClass: morningDays,
+        mangalaArti: mangalaDays,
+        cleanliness: cleanDays,
+        rounds: avgRounds,
+        
+        // Raw data
+        raw: {
+            entryCount,
+            totalSoulMarks,
+            totalBodyMarks,
+            totalRounds: apiData.totalRounds || 0
+        }
+    };
+},
+
+    // ============================================
+    // FIXED: Calculate soul score ONLY (no japa)
+    // ============================================
+calculateSoulScore: function(devoteeData, config) {
+    const soulConfig = config?.soul || this.defaultConfig.soul;
+    
+    let activityMarks = 0;
+    
+    // Loop through ALL soul activities
+    for (let i = 0; i < soulConfig.activities.length; i++) {
+        const activity = soulConfig.activities[i];
+        if (activity.enabled === false) continue;
+        
+        // Handle different activity types
+        if (activity.type === 'boolean') {
+            // Boolean activities (hearing, reading, etc.)
+            if (devoteeData[activity.name] == 1 || devoteeData[activity.name] === true) {
+                activityMarks += activity.maxMarks;
+            }
+        } else if (activity.type === 'time') {
+            // Time-based activities (chantingEnd)
+            const timeStr = devoteeData[activity.name];
+            if (timeStr) {
+                // You'll need to implement time-based calculation
+                // This is simplified - you may want to call calculateTimeMarks
+                activityMarks += this.calculateTimeMarks(timeStr, activity);
+            }
+        }
+        // Add other types as needed
+    }
+    
+    // ❌ NO japa calculation here at all!
+    
+    const totalMarks = activityMarks;
+    const percentage = Math.round(
+        (totalMarks / soulConfig.maxTotal) * 100
+    );
+    
+    return {
+        total: totalMarks,
+        percentage: percentage,
+        maxPossible: soulConfig.maxTotal
+        // ❌ NO japa field
+    };
+},
 
     // ADD this function after loadHistory
     getChangeSummary: function() {
@@ -3024,12 +3440,22 @@ const LeaderboardModule = {
 
     // Get available months from API
     getAvailableMonths: async function() {
+        // Early return if no token
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.log('No token, using default months');
+            return this.getDefaultMonths();
+        }
+
         try {
             const res = await fetch(`${app.API_BASE_URL}/api/leaderboard/months`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+                headers: { 'Authorization': `Bearer ${token}` }
             });
+
+            if (res.status === 403) {
+                console.log('Auth failed, token may be expired');
+                return this.getDefaultMonths();
+            }
 
             if (res.ok) {
                 const months = await res.json();
@@ -3040,16 +3466,17 @@ const LeaderboardModule = {
             console.log('Error fetching months:', e);
         }
 
-        // Fallback to default months
+        return this.getDefaultMonths();
+    },
+
+    // Helper function for default months
+    getDefaultMonths: function() {
         const months = ['current'];
         const now = new Date();
-
         for (let i = 1; i <= 3; i++) {
             const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-            const monthStr = d.toISOString().slice(0, 7);
-            months.push(monthStr);
+            months.push(d.toISOString().slice(0, 7));
         }
-
         this.availableMonths = months;
         return months;
     },
@@ -3222,6 +3649,9 @@ const LeaderboardModule = {
     
     // Render leaderboard
     render: function(container, data, sortType) {
+            console.log('🎨 Rendering leaderboard with data:', data);
+            console.log('🎨 Container element:', container);
+    
         const sortedData = this.sortData(data, sortType);
         
         let html = `
@@ -3378,6 +3808,11 @@ const LeaderboardModule = {
             </div>`;
         
         container.innerHTML = html;
+                //debug
+                console.log('📝 HTML generated, length:', html.length);
+                container.innerHTML = html;
+                console.log('✅ Container updated');
+
     },
     
     // Change sort
@@ -3405,24 +3840,86 @@ const RuleAdmin = {
     init: function() {
         this.loadVoices();
     },
+
+    // Add this temporarily to test
+// ============================================
+// FIXED: Test function that accesses rules correctly
+// ============================================
+testShowAllRules: function() {
+    console.log('🔍 TEST: Showing all rules from database');
+    console.log('Current voice:', this.currentVoice);
+    console.log('Full rules object:', this.rules);
     
+    // ✅ FIX: Rules are inside config_data!
+    const rulesData = this.rules.config_data?.rules;
+    
+    if (rulesData) {
+        console.log('✅ Extracted rules:', rulesData);
+        console.log('🧘 Soul rules:', rulesData.soul);
+        console.log('🏃 Body rules:', rulesData.body);
+        console.log('📿 Japa rules:', rulesData.japa);
+        
+        // Check specifically for chantingEnd
+        if (rulesData.soul) {
+            const chantingEnd = rulesData.soul.find(r => r.id === 'chantingEnd');
+            if (chantingEnd) {
+                console.log('✅ chantingEnd FOUND:', chantingEnd);
+            } else {
+                console.log('❌ chantingEnd NOT found');
+                console.log('Available soul rule IDs:', rulesData.soul.map(r => r.id));
+            }
+        }
+        
+        // Check body rules for new times
+        if (rulesData.body) {
+            const toBed = rulesData.body.find(r => r.id === 'earlyToBed');
+            if (toBed) {
+                console.log('✅ earlyToBed rules:', toBed.conditions);
+            }
+        }
+    } else {
+        console.log('❌ No rules found in config_data');
+    }
+    
+    return rulesData;
+},
+    // ============================================
+    // ADD THIS FUNCTION to RuleAdmin
+    // ============================================
     loadVoices: async function() {
         try {
             const res = await fetch(`${app.API_BASE_URL}/api/admin/voices-with-config`, {
                 headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
             });
+
             if (!res.ok) throw new Error('Failed to load voices');
-            
+
             const result = await res.json();
             const select = document.getElementById('admin-voice-select');
             if (!select) return;
-            
+
+            // Clear existing options except 'all'
             select.innerHTML = '<option value="all">🌐 Global Default</option>';
-            if (result.data?.voices) {
+
+            // Add voice-specific options
+            if (result.data?.voices && result.data.voices.length > 0) {
                 result.data.voices.forEach(voice => {
                     select.innerHTML += `<option value="${voice.voice_name}">🔊 ${voice.voice_name}</option>`;
                 });
             }
+
+            // Also add any voices from users table that don't have configs yet
+            if (result.data?.allVoices && result.data.allVoices.length > 0) {
+                const existingVoices = result.data.voices.map(v => v.voice_name);
+                result.data.allVoices.forEach(voice => {
+                    if (!existingVoices.includes(voice) && voice !== 'all') {
+                        select.innerHTML += `<option value="${voice}">🔊 ${voice} (no config)</option>`;
+                    }
+                });
+            }
+
+            console.log('✅ Loaded voices:', select.options.length);
+
         } catch (error) {
             console.error('Error loading voices:', error);
             app.notify('Failed to load voices', true);
@@ -4306,23 +4803,69 @@ const RuleAdmin = {
         }
     },
 
-        // Show comparison modal
-    showDefaultComparison: function() {
-        const defaults = this.getDefaultRules();
-        
-        // Generate unique ID for this modal
+     // ============================================
+    // UPDATED: Show comparison from DATABASE, not code
+    // ============================================
+    showDefaultComparison: async function() {
+        // Show loading
+        app.notify('Loading default rules from database...', false);
+
+        try {
+            // Fetch the actual database config for 'all'
+            const res = await fetch(`${app.API_BASE_URL}/api/admin/marks-config/all`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to fetch from database');
+            }
+
+            const result = await res.json();
+
+            // Extract rules from response
+            let dbRules;
+            if (result.success && result.data) {
+                if (result.data.rules) {
+                    dbRules = result.data.rules;
+                } else {
+                    dbRules = result.data;
+                }
+            } else if (result.rules) {
+                dbRules = result.rules;
+            } else {
+                dbRules = this.getDefaultRules(); // Fallback to code
+            }
+
+            // Generate modal with database rules
+            this.showRulesModal(dbRules, 'Database Default Rules');
+
+        } catch (error) {
+            console.error('Error fetching database defaults:', error);
+            app.notify('Could not load from database, showing code defaults', true);
+
+            // Fallback to code defaults
+            const codeDefaults = this.getDefaultRules();
+            this.showRulesModal(codeDefaults, 'Code Default Rules (Fallback)');
+        }
+    },
+    // ============================================
+    // NEW: Helper to show rules modal
+    // ============================================
+    showRulesModal: function(rules, title) {
         const modalId = 'default-modal-' + Date.now();
-        
-        let html = '<h4>📋 Default Rules Preview</h4>';
+
+        let html = `<h4>📋 ${title}</h4>`;
         html += '<div style="max-height: 400px; overflow-y: auto;">';
         
         // Soul rules
         html += '<h5 style="color: var(--saffron-dark); margin-top: 15px;">🧘 Soul Rules</h5>';
-        defaults.soul.forEach(rule => {
+        (rules.soul || []).forEach(rule => {
             html += `<div style="background: #f8f9fa; padding: 10px; margin: 5px 0; border-radius: 5px;">`;
             html += `<strong>${rule.name}</strong> (Max: ${rule.maxMarks} marks)`;
             html += '<ul style="margin: 5px 0 0 20px;">';
-            rule.conditions.forEach(cond => {
+            (rule.conditions || []).forEach(cond => {
                 let operator = cond.operator;
                 if (cond.operator === '<=') operator = '≤';
                 else if (cond.operator === '>=') operator = '≥';
@@ -4330,14 +4873,14 @@ const RuleAdmin = {
             });
             html += '</ul></div>';
         });
-        
+
         // Body rules
         html += '<h5 style="color: var(--saffron-dark); margin-top: 15px;">🏃 Body Rules</h5>';
-        defaults.body.forEach(rule => {
+        (rules.body || []).forEach(rule => {
             html += `<div style="background: #f8f9fa; padding: 10px; margin: 5px 0; border-radius: 5px;">`;
             html += `<strong>${rule.name}</strong> (Max: ${rule.maxMarks} marks)`;
             html += '<ul style="margin: 5px 0 0 20px;">';
-            rule.conditions.forEach(cond => {
+            (rule.conditions || []).forEach(cond => {
                 let operator = cond.operator;
                 if (cond.operator === '<=') operator = '≤';
                 else if (cond.operator === '>=') operator = '≥';
@@ -4345,14 +4888,14 @@ const RuleAdmin = {
             });
             html += '</ul></div>';
         });
-        
+
         // Japa rules
         html += '<h5 style="color: var(--saffron-dark); margin-top: 15px;">📿 Japa Rules</h5>';
-        defaults.japa.forEach(rule => {
+        (rules.japa || []).forEach(rule => {
             html += `<div style="background: #f8f9fa; padding: 10px; margin: 5px 0; border-radius: 5px;">`;
             html += `<strong>${rule.name}</strong> (Max: ${rule.maxMarks} marks)`;
             html += '<ul style="margin: 5px 0 0 20px;">';
-            rule.conditions.forEach(cond => {
+            (rule.conditions || []).forEach(cond => {
                 let operator = cond.operator;
                 if (cond.operator === '<=') operator = '≤';
                 else if (cond.operator === '>=') operator = '≥';
@@ -4360,18 +4903,17 @@ const RuleAdmin = {
             });
             html += '</ul></div>';
         });
-        
+
         html += '</div>';
         html += '<div style="margin-top: 20px; text-align: right;">';
         html += `<button class="btn btn-primary" onclick="RuleAdmin.closeModal('${modalId}')">Close</button>`;
         html += '</div>';
         
-        // Create modal with the generated ID
         const modalHtml = `
             <div class="modal-overlay" id="${modalId}">
                 <div class="modal-content" style="max-width: 600px;">
                     <div class="modal-header">
-                        <h3 class="modal-title">Default Rules</h3>
+                        <h3 class="modal-title">${title}</h3>
                         <button class="modal-close" onclick="RuleAdmin.closeModal('${modalId}')">&times;</button>
                     </div>
                     <div class="modal-body">
@@ -4382,11 +4924,6 @@ const RuleAdmin = {
         `;
         
         document.body.insertAdjacentHTML('beforeend', modalHtml);
-    },
-
-    closeModal: function(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) modal.remove();
     },
 
 };
@@ -4447,7 +4984,14 @@ const app = {
             this.showView('login'); 
         }
         LeaderboardModule.init();
+        this.setupClickOutside();
     },
+
+    testLoadVoices: function() {
+    console.log('Testing voice load...');
+    this.loadAllVoices();
+    alert('Check console for logs');
+},
 
     toggleTheme: function() {
         const currentTheme = document.body.getAttribute('data-theme') || 'light';
@@ -4596,19 +5140,60 @@ const app = {
     
     if (id === 'user-mgmt') this.loadUsers();
     
-    if (id === 'reports' || id === 'search') { 
-        this.loadPickers(); 
-        this.generateReport(); 
-        this.performSearch(); 
+    if (id === 'reports') {
+    // 🚫 BLOCK DEVOTEES - Only allow admin/developer
+    if (!this.currentUser || !['admin', 'developer'].includes(this.currentUser.role)) {
+        this.notify("⛔ Access Denied. Analytics is only available for admin and developer roles.", true);
+        this.showView('dashboard');
+        return;
     }
     
-    if (id === 'register') this.fetchVoices('reg-voice');
+    this.loadPickers();
+    
+    // Admin/Developer sees all voices (via activeVoice selector)
+    this.generateGroupReport('weekly', this.activeVoice);
+}
+    /*if (id === 'reports') {
+        this.loadPickers();
+
+        // Role-based access
+        if (this.currentUser.role === 'devotee') {
+            // Devotee sees only their own data
+            this.generateGroupReport('weekly', this.currentUser.voice);
+        } else {
+            // Admin/Developer sees all voices (via activeVoice selector)
+            this.generateGroupReport('weekly', this.activeVoice);
+        }
+    }*/
+
+    if (id === 'search') {
+    this.loadPickers();
+    this.performSearch();
+    }
+    
+    if (id === 'register') {
+    this.fetchVoices('reg-voice');
+     setTimeout(() => {
+        this.loadAllVoices();   // Load voices into dropdown
+        this.loadAllGroups();   // Load groups into dropdown
+    }, 100);// 
+    
+
+}
     
     if (id === 'dashboard') {
         this.updateDashboardInfo();
     }
 },
-        // ✅ YAHAN PE YEH FUNCTION ADD KARO (kisi bhi existing function ke baad)
+
+// Add this to handle report type changes
+handleReportChange: function() {
+    const type = document.getElementById('report-range').value;
+    // Just generate the report directly - remove the .card.mt-20 check
+    this.generateGroupReport(type);
+},
+
+// ✅ YAHAN PE YEH FUNCTION ADD KARO (kisi bhi existing function ke baad)
     updateDashboardInfo: function() {
         // Update date
         const today = new Date();
@@ -4706,74 +5291,459 @@ const app = {
     },
 
         // ✅ Registration
-    handleRegister: async function() {
-        // Get form values
-        const name = document.getElementById('reg-name').value;
-        const email = document.getElementById('reg-email').value;
-        const password = document.getElementById('reg-pass').value;
-        const voice = document.getElementById('reg-voice').value;
-        const group = document.getElementById('reg-group').value;
+    // ============================================
+// UPDATED: handleRegister with voice & group normalization
+// ============================================
+handleRegister: async function() {
+    // Get form values
+    const name = document.getElementById('reg-name').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-pass').value;
+    let voice = document.getElementById('reg-voice').value;
+    let group = document.getElementById('reg-group').value;
+    
+    // Validation
+    if (!name || !email || !password || !voice || !group) {
+        this.notify("❌ All fields are required", true);
+        return;
+    }
+    
+    if (password.length < 6) {
+        this.notify("❌ Password must be at least 6 characters", true);
+        return;
+    }
+    
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        this.notify("❌ Please enter a valid email address", true);
+        return;
+    }
+    
+    // ============================================
+    // NORMALIZE VOICE
+    // ============================================
+    voice = voice.trim();
+    voice = voice.charAt(0).toUpperCase() + voice.slice(1).toLowerCase();
+    voice = voice.replace(/\s+voice$/i, '');
+    
+    const voiceMap = {
+        'surbhikunj': 'Surbhikunj',
+    };
+    
+    const normalizedVoice = voiceMap[voice.toLowerCase()];
+    if (normalizedVoice) {
+        voice = normalizedVoice;
+    }
+    
+    // ============================================
+    // NORMALIZE GROUP
+    // ============================================
+    group = group.trim();
+    group = group.charAt(0).toUpperCase() + group.slice(1).toLowerCase();
+    
+    const groupMap = {
+        'yudhisthir': 'Yudhisthir',
+        'yudhishthir': 'Yudhisthir',
+        'yudister': 'Yudhisthir',
+        'bheem': 'Bheem',
+        'bhima': 'Bheem',
+        'nakul': 'Nakul',
+        'nakula': 'Nakul',
+        'sahdev': 'Sahdev',
+        'sahadev': 'Sahdev',
+        'sahadeva': 'Sahdev'
+    };
+    
+    const normalizedGroup = groupMap[group.toLowerCase()];
+    if (normalizedGroup) {
+        group = normalizedGroup;
+    }
+    
+    console.log('Normalized:', { voice, group });
+    
+    // Prepare request body
+    const body = {
+        name: name,
+        email: email,
+        password: password,
+        voice: voice,
+        group: group
+    };
+    
+    try {
+        const res = await fetch(`${this.API_BASE_URL}/api/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
         
-        // Validation
-        if (!name || !email || !password || !voice || !group) {
-            this.notify("❌ All fields are required", true);
-            return;
-        }
+        const data = await res.json();
         
-        if (password.length < 6) {
-            this.notify("❌ Password must be at least 6 characters", true);
-            return;
-        }
-        
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            this.notify("❌ Please enter a valid email address", true);
-            return;
-        }
-        
-        // Prepare request body
-        const body = {
-            name: name,
-            email: email,
-            password: password,
-            voice: voice,
-            group: group
-        };
-        
-        try {
-            const res = await fetch(`${this.API_BASE_URL}/api/auth/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
-            });
-            
-            const data = await res.json();
-            
-            if (res.ok) {
-                this.notify("✅ Registration Successful! Please login.");
-                // Clear form
-                document.getElementById('reg-name').value = '';
-                document.getElementById('reg-email').value = '';
-                document.getElementById('reg-pass').value = '';
-                document.getElementById('reg-voice').value = '';
-                document.getElementById('reg-group').selectedIndex = 0;
-                // Go to login view
-                this.showView('login');
+        if (res.ok) {
+            this.notify("✅ Registration Successful! Please login.");
+            // Clear form
+            document.getElementById('reg-name').value = '';
+            document.getElementById('reg-email').value = '';
+            document.getElementById('reg-pass').value = '';
+            document.getElementById('reg-voice').value = '';
+            document.getElementById('reg-group').value = 'Yudhisthir';
+            document.getElementById('reg-voice-quick').selectedIndex = 0;
+            document.getElementById('reg-group-quick').selectedIndex = 0;
+            this.showView('login');
+        } else {
+            if (res.status === 400) {
+                this.notify(data.error || "❌ Registration failed. Email may already exist.", true);
             } else {
-                if (res.status === 400) {
-                    this.notify(data.error || "❌ Registration failed. Email may already exist.", true);
-                } else {
-                    this.notify(data.error || "❌ Registration failed", true);
-                }
+                this.notify(data.error || "❌ Registration failed", true);
             }
-        } catch (error) {
-            console.error('Registration error:', error);
-            this.notify("❌ Network error. Please try again.", true);
         }
-    },
+    } catch (error) {
+        console.error('Registration error:', error);
+        this.notify("❌ Network error. Please try again.", true);
+    }
+},
+
+// ============================================
+// VOICE & GROUP SUGGESTION FUNCTIONS
+// ============================================
+// Load all existing voices into dropdown
+loadAllVoices: async function() {
+    console.log('Loading voices...'); // Debug log
+    console.log('Current hostname:', window.location.hostname);
+    console.log('API_BASE_URL:', this.API_BASE_URL);
+    console.log('Full URL:', `${this.API_BASE_URL}/api/voices`);
+    
+    try {
+        const res = await fetch(`${this.API_BASE_URL}/api/voices`);
+        
+        if (!res.ok) {
+            throw new Error(`API returned ${res.status}`);
+        }
+        
+        const voices = await res.json();
+        console.log('Voices loaded:', voices); // Debug log
+        
+        // Sort voices alphabetically
+        voices.sort();
+        
+        // Get the dropdown element
+        const select = document.getElementById('reg-voice-quick');
+        if (!select) {
+            console.error('Dropdown element not found!');
+            return;
+        }
+        
+        // Clear and populate dropdown
+        select.innerHTML = '<option value="">📋 Select Voice</option>';
+        
+        if (voices.length === 0) {
+            // No voices yet - show default options
+            select.innerHTML += '<option value="Surbhikunj">🔊 Surbhikunj</option>';
+        } else {
+            // Add existing voices
+            voices.forEach(voice => {
+                select.innerHTML += `<option value="${voice}">🔊 ${voice}</option>`;
+            });
+        }
+        
+        // Always add "Enter New" option
+        select.innerHTML += `<option value="__new__">✨ Enter New Voice...</option>`;
+        
+        console.log('Dropdown populated with', select.options.length, 'options');
+        
+    } catch (e) {
+        console.error('Error loading voices:', e);
+        
+        // Fallback - populate with default options
+        const select = document.getElementById('reg-voice-quick');
+        if (select) {
+            select.innerHTML = '<option value="">📋 Select Voice</option>';
+            select.innerHTML += '<option value="Surbhikunj">🔊 Surbhikunj</option>';
+            select.innerHTML += '<option value="__new__">✨ Enter New Voice...</option>';
+        }
+    }
+},
+
+// Load all existing groups from database
+loadAllGroups: async function() {
+    try {
+        const res = await fetch(`${this.API_BASE_URL}/api/groups`);
+        const groups = await res.json();
+        
+        // Sort groups alphabetically
+        groups.sort();
+        
+        // Populate the quick select dropdown
+        const select = document.getElementById('reg-group-quick');
+        if (select) {
+            select.innerHTML = '<option value="">📋 Select Group</option>';
+            groups.forEach(group => {
+                select.innerHTML += `<option value="${group}">👥 ${group}</option>`;
+            });
+            select.innerHTML += `<option value="__new__">✨ Enter New Group...</option>`;
+        }
+        
+        return groups;
+    } catch (e) {
+        console.log('Error loading groups:', e);
+        // Fallback to default groups
+        const defaultGroups = ['Yudhisthir', 'Bheem', 'Nakul', 'Sahdev'];
+        const select = document.getElementById('reg-group-quick');
+        if (select) {
+            select.innerHTML = '<option value="">📋 Select Group</option>';
+            defaultGroups.forEach(group => {
+                select.innerHTML += `<option value="${group}">👥 ${group}</option>`;
+            });
+            select.innerHTML += `<option value="__new__">✨ Enter New Group...</option>`;
+        }
+        return defaultGroups;
+    }
+},
+
+// Show all voices when field is focused
+showAllVoices: async function() {
+    const input = document.getElementById('reg-voice').value;
+    if (input.length > 0) return;
+    
+    const voices = await this.loadAllVoices();
+    const suggestions = document.getElementById('voice-suggestions');
+    
+    if (voices.length === 0) {
+        suggestions.style.display = 'none';
+        return;
+    }
+    
+    let html = '<div style="padding: 8px 12px; background: var(--saffron-light); font-weight: bold;">📋 Existing Voices:</div>';
+    voices.forEach(voice => {
+        html += `<div onclick="app.selectVoice('${voice.replace(/'/g, "\\'")}')" 
+                      style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid var(--border-color);">
+                      🔊 ${voice}
+                 </div>`;
+    });
+    html += `<div onclick="app.clearVoiceField()" 
+                  style="padding: 8px 12px; cursor: pointer; color: var(--saffron); font-style: italic; border-top: 1px dashed var(--border-color);">
+                  ✏️ Type new voice...
+             </div>`;
+    
+    suggestions.innerHTML = html;
+    suggestions.style.display = 'block';
+},
+
+// Show all groups when field is focused
+showAllGroups: async function() {
+    const input = document.getElementById('reg-group').value;
+    if (input.length > 0) return;
+    
+    const groups = await this.loadAllGroups();
+    const suggestions = document.getElementById('group-suggestions');
+    
+    if (groups.length === 0) {
+        suggestions.style.display = 'none';
+        return;
+    }
+    
+    let html = '<div style="padding: 8px 12px; background: var(--saffron-light); font-weight: bold;">📋 Existing Groups:</div>';
+    groups.forEach(group => {
+        html += `<div onclick="app.selectGroup('${group.replace(/'/g, "\\'")}')" 
+                      style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid var(--border-color);">
+                      👥 ${group}
+                 </div>`;
+    });
+    html += `<div onclick="app.clearGroupField()" 
+                  style="padding: 8px 12px; cursor: pointer; color: var(--saffron); font-style: italic; border-top: 1px dashed var(--border-color);">
+                  ✏️ Type new group...
+             </div>`;
+    
+    suggestions.innerHTML = html;
+    suggestions.style.display = 'block';
+},
+
+// Handle as-you-type voice suggestions
+handleVoiceInput: async function(input) {
+    const suggestions = document.getElementById('voice-suggestions');
+    
+    if (!input || input.length < 1) {
+        suggestions.style.display = 'none';
+        return;
+    }
+    
+    try {
+        const res = await fetch(`${this.API_BASE_URL}/api/voices`);
+        const voices = await res.json();
+        
+        const inputLower = input.toLowerCase().trim();
+        const matches = voices.filter(v => 
+            v.toLowerCase().includes(inputLower)
+        ).slice(0, 5);
+        
+        if (matches.length === 0) {
+            suggestions.innerHTML = `<div style="padding: 12px; color: var(--text-muted); font-style: italic;">
+                ✨ No existing voice matches. You'll create: <strong>"${input}"</strong>
+            </div>`;
+            suggestions.style.display = 'block';
+            return;
+        }
+        
+        let html = '<div style="padding: 8px 12px; background: var(--saffron-light); font-weight: bold;">Matching Voices:</div>';
+        matches.forEach(voice => {
+            html += `<div onclick="app.selectVoice('${voice.replace(/'/g, "\\'")}')" 
+                          style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid var(--border-color);">
+                          🔊 ${voice}
+                     </div>`;
+        });
+        html += `<div onclick="app.selectNewVoice()" 
+                      style="padding: 8px 12px; cursor: pointer; color: var(--saffron); font-style: italic; border-top: 1px dashed var(--border-color);">
+                      ✨ Use "<strong>${input}</strong>" as new voice
+                 </div>`;
+        
+        suggestions.innerHTML = html;
+        suggestions.style.display = 'block';
+        
+    } catch (e) {
+        console.log('Voice suggestions error:', e);
+    }
+},
+
+// Handle as-you-type group suggestions
+handleGroupInput: async function(input) {
+    const suggestions = document.getElementById('group-suggestions');
+    
+    if (!input || input.length < 1) {
+        suggestions.style.display = 'none';
+        return;
+    }
+    
+    try {
+        const res = await fetch(`${this.API_BASE_URL}/api/groups`);
+        const groups = await res.json();
+        
+        const inputLower = input.toLowerCase().trim();
+        const matches = groups.filter(g => 
+            g.toLowerCase().includes(inputLower)
+        ).slice(0, 5);
+        
+        if (matches.length === 0) {
+            suggestions.innerHTML = `<div style="padding: 12px; color: var(--text-muted); font-style: italic;">
+                ✨ No existing group matches. You'll create: <strong>"${input}"</strong>
+            </div>`;
+            suggestions.style.display = 'block';
+            return;
+        }
+        
+        let html = '<div style="padding: 8px 12px; background: var(--saffron-light); font-weight: bold;">Matching Groups:</div>';
+        matches.forEach(group => {
+            html += `<div onclick="app.selectGroup('${group.replace(/'/g, "\\'")}')" 
+                          style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid var(--border-color);">
+                          👥 ${group}
+                     </div>`;
+        });
+        html += `<div onclick="app.selectNewGroup()" 
+                      style="padding: 8px 12px; cursor: pointer; color: var(--saffron); font-style: italic; border-top: 1px dashed var(--border-color);">
+                      ✨ Use "<strong>${input}</strong>" as new group
+                 </div>`;
+        
+        suggestions.innerHTML = html;
+        suggestions.style.display = 'block';
+        
+    } catch (e) {
+        console.log('Group suggestions error:', e);
+    }
+},
+
+// Select voice from suggestions
+selectVoice: function(voice) {
+    document.getElementById('reg-voice').value = voice;
+    document.getElementById('voice-suggestions').style.display = 'none';
+    
+    const select = document.getElementById('reg-voice-quick');
+    if (select) {
+        for (let i = 0; i < select.options.length; i++) {
+            if (select.options[i].value === voice) {
+                select.selectedIndex = i;
+                break;
+            }
+        }
+    }
+},
+
+// Select group from suggestions
+selectGroup: function(group) {
+    document.getElementById('reg-group').value = group;
+    document.getElementById('group-suggestions').style.display = 'none';
+    
+    const select = document.getElementById('reg-group-quick');
+    if (select) {
+        for (let i = 0; i < select.options.length; i++) {
+            if (select.options[i].value === group) {
+                select.selectedIndex = i;
+                break;
+            }
+        }
+    }
+},
+
+// Select from voice dropdown
+selectVoiceFromDropdown: function(value) {
+    if (value === '__new__') {
+        document.getElementById('reg-voice').value = '';
+        document.getElementById('reg-voice').focus();
+    } else if (value) {
+        document.getElementById('reg-voice').value = value;
+        document.getElementById('voice-suggestions').style.display = 'none';
+    }
+},
+
+// Select from group dropdown
+selectGroupFromDropdown: function(value) {
+    if (value === '__new__') {
+        document.getElementById('reg-group').value = '';
+        document.getElementById('reg-group').focus();
+    } else if (value) {
+        document.getElementById('reg-group').value = value;
+        document.getElementById('group-suggestions').style.display = 'none';
+    }
+},
+
+// Clear voice field
+clearVoiceField: function() {
+    document.getElementById('reg-voice').value = '';
+    document.getElementById('reg-voice').focus();
+    document.getElementById('voice-suggestions').style.display = 'none';
+},
+
+// Clear group field
+clearGroupField: function() {
+    document.getElementById('reg-group').value = '';
+    document.getElementById('reg-group').focus();
+    document.getElementById('group-suggestions').style.display = 'none';
+},
+
+// Keep current input as new voice
+selectNewVoice: function() {
+    document.getElementById('voice-suggestions').style.display = 'none';
+},
+
+// Keep current input as new group
+selectNewGroup: function() {
+    document.getElementById('group-suggestions').style.display = 'none';
+},
+
+// Close suggestions when clicking outside
+setupClickOutside: function() {
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#reg-voice') && !e.target.closest('#voice-suggestions') && !e.target.closest('#reg-voice-quick')) {
+            const voiceSuggestions = document.getElementById('voice-suggestions');
+            if (voiceSuggestions) voiceSuggestions.style.display = 'none';
+        }
+        if (!e.target.closest('#reg-group') && !e.target.closest('#group-suggestions') && !e.target.closest('#reg-group-quick')) {
+            const groupSuggestions = document.getElementById('group-suggestions');
+            if (groupSuggestions) groupSuggestions.style.display = 'none';
+        }
+    });
+},
 
     loadUsers: async function() {
         try {
@@ -4816,45 +5786,6 @@ const app = {
         this.renderUserTable(filtered);
     },
 
-    // saveSadhana: async function() {
-    //     const dayRestParts = document.getElementById('sd-dayrest').value.split(':');
-    //     const dayRestMinutes = (+dayRestParts[0] || 0) * 60 + (+dayRestParts[1] || 0);
-    //     const body = {
-    //         date: document.getElementById('sd-date').value,
-    //         wakeup: document.getElementById('sd-wakeup').value,
-    //         rounds: document.getElementById('sd-rounds').value,
-    //         chantEnd: document.getElementById('sd-chantend').value,
-    //         hearing: document.getElementById('sd-hearing').value,
-    //         reading: document.getElementById('sd-reading').value,
-    //         study: document.getElementById('sd-study').value,
-    //         dayRestMinutes,
-    //         sleep: document.getElementById('sd-sleep').value,
-    //         // NEW FIELDS
-    //         temp_hall_rech: document.getElementById('sd-temple').value,
-    //         time_wasted: document.getElementById('sd-waste').value,
-    //         morning_class: document.getElementById('sd-morning').value,
-    //         mangala_aarti: document.getElementById('sd-mangala').value,
-    //         cleanliness: document.getElementById('sd-clean').value,
-    //         book_name: document.getElementById('sd-book').value,
-    //         reflections: document.getElementById('sd-reflect').value
-    //     };
-    //     const res = await fetch(`${this.API_BASE_URL}/api/sadhana`, {
-    //         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-    //         body: JSON.stringify(body)
-    //     });
-    //     if (res.ok) {
-
-    //     this.notify("Sadhana Saved Successfully 🙏");
-    //     this.generateSummary(body);
-    //     }
-    //     else if (res.status === 409) {
-    //     this.notify("Sadhana already saved for this date", true);
-    //     }
-    //     else {
-    //     this.notify(data.error || "Save failed", true);
-    //     }
-
-    // },
     saveSadhana: async function() {
         // ============================================
         // FIELD VALIDATION - Check all mandatory fields
@@ -4919,8 +5850,7 @@ const app = {
         // ============================================
         // PROCESS DAY REST (convert to minutes)
         // ============================================
-        const dayRestParts = dayRest.split(':');
-        const dayRestMinutes = (+dayRestParts[0] || 0) * 60 + (+dayRestParts[1] || 0);
+        const dayRestMinutes = parseInt(dayRest) || 0; 
 
         // ============================================
         // PREPARE REQUEST BODY
@@ -4933,7 +5863,7 @@ const app = {
             hearing: hearing,
             reading: reading,
             study: study,
-            dayRestMinutes: parseInt(dayRest) || 0,     // Direct minutes bhejo
+            dayRestMinutes: dayRestMinutes,     // Direct minutes bhejo
             sleep: sleep,
             temp_hall_rech: temple,
             time_wasted: parseInt(waste) || 0,     //direct minutes
@@ -4994,54 +5924,764 @@ const app = {
         };
         return mapping[fieldName];
     },
+// In your app object, update generateSummary:
 
-    generateSummary: function(e) {
+generateSummary: async function(e) {
+    try {
+        // Prepare data for MarksCalculator
+        const devoteeData = {
+            name: this.currentUser.name,
+            group: this.currentUser.group,
+            voice: this.currentUser.voice,
             
-    let msg =
-    `*|| Hare Krishna ||*
-        
-    🪔 *Sadhana Summary*
-        
-    👤 Devotee: ${this.currentUser.name}
-    🏠 Voice: ${this.currentUser.voice}
-    🏷 Group: ${this.currentUser.group}   
-    📅 Date: ${e.date}
-    🌅 Wakeup: ${e.wakeup || '-'}
-    🛏 Sleep: ${e.sleep || '-'}
-    🛕 Temple Reach: ${e.temp_hall_rech || '-'}   
-    📿 Rounds: ${e.rounds}
-    🔚 Chant End: ${e.chantEnd || '-'}
-    🎧 Hearing: ${e.hearing}m
-    📖 Reading: ${e.reading}m
-    📚 Study: ${e.study}m  
-    🧘 Morning Class: ${e.morning_class == 1 ? 'Yes':'No'}
-    🪔 Mangala Arti: ${e.mangala_aarti == 1 ? 'Yes':'No'}
-    🧹 Cleanliness: ${e.cleanliness == 1 ? 'Yes':'No'}   
-    📘 Book: ${e.book_name || '-'}
-    💭 Reflections:${e.reflections || '-'}  
-    ⏳ Time Wasted: ${e.time_wasted || '-'} 
-    `;
-    document.getElementById('whatsapp-preview').value = msg;
-    document.getElementById('whatsapp-section').classList.remove('hidden');
-    },
+            // Soul activities
+            hearing: parseInt(e.hearing) > 0 ? 1 : 0,
+            reading: parseInt(e.reading) > 0 ? 1 : 0,
+            cleanliness: e.cleanliness == 1 ? 1 : 0,
+            morningClass: e.morning_class == 1 ? 1 : 0,
+            mangalaArti: e.mangala_aarti == 1 ? 1 : 0,
+            chantingEnd: e.chantEnd,
+            
+            // Japa rounds (recorded but separate from soul)
+            rounds: parseInt(e.rounds) || 0,
+            
+            // Body activities
+            earlyWakeup: e.wakeup,
+            earlyToBed: e.sleep,
+            dayRest: parseInt(e.dayRestMinutes) || 0
+        };
 
+        console.log('📊 Generating summary with data:', devoteeData);
+
+        // ✅ USE MARKSCALCULATOR for scores
+        const scores = await MarksCalculator.calculateCompleteScore(devoteeData);
+        
+        // ✅ GET CONFIG for individual slab details
+        const config = await MarksCalculator.getConfig(this.currentUser.voice);
+        
+        console.log('✅ Scores from MarksCalculator:', scores);
+
+        // Get individual marks using MarksCalculator helpers
+        let wakeMarks = 0, sleepMarks = 0, restMarks = 0;
+        let chantingMarks = 0;
+        
+        // Wakeup marks using calculator
+        const wakeRule = config.body?.activities?.find(a => a.name === 'earlyWakeup');
+        if (wakeRule && e.wakeup) {
+            wakeMarks = MarksCalculator.calculateTimeMarks(e.wakeup, wakeRule);
+        }
+        
+        // Sleep marks using calculator
+        const sleepRule = config.body?.activities?.find(a => a.name === 'earlyToBed');
+        if (sleepRule && e.sleep) {
+            sleepMarks = MarksCalculator.calculateTimeMarks(e.sleep, sleepRule);
+        }
+        
+        // Day rest marks using calculator
+        const restRule = config.body?.activities?.find(a => a.name === 'dayRest');
+        if (restRule) {
+            restMarks = MarksCalculator.calculateDurationMarks(parseInt(e.dayRestMinutes) || 0, restRule);
+        }
+        
+        // Chanting end marks using calculator
+        const chantingRule = config.soul?.activities?.find(a => a.name === 'chantingEnd');
+        if (chantingRule && e.chantEnd) {
+            chantingMarks = MarksCalculator.calculateTimeMarks(e.chantEnd, chantingRule);
+        }
+
+        // Soul activities marks (these are boolean - either 0 or max)
+        const hearingMarks = devoteeData.hearing ? 5 : 0;
+        const readingMarks = devoteeData.reading ? 5 : 0;
+        const morningMarks = devoteeData.morningClass ? 5 : 0;
+        const mangalaMarks = devoteeData.mangalaArti ? 5 : 0;
+        const cleanMarks = devoteeData.cleanliness ? 5 : 0;
+        
+        const soulActivitiesTotal = hearingMarks + readingMarks + morningMarks + mangalaMarks + cleanMarks;
+
+        // Build WhatsApp message
+        let msg =
+`*|| Hare Krishna ||*
+
+🪔 *Sadhana Summary*
+
+👤 Devotee: ${this.currentUser.name}
+🏠 Voice: ${this.currentUser.voice}
+🏷 Group: ${this.currentUser.group}   
+📅 Date: ${e.date}
+
+━━━━━━━━━━━━━━━━━━━
+🌅 *MORNING DISCIPLINE*
+━━━━━━━━━━━━━━━━━━━
+⏰ Wakeup: ${e.wakeup || '-'} (${wakeMarks}/25)
+🛏 Sleep: ${e.sleep || '-'} (${sleepMarks}/25)
+🛕 Temple Reach: ${e.temp_hall_rech || '-'}   
+📿 Japa Rounds: ${e.rounds}
+🔚 Chant End: ${e.chantEnd || '-'} (${chantingMarks}/25)
+
+━━━━━━━━━━━━━━━━━━━
+🧘 *SOUL ACTIVITIES* (${soulActivitiesTotal}/25)
+━━━━━━━━━━━━━━━━━━━
+🎧 Hearing: ${e.hearing}m (${hearingMarks}/5)
+📖 Reading: ${e.reading}m (${readingMarks}/5)
+🧘 Morning Class: ${e.morning_class == 1 ? '✅ Yes' : '❌ No'} (${morningMarks}/5)
+🪔 Mangala Arti: ${e.mangala_aarti == 1 ? '✅ Yes' : '❌ No'} (${mangalaMarks}/5)
+🧹 Cleanliness: ${e.cleanliness == 1 ? '✅ Yes' : '❌ No'} (${cleanMarks}/5)
+
+━━━━━━━━━━━━━━━━━━━
+🏃 *BODY DISCIPLINE* (${wakeMarks + sleepMarks + restMarks}/75)
+━━━━━━━━━━━━━━━━━━━
+🌅 Wakeup: ${wakeMarks}/25
+🛏 Sleep: ${sleepMarks}/25
+😴 Day Rest: ${e.dayRestMinutes || 0}m (${restMarks}/25)
+⏳ Time Wasted: ${e.time_wasted || 0}m
+
+━━━━━━━━━━━━━━━━━━━
+📚 *STUDY & REFLECTION*
+━━━━━━━━━━━━━━━━━━━
+📚 Study: ${e.study}m
+📘 Book: ${e.book_name || '-'}
+💭 Reflections: ${e.reflections || '-'}
+
+━━━━━━━━━━━━━━━━━━━
+📊 *FINAL SCORES*
+━━━━━━━━━━━━━━━━━━━
+🧘 Soul: ${soulActivitiesTotal + chantingMarks}/50 (${scores.soulPercentage}%)
+🏃 Body: ${wakeMarks + sleepMarks + restMarks}/75 (${scores.bodyPercentage}%)
+`;
+
+        document.getElementById('whatsapp-preview').value = msg;
+        document.getElementById('whatsapp-section').classList.remove('hidden');
+        
+    } catch (error) {
+        console.error('❌ Error generating summary:', error);
+        this.notify('Error generating summary', true);
+        
+        // Fallback to simple message
+        document.getElementById('whatsapp-preview').value = 
+`*|| Hare Krishna ||*
+Sadhana recorded for ${e.date}
+👤 ${this.currentUser.name}`;
+        document.getElementById('whatsapp-section').classList.remove('hidden');
+    }
+},
+
+    //Whatsapp integration
     sendToWhatsApp: function() {
-        const text = encodeURIComponent(document.getElementById('whatsapp-preview').value);
-        window.open(`https://wa.me/${this.MASTER_NUMBER}?text=${text}`, '_blank');
-    },
+        const text = document.getElementById('whatsapp-preview').value;
+        if (!text || text.trim() === '') {
+            this.notify('No summary to send', true);
+            return;
+        }
 
-    performSearch: async function() {
+        // Encode the text for URL
+        const encodedText = encodeURIComponent(text);
+
+        // Open WhatsApp with the message
+        window.open(`https://wa.me/${this.MASTER_NUMBER}?text=${encodedText}`, '_blank');
+
+        this.notify('Opening WhatsApp...');
+    },
+    // ============================================
+    // Analytics reports
+    // ============================================
+
+    // ============================================
+// COMPLETE ANALYTICS MODULE - Group Report
+// Add these functions to your app object
+// ============================================
+// REPLACE your existing generateGroupReport with this:
+
+generateGroupReport: async function(type = 'weekly', voice = null) {
+    try {
+        // Use provided voice or fallback to activeVoice
+        const targetVoice = voice || this.activeVoice;
+        
+        console.log(`📊 Generating ${type} report for voice: ${targetVoice}`);
+        
+        const container = document.getElementById('report-content');
+        container.innerHTML = '<div class="dashboard-loading">Loading group report...</div>';
+        
+        const today = new Date();
+        
+        // Calculate date range
+        let startDate, endDate, periodText, totalDays;
+        
+        if (type === 'weekly') {
+            const day = today.getDay();
+            const diff = day === 0 ? 6 : day - 1;
+            startDate = new Date(today);
+            startDate.setDate(today.getDate() - diff);
+            endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + 6);
+            periodText = `${startDate.getDate()} - ${endDate.getDate()} ${endDate.toLocaleString('default', { month: 'short' })} ${endDate.getFullYear()}`;
+            totalDays = 7;
+        } else {
+            startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            periodText = `${startDate.toLocaleString('default', { month: 'long' })} ${startDate.getFullYear()}`;
+            totalDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+        }
+        
+        const startDateStr = startDate.toISOString().split('T')[0];
+        const endDateStr = endDate.toISOString().split('T')[0];
+        
+        // Build URL based on role
+        let url;
+        const token = localStorage.getItem('token');
+        
+        if (this.currentUser.role === 'devotee') {
+            // Devotee: only their own data
+            url = `${this.API_BASE_URL}/api/reports/group?voice=${targetVoice}&start=${startDateStr}&end=${endDateStr}&user_id=${this.currentUser.id}`;
+        } else {
+            // Admin/Developer: all users in selected voice
+            url = `${this.API_BASE_URL}/api/reports/group?voice=${targetVoice}&start=${startDateStr}&end=${endDateStr}`;
+        }
+        
+        const res = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        
+        const data = await res.json();
+        
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div class="dashboard-empty">No data available for this period</div>';
+            document.getElementById('report-actions').style.display = 'none';
+            return;
+        }
+        
+        // Show action buttons
+        document.getElementById('report-actions').style.display = 'flex';
+        
+        // Group by user_group
+        const groups = {};
+        const allGroups = new Set();
+        
+        data.forEach(user => {
+            const group = user.user_group || 'Ungrouped';
+            allGroups.add(group);
+            if (!groups[group]) {
+                groups[group] = {
+                    name: group,
+                    devotees: []
+                };
+            }
+            
+            // Get totals from database
+            const toBedTotal = Number(user.total_sleep_marks) || 0;
+            const wakeUpTotal = Number(user.total_wakeup_marks) || 0;
+            const dayRestTotal = Number(user.total_rest_marks) || 0;
+            const japaTotal = Number(user.total_chanting_marks) || 0;
+            const pathanTotal = Number(user.total_soul_activities_marks) || 0;
+            
+            // Calculate percentages
+            const toBedPct = totalDays > 0 ? ((toBedTotal / (25 * totalDays)) * 100).toFixed(2) : '0.00';
+            const wakeUpPct = totalDays > 0 ? ((wakeUpTotal / (25 * totalDays)) * 100).toFixed(2) : '0.00';
+            const dayRestPct = totalDays > 0 ? ((dayRestTotal / (25 * totalDays)) * 100).toFixed(2) : '0.00';
+            const japaPct = totalDays > 0 ? ((japaTotal / (25 * totalDays)) * 100).toFixed(2) : '0.00';
+            const pathanPct = totalDays > 0 ? ((pathanTotal / (25 * totalDays)) * 100).toFixed(2) : '0.00';
+            
+            const bodyPct = totalDays > 0 ? 
+                (((toBedTotal + wakeUpTotal + dayRestTotal) / (75 * totalDays)) * 100).toFixed(2) : '0.00';
+            const soulPct = totalDays > 0 ? 
+                (((japaTotal + pathanTotal) / (50 * totalDays)) * 100).toFixed(2) : '0.00';
+            const totalPct = ((parseFloat(bodyPct) + parseFloat(soulPct)) / 2).toFixed(2);
+            
+            groups[group].devotees.push({
+                name: user.name,
+                toBed: toBedPct,
+                wakeUp: wakeUpPct,
+                dayRest: dayRestPct,
+                japa: japaPct,
+                pathan: pathanPct,
+                body: bodyPct,
+                soul: soulPct,
+                total: totalPct
+            });
+        });
+        
+        // Sort devotees in each group
+        Object.keys(groups).forEach(group => {
+            groups[group].devotees.sort((a, b) => parseFloat(b.total) - parseFloat(a.total));
+        });
+        
+        const sortedGroups = Array.from(allGroups).sort();
+        
+        // Store for export
+        this.currentReportData = {
+            groups,
+            sortedGroups,
+            type,
+            periodText,
+            voice: targetVoice,
+            totalDays
+        };
+        
+        // Generate copyable text
+        const copyableText = this.generateCopyableReport(groups, sortedGroups, type, periodText, targetVoice);
+        
+        // Render report
+        this.renderGroupReport(groups, sortedGroups, type, periodText, targetVoice, copyableText);
+        
+    } catch (error) {
+        console.error('❌ Error:', error);
+        this.notify('Failed to generate report: ' + error.message, true);
+        document.getElementById('report-content').innerHTML = '<div class="dashboard-empty">Failed to load report</div>';
+        document.getElementById('report-actions').style.display = 'none';
+    }
+},
+
+// 2. Generate copyable text (TAB-separated for Excel/WhatsApp)
+// Find this function in your code and replace it entirely
+generateCopyableReport: function(groups, type, periodText, voice) {
+    // Fix: Convert type to string safely
+    const typeStr = String(type || 'weekly').toUpperCase();
+    
+    let text = `# ${typeStr} SADHANA REPORT - ${periodText}\n`;
+    text += `Voice: ${voice}\n\n`;
+    
+    const sortedGroups = ['Yudhisthir', 'Bheem', 'Nakul', 'Sahdev', 'Ungrouped'];
+    
+    sortedGroups.forEach(groupName => {
+        const group = groups[groupName];
+        if (!group || group.devotees.length === 0) return;
+        
+        text += `${groupName} GROUP\n`;
+        text += `Activity\t${group.devotees.map(d => d.name).join('\t')}\n`;
+        text += `To Bed\t${group.devotees.map(d => d.toBed).join('\t')}\n`;
+        text += `Wake Up\t${group.devotees.map(d => d.wakeUp).join('\t')}\n`;
+        text += `Day Rest\t${group.devotees.map(d => d.dayRest).join('\t')}\n`;
+        text += `Japa\t${group.devotees.map(d => d.japa).join('\t')}\n`;
+        text += `Pathan & Sravan\t${group.devotees.map(d => d.pathan).join('\t')}\n`;
+        text += `Body\t${group.devotees.map(d => d.body).join('\t')}\n`;
+        text += `Soul\t${group.devotees.map(d => d.soul).join('\t')}\n`;
+        text += `Total\t${group.devotees.map(d => d.total).join('\t')}\n\n`;
+    });
+    
+    // Individual totals
+    text += `Individual Totals:\n`;
+    sortedGroups.forEach(groupName => {
+        const group = groups[groupName];
+        if (!group) return;
+        group.devotees.forEach(d => {
+            if (parseFloat(d.total) > 0) {
+                text += `• ${d.name} (${groupName}): ${d.total}%\n`;
+            }
+        });
+    });
+    
+    text += `\nHare Krishna 🙏`;
+    return text;
+},
+
+// Add this if you don't have it:
+
+renderGroupReport: function(groups, sortedGroups, type, periodText, voice, copyableText) {
+    const container = document.getElementById('report-content');
+    if (!container) return;
+    
+    let html = `
+        <div class="card" style="padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
+                <h3 style="color: var(--saffron); margin: 0;">
+                    🕉️ ${type.toUpperCase()} SADHANA REPORT (${periodText}) - ${voice}
+                </h3>
+            </div>
+    `;
+    
+    // Hidden pre for copyable text
+    html += `<pre id="copyable-report" style="display: none;">${copyableText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>`;
+    
+    sortedGroups.forEach(groupName => {
+        const group = groups[groupName];
+        if (!group || group.devotees.length === 0) return;
+        
+        html += `
+            <div style="margin: 20px 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+                <div style="background: var(--saffron); color: white; padding: 8px 15px; font-weight: bold;">
+                    📋 ${groupName} GROUP
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 8px; text-align: left; background: var(--saffron-light);">Activity</th>
+        `;
+        
+        group.devotees.forEach(d => {
+            html += `<th style="padding: 8px; text-align: center; background: var(--saffron-light);">${d.name}</th>`;
+        });
+        
+        html += `</tr></thead><tbody>`;
+        
+        const rows = [
+            { key: 'toBed', label: 'To Bed' },
+            { key: 'wakeUp', label: 'Wake Up' },
+            { key: 'dayRest', label: 'Day Rest' },
+            { key: 'japa', label: 'Japa' },
+            { key: 'pathan', label: 'Pathan & Sravan' },
+            { key: 'body', label: 'Body', isBold: true },
+            { key: 'soul', label: 'Soul', isBold: true },
+            { key: 'total', label: 'Total', isBold: true }
+        ];
+        
+        rows.forEach(row => {
+            let rowHtml = `<tr>`;
+            rowHtml += `<td style="padding: 8px; font-weight: ${row.isBold ? 'bold' : 'normal'}; border-bottom: 1px solid var(--border);">${row.label}</td>`;
+            
+            group.devotees.forEach(d => {
+                rowHtml += `<td style="padding: 8px; text-align: center; border-bottom: 1px solid var(--border);">${d[row.key]}</td>`;
+            });
+            
+            rowHtml += `</tr>`;
+            html += rowHtml;
+        });
+        
+        html += `</tbody></table></div></div>`;
+    });
+    
+    // Individual totals section
+    html += `<div style="margin-top: 20px; padding: 15px; background: var(--bg-input); border-radius: 8px;">`;
+    html += `<h4 style="margin-bottom: 10px;">📊 Individual Totals:</h4>`;
+    
+    sortedGroups.forEach(groupName => {
+        const group = groups[groupName];
+        if (!group) return;
+        group.devotees.forEach(d => {
+            if (parseFloat(d.total) > 0) {
+                html += `<div style="margin: 5px 0;">• <strong>${d.name}</strong> (${groupName}): ${d.total}%</div>`;
+            }
+        });
+    });
+    
+    html += `</div>`;
+    html += `</div>`;
+    
+    container.innerHTML = html;
+},
+
+// ============================================
+// FIX ONLY: Copy and Export for existing Analytics
+// ============================================
+// Find this function in your code and replace it entirely
+copyReportToClipboard: function() {
+    const container = document.getElementById('report-content');
+    if (!container) {
+        this.notify('No report to copy', true);
+        return;
+    }
+    
+    let copyText = '';
+    
+    // Get title
+    const title = container.querySelector('h3');
+    if (title) {
+        copyText += title.textContent + '\n\n';
+    }
+    
+    // Get all tables
+    const tables = container.querySelectorAll('table');
+    tables.forEach((table, index) => {
+        // Get group name from preceding element
+        const prevElement = table.closest('div')?.previousElementSibling;
+        if (prevElement && prevElement.textContent.includes('GROUP')) {
+            copyText += prevElement.textContent.trim() + '\n';
+        }
+        
+        const rows = table.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('th, td');
+            const rowText = [];
+            cells.forEach(cell => {
+                rowText.push(cell.textContent.trim());
+            });
+            copyText += rowText.join('\t') + '\n';
+        });
+        copyText += '\n';
+    });
+    
+    // Copy to clipboard
+    const textarea = document.createElement('textarea');
+    textarea.value = copyText;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    this.notify('✅ Report copied to clipboard!');
+},
+
+// REPLACE your existing exportReportToExcel with this:
+
+exportReportToExcel: function() {
+    if (!this.currentReportData) {
+        this.notify('No report to export', true);
+        return;
+    }
+    
+    const { groups, sortedGroups, type, periodText, voice } = this.currentReportData;
+    
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    
+    // Prepare summary data
+    const summaryData = [];
+    sortedGroups.forEach(groupName => {
+        const group = groups[groupName];
+        if (!group) return;
+        
+        group.devotees.forEach(devotee => {
+            summaryData.push({
+                'Group': groupName,
+                'Devotee': devotee.name,
+                'Voice': voice,
+                'Period': periodText,
+                'Type': type,
+                'To Bed %': devotee.toBed,
+                'Wake Up %': devotee.wakeUp,
+                'Day Rest %': devotee.dayRest,
+                'Japa %': devotee.japa,
+                'Pathan %': devotee.pathan,
+                'Body %': devotee.body,
+                'Soul %': devotee.soul,
+                'Total %': devotee.total
+            });
+        });
+    });
+    
+    // Add summary sheet
+    const summarySheet = XLSX.utils.json_to_sheet(summaryData);
+    XLSX.utils.book_append_sheet(wb, summarySheet, 'Summary');
+    
+    // Add group-wise sheets
+    sortedGroups.forEach(groupName => {
+        const group = groups[groupName];
+        if (!group || group.devotees.length === 0) return;
+        
+        // Create matrix format like GUI
+        const matrixData = [];
+        
+        // Header row
+        const headerRow = ['Activity', ...group.devotees.map(d => d.name)];
+        matrixData.push(headerRow);
+        
+        // Data rows
+        const rows = [
+            { key: 'toBed', label: 'To Bed' },
+            { key: 'wakeUp', label: 'Wake Up' },
+            { key: 'dayRest', label: 'Day Rest' },
+            { key: 'japa', label: 'Japa' },
+            { key: 'pathan', label: 'Pathan & Sravan' },
+            { key: 'body', label: 'Body' },
+            { key: 'soul', label: 'Soul' },
+            { key: 'total', label: 'Total' }
+        ];
+        
+        rows.forEach(row => {
+            const rowData = [row.label];
+            group.devotees.forEach(d => {
+                rowData.push(d[row.key]);
+            });
+            matrixData.push(rowData);
+        });
+        
+        const sheet = XLSX.utils.aoa_to_sheet(matrixData);
+        XLSX.utils.book_append_sheet(wb, sheet, groupName);
+    });
+    
+    // Save file
+    XLSX.writeFile(wb, `${type}_report_${periodText.replace(/[\/\\ ]/g, '_')}.xlsx`);
+    this.notify('✅ Excel file downloaded');
+},
+
+// Add this temporary test function
+testGroupReportEndpoint: async function() {
+    try {
+        const voice = this.activeVoice;
+        const today = new Date();
+        const startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+        const endDate = today.toISOString().split('T')[0];
+        
+        const token = localStorage.getItem('token');
+        const url = `${this.API_BASE_URL}/api/reports/group?voice=${voice}&start=${startDate}&end=${endDate}`;
+        
+        console.log('Testing endpoint:', url);
+        
+        const res = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        console.log('Response status:', res.status);
+        
+        if (res.ok) {
+            const data = await res.json();
+            console.log('✅ Endpoint working! Data:', data);
+        } else {
+            console.log('❌ Endpoint failed with status:', res.status);
+            const text = await res.text();
+            console.log('Response:', text);
+        }
+    } catch (error) {
+        console.error('Test failed:', error);
+    }
+},
+
+/*renderGroupReport: function(groups, type, periodText, voice) {
+    const container = document.getElementById('report-content');
+    if (!container) return;
+    
+    let html = `
+        <div class="card" style="overflow-x: auto; padding: 15px;">
+            <h3 style="text-align: center; color: var(--saffron); margin-bottom: 10px;">
+                🕉️ ${type.toUpperCase()} SADHANA REPORT (${periodText}) - ${voice}
+            </h3>
+    `;
+    
+    const sortedGroups = ['Yudhisthir', 'Bheem', 'Nakul', 'Sahdev', 'Ungrouped'];
+    
+    sortedGroups.forEach(groupName => {
+        const group = groups[groupName];
+        if (!group || group.devotees.length === 0) return;
+        
+        html += `
+            <div style="margin: 20px 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
+                <div style="background: var(--saffron); color: white; padding: 8px 15px; font-weight: bold;">
+                    📋 ${groupName} GROUP
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 8px; text-align: left;">Activity</th>
+        `;
+        
+        // Add devotee names as column headers
+        group.devotees.forEach(d => {
+            html += `<th style="padding: 8px; text-align: center;">${d.name}</th>`;
+        });
+        
+        html += `</tr></thead><tbody>`;
+        
+        // Define rows in exact order from image
+        const rows = [
+            { key: 'toBed', label: 'To Bed' },
+            { key: 'wakeUp', label: 'Wake Up' },
+            { key: 'dayRest', label: 'Day Rest' },
+            { key: 'japa', label: 'Japa' },
+            { key: 'pathan', label: 'Pathan & Sravan' },
+            { key: 'body', label: 'Body', isBold: true },
+            { key: 'soul', label: 'Soul', isBold: true },
+            { key: 'total', label: 'Total', isBold: true }
+        ];
+        
+        rows.forEach(row => {
+            let rowHtml = `<tr>`;
+            rowHtml += `<td style="padding: 8px; font-weight: ${row.isBold ? 'bold' : 'normal'};">${row.label}</td>`;
+            
+            group.devotees.forEach(d => {
+                let value = d[row.key];
+                // Check if value is negative (like -20.00 in image)
+                if (parseFloat(value) < 0) {
+                    rowHtml += `<td style="padding: 8px; text-align: center; color: #f56565;">${value}</td>`;
+                } else {
+                    rowHtml += `<td style="padding: 8px; text-align: center;">${value}</td>`;
+                }
+            });
+            
+            rowHtml += `</tr>`;
+            html += rowHtml;
+        });
+        
+        html += `</tbody></table></div></div>`;
+    });
+    
+    // Add individual totals section (like in image)
+    html += `<div style="margin-top: 20px; padding: 15px; background: var(--bg-input); border-radius: 8px;">`;
+    html += `<h4 style="margin-bottom: 10px;">📊 Individual Totals:</h4>`;
+    
+    sortedGroups.forEach(groupName => {
+        const group = groups[groupName];
+        if (!group || group.devotees.length === 0) return;
+        
+        group.devotees.forEach(d => {
+            if (parseFloat(d.total) > 0) {
+                html += `<div style="margin: 5px 0;">• <strong>${d.name}</strong> (${groupName}): ${d.total}%</div>`;
+            }
+        });
+    });
+    
+    html += `</div>`;
+    
+    // Add summary section
+    html += `
+        <div style="margin-top: 20px; padding: 15px; background: var(--saffron-light); border-radius: 8px;">
+            <h4 style="margin-bottom: 10px;">📈 Quick Summary:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+    `;
+    
+    // Find top performers
+    const allDevotees = [];
+    Object.values(groups).forEach(g => {
+        g.devotees.forEach(d => {
+            allDevotees.push({...d, group: g.name});
+        });
+    });
+    
+    allDevotees.sort((a, b) => parseFloat(b.total) - parseFloat(a.total));
+    
+    html += `<div><strong>🏆 Top 3:</strong><br>`;
+    allDevotees.slice(0, 3).forEach((d, i) => {
+        html += `${i+1}. ${d.name} (${d.group}): ${d.total}%<br>`;
+    });
+    html += `</div>`;
+    
+    // Find inactive devotees
+    const inactive = allDevotees.filter(d => parseFloat(d.total) === 0);
+    if (inactive.length > 0) {
+        html += `<div><strong>⚠️ Need Attention:</strong><br>`;
+        inactive.slice(0, 5).forEach(d => {
+            html += `• ${d.name} (${d.group})<br>`;
+        });
+        if (inactive.length > 5) html += `• ... and ${inactive.length - 5} more<br>`;
+        html += `</div>`;
+    }
+    
+    html += `</div></div>`;
+    
+    html += `
+            <div style="text-align: center; margin-top: 20px; font-style: italic; color: var(--text-muted);">
+                Hare Krishna 🙏
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+},*/
+
+    // ============================================
+    // Day report section
+    // ============================================
+performSearch: async function() {
     const date = document.getElementById('search-date').value;
     const name = (document.getElementById('search-name')) ? document.getElementById('search-name').value : "";
     const userId = (document.getElementById('search-user-picker')) ? document.getElementById('search-user-picker').value : "All";
-    
+
     const url = `${this.API_BASE_URL}/api/search?voice=${this.activeVoice}&date=${date}&name=${encodeURIComponent(name)}&userId=${userId}`;
-    
+
     try {
-        const res = await fetch(url, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
+        const res = await fetch(url, { 
+            headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} 
+        });
         const data = await res.json();
 
-        // Build table header with all fields
+        // Build table header
         let html = `
         <div class="table-container">
             <table>
@@ -5065,20 +6705,47 @@ const app = {
                         <th>Waste</th>
                         <th>Book</th>
                         <th>Reflection</th>
-                        <th>Body %</th>
                         <th>Soul %</th>
+                        <th>Body %</th>
                     </tr>
                 </thead>
                 <tbody>
         `;
 
-        data.forEach(r => {
-            // Convert dayRest from HH:MM to minutes
-            let dayRestMins = '-';
-            if(r.day_rest_time) {
+        // ✅ RECALCULATE SCORES using MarksCalculator for each record
+        for (const r of data) {
+            // Convert dayRest from HH:MM to minutes if needed
+            let dayRestMins = r.day_rest_minutes || 0;
+            if (r.day_rest_time && !dayRestMins) {
                 const parts = r.day_rest_time.split(':');
                 dayRestMins = (+parts[0]||0)*60 + (+parts[1]||0);
             }
+
+            // Prepare data for MarksCalculator
+            const recordData = {
+                name: r.name,
+                group: r.user_group,
+                voice: r.voice_name,
+                
+                // Soul activities
+                hearing: r.hearing_minutes > 0 ? 1 : 0,
+                reading: r.reading_minutes > 0 ? 1 : 0,
+                cleanliness: r.cleanliness == 1 ? 1 : 0,
+                morningClass: r.morning_class == 1 ? 1 : 0,
+                mangalaArti: r.mangala_aarti == 1 ? 1 : 0,
+                chantingEnd: r.chanting_end_time,
+                
+                // Japa rounds
+                rounds: r.rounds || 0,
+                
+                // Body activities
+                earlyWakeup: r.wakeup_time,
+                earlyToBed: r.sleep_time,
+                dayRest: dayRestMins
+            };
+
+            // ✅ USE MARKSCALCULATOR for scores
+            const scores = await MarksCalculator.calculateCompleteScore(recordData);
 
             html += `
                 <tr>
@@ -5095,24 +6762,177 @@ const app = {
                     <td>${r.morning_class ? 'Yes' : 'No'}</td>
                     <td>${r.mangala_aarti ? 'Yes' : 'No'}</td>
                     <td>${r.cleanliness ? 'Yes' : 'No'}</td>
-                    <td>${dayRestMins}</td>
+                    <td>${dayRestMins}m</td>
                     <td>${r.sleep_time || '-'}</td>
                     <td>${r.time_wasted || '-'}</td>
                     <td>${r.book_name || '-'}</td>
                     <td>${r.reflections || '-'}</td>
-                    <td>${r.body_percent || 0}%</td>
-                    <td>${r.soul_percent || 0}%</td>
+                    <td><strong>${scores.soulPercentage}%</strong> (${scores.soul.total}/50)</td>
+                    <td><strong>${scores.bodyPercentage}%</strong> (${scores.body.total}/75)</td>
                 </tr>
             `;
-        });
+        }
 
         html += '</tbody></table></div>';
         document.getElementById('search-results').innerHTML = html;
 
     } catch (e) {
+        console.error('Search error:', e);
         this.notify("Failed to load Day Report", true);
     }
-    },
+},
+
+
+    // ============================================
+    // FIXED: performSearch function with recalculation
+    // ============================================
+loadTodayReport: async function(userName, userId) {
+    const grid = document.getElementById(`today-grid-${userId}`);
+    if (!grid) return;
+
+    grid.innerHTML = '<div class="dashboard-loading">Loading today\'s data...</div>';
+
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        const url = `${this.API_BASE_URL}/api/search?voice=${this.activeVoice}&date=${today}&name=${encodeURIComponent(userName)}`;
+
+        const res = await fetch(url, {
+            headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+        });
+
+        const data = await res.json();
+
+        if (data.length === 0) {
+            grid.innerHTML = '<div class="dashboard-empty">No entry for today yet.</div>';
+            return;
+        }
+
+        const record = data[0];
+        console.log('📋 Today Record:', record);
+
+        // ✅ GET CONFIG for this voice
+        const config = await MarksCalculator.getConfig(record.voice_name);
+        
+        // ✅ Soul activities (boolean)
+        const hearing = record.hearing_minutes > 0 ? 1 : 0;
+        const reading = record.reading_minutes > 0 ? 1 : 0;
+        const cleanliness = record.cleanliness == 1 ? 1 : 0;
+        const morningClass = record.morning_class == 1 ? 1 : 0;
+        const mangalaArti = record.mangala_aarti == 1 ? 1 : 0;
+        
+        const soulActivitiesMarks = (hearing + reading + cleanliness + morningClass + mangalaArti) * 5;
+
+        // ✅ Chanting End using MarksCalculator
+        let chantingMarks = 0;
+        const chantingRule = config.soul?.activities?.find(a => a.name === 'chantingEnd');
+        if (chantingRule && record.chanting_end_time) {
+            chantingMarks = MarksCalculator.calculateTimeMarks(record.chanting_end_time, chantingRule);
+        }
+
+        // ✅ Body activities using MarksCalculator
+        let wakeMarks = 0;
+        const wakeRule = config.body?.activities?.find(a => a.name === 'earlyWakeup');
+        if (wakeRule && record.wakeup_time) {
+            wakeMarks = MarksCalculator.calculateTimeMarks(record.wakeup_time, wakeRule);
+        }
+
+        let bedMarks = 0;
+        const bedRule = config.body?.activities?.find(a => a.name === 'earlyToBed');
+        if (bedRule && record.sleep_time) {
+            bedMarks = MarksCalculator.calculateTimeMarks(record.sleep_time, bedRule);
+        }
+
+        let restMarks = 0;
+        const restRule = config.body?.activities?.find(a => a.name === 'dayRest');
+        if (restRule) {
+            restMarks = MarksCalculator.calculateDurationMarks(record.day_rest_minutes || 0, restRule);
+        }
+
+        const soulTotal = soulActivitiesMarks + chantingMarks;
+        const soulPercent = Math.round((soulTotal / 50) * 100);
+        
+        const bodyTotal = wakeMarks + bedMarks + restMarks;
+        const bodyPercent = Math.round((bodyTotal / 75) * 100);
+
+        console.log('📊 Today Calculation (using MarksCalculator):', {
+            soulActivities: soulActivitiesMarks,
+            chantingMarks,
+            soulTotal,
+            soulPercent,
+            wakeMarks,
+            bedMarks,
+            restMarks,
+            bodyTotal,
+            bodyPercent
+        });
+
+        grid.innerHTML = `
+            <div class="today-metric">
+                <span class="label">Wakeup</span>
+                <span class="value">${record.wakeup_time || '-'}</span>
+                <span class="sub-value">${wakeMarks}/25</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Sleep</span>
+                <span class="value">${record.sleep_time || '-'}</span>
+                <span class="sub-value">${bedMarks}/25</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Day Rest</span>
+                <span class="value">${record.day_rest_minutes || 0}m</span>
+                <span class="sub-value">${restMarks}/25</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Chanting End</span>
+                <span class="value">${record.chanting_end_time || '-'}</span>
+                <span class="sub-value">${chantingMarks}/25</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Rounds</span>
+                <span class="value">${record.rounds || 0}</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Hearing</span>
+                <span class="value">${record.hearing_minutes || 0}m</span>
+                <span class="sub-value">${hearing * 5}/5</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Reading</span>
+                <span class="value">${record.reading_minutes || 0}m</span>
+                <span class="sub-value">${reading * 5}/5</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Morning Class</span>
+                <span class="value">${record.morning_class ? '✅' : '❌'}</span>
+                <span class="sub-value">${morningClass * 5}/5</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Mangala Arti</span>
+                <span class="value">${record.mangala_aarti ? '✅' : '❌'}</span>
+                <span class="sub-value">${mangalaArti * 5}/5</span>
+            </div>
+            <div class="today-metric">
+                <span class="label">Cleanliness</span>
+                <span class="value">${record.cleanliness ? '✅' : '❌'}</span>
+                <span class="sub-value">${cleanliness * 5}/5</span>
+            </div>
+            <div class="today-metric" style="grid-column: span 2; background: #fef3c7;">
+                <span class="label">Soul Score</span>
+                <span class="value">${soulPercent}%</span>
+                <span class="sub-value">(${soulTotal}/50)</span>
+            </div>
+            <div class="today-metric" style="grid-column: span 2; background: #e6fffa;">
+                <span class="label">Body Score</span>
+                <span class="value">${bodyPercent}%</span>
+                <span class="sub-value">(${bodyTotal}/75)</span>
+            </div>
+        `;
+        
+    } catch (error) {
+        console.error('Error loading today report:', error);
+        grid.innerHTML = '<div class="dashboard-empty">Failed to load today\'s data</div>';
+    }
+},
 //--------------------new addition of sadhna and other function-----------------//
 
 // ============================================
@@ -5120,204 +6940,383 @@ const app = {
 // Add these to your app object
 // ============================================
 
-// Get proper date range based on period
-getDateRange: function(type) {
-    const today = new Date();
-    let start, end;
-    
-    if (type === 'weekly') {
-        // Get Monday (start of week)
-        const day = today.getDay(); // 0 = Sunday
-        const diff = day === 0 ? 6 : day - 1; // Days to subtract to get Monday
-        
-        start = new Date(today);
-        start.setDate(today.getDate() - diff);
-        start.setHours(0, 0, 0, 0);
-        
-        end = new Date(start);
-        end.setDate(start.getDate() + 6);
-        end.setHours(23, 59, 59, 999);
-    } else {
-        // Monthly - first and last day of month
-        start = new Date(today.getFullYear(), today.getMonth(), 1);
-        start.setHours(0, 0, 0, 0);
-        
-        end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        end.setHours(23, 59, 59, 999);
-    }
-    
-    const formatDate = (date) => {
-        return date.toLocaleDateString('en-IN', { 
-            day: 'numeric', 
-            month: 'short',
-            year: 'numeric'
-        });
-    };
-    
-    return {
-        start: formatDate(start),
-        end: formatDate(end),
-        startISO: start.toISOString().split('T')[0],
-        endISO: end.toISOString().split('T')[0]
-    };
-},
+    // Get proper date range based on period
+    getDateRange: function(type) {
+        const today = new Date();
+        let start, end;
 
-// Load Sadhana Dashboard with proper date ranges
-loadSadhanaDashboard: async function() {
-    const type = document.getElementById('dash-report-type').value;
-    const group = document.getElementById('dash-group-filter').value;
-    
-    // Get proper date range
-    const dateRange = this.getDateRange(type);
-    
-    // Show date range in UI
-    const rangeDisplay = document.getElementById('dashboard-date-range');
-    if (rangeDisplay) {
-        rangeDisplay.innerHTML = `${dateRange.start} to ${dateRange.end}`;
-    }
-    
-    // Determine voice filter
-    let voiceFilter;
-    if (this.currentUser.role === 'devotee') {
-        voiceFilter = this.currentUser.voice;
-    } else { 
-        voiceFilter = this.activeVoice;
-    }
+        if (type === 'weekly') {
+            // Get Monday (start of week)
+            const day = today.getDay(); // 0 = Sunday
+            const diff = day === 0 ? 6 : day - 1; // Days to subtract to get Monday
 
-    const container = document.getElementById('dashboard-report-content');
-    container.innerHTML = '<div class="dashboard-loading">Loading transcendental data...</div>';
+            start = new Date(today);
+            start.setDate(today.getDate() - diff);
+            start.setHours(0, 0, 0, 0);
 
-    try {
-        // Use dashboard/report endpoint with proper params
-        const url = `${this.API_BASE_URL}/api/dashboard/report?voice=${voiceFilter}&type=${type}&group=${group}`;
-        const res = await fetch(url, {
-            headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
-        });
+            end = new Date(start);
+            end.setDate(start.getDate() + 6);
+            end.setHours(23, 59, 59, 999);
+        } else {
+            // Monthly - first and last day of month
+            start = new Date(today.getFullYear(), today.getMonth(), 1);
+            start.setHours(0, 0, 0, 0);
 
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
+            end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            end.setHours(23, 59, 59, 999);
         }
 
-        const data = await res.json();
-        window.sadhanaDashboardData = data;
+        const formatDate = (date) => {
+            return date.toLocaleDateString('en-IN', { 
+                day: 'numeric', 
+                month: 'short',
+                year: 'numeric'
+            });
+        };
 
-        if (!data.length) {
-            container.innerHTML = '<div class="dashboard-empty">No records found for this period.</div>';
-            return;
+        return {
+            start: formatDate(start),
+            end: formatDate(end),
+            startISO: start.toISOString().split('T')[0],
+            endISO: end.toISOString().split('T')[0]
+        };
+    },
+
+    // ============================================
+    // UPDATED: loadSadhanaDashboard with mobile fixes
+    // ============================================
+    loadSadhanaDashboard: async function() {
+        const type = document.getElementById('dash-report-type').value;
+        const group = document.getElementById('dash-group-filter').value;
+
+        // Get proper date range
+        const dateRange = this.getDateRange(type);
+
+        // Show date range in UI
+        const rangeDisplay = document.getElementById('dashboard-date-range');
+        if (rangeDisplay) {
+            rangeDisplay.innerHTML = `${dateRange.start} to ${dateRange.end}`;
         }
 
-        // Calculate scores using MarksCalculator for each user
-        const enhancedData = await this.enhanceDataWithMarksCalculator(data, type);
-        
-        // Render the enhanced table
-        container.innerHTML = this.renderDashboardTable(enhancedData, type, dateRange);
-        
-        // Attach handlers
-        this.attachDashboardHandlers();
+        // Load user preference for summary stats
+        this.loadSummaryStatsPreference();
 
-    } catch(e) {
-        console.error('Dashboard error:', e);
-        this.notify("Dashboard load failed: " + e.message, true);
-        container.innerHTML = '<div class="dashboard-empty">Failed to load dashboard.</div>';
-    }
-},
+        // Determine voice filter
+        let voiceFilter;
+        if (this.currentUser.role === 'devotee') {
+            voiceFilter = this.currentUser.voice;
+        } else { 
+            voiceFilter = this.activeVoice;
+        }
 
-// Enhance data with MarksCalculator scores
+        const container = document.getElementById('dashboard-report-content');
+        container.innerHTML = '<div class="dashboard-loading">Loading transcendental data...</div>';
+
+        try {
+            const url = `${this.API_BASE_URL}/api/dashboard/report?voice=${voiceFilter}&type=${type}&group=${group}`;
+            const res = await fetch(url, {
+                headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+            window.sadhanaDashboardData = data;
+            console.log('🔍 RAW API DATA - PEHLA RECORD:', data[0]);
+            console.log('🔍 RAW API DATA - SAARE FIELDS:', Object.keys(data[0]));
+
+            if (!data.length) {
+                container.innerHTML = '<div class="dashboard-empty">No records found for this period.</div>';
+                return;
+            }
+
+            // Calculate scores using MarksCalculator for each user
+            const enhancedData = await this.enhanceDataWithMarksCalculator(data, type);
+
+            // Render the enhanced table WITH scroll hint for mobile
+            container.innerHTML = this.renderDashboardTable(enhancedData, type, dateRange);
+
+            // Add scroll hint for mobile
+            this.addScrollHint();
+
+            // Attach handlers
+            this.attachDashboardHandlers();
+
+        } catch(e) {
+            console.error('Dashboard error:', e);
+            this.notify("Dashboard load failed: " + e.message, true);
+            container.innerHTML = '<div class="dashboard-empty">Failed to load dashboard.</div>';
+        }
+    },
+
+    // Add scroll hint for mobile users
+    addScrollHint: function() {
+        const tableContainer = document.querySelector('.dashboard-table-container');
+        if (!tableContainer) return;
+
+        // Check if hint already exists
+        if (document.querySelector('.scroll-hint')) return;
+
+        // Only show on mobile
+        if (window.innerWidth <= 768) {
+            const hint = document.createElement('div');
+            hint.className = 'scroll-hint';
+            hint.innerHTML = 'Swipe to see more columns →';
+            tableContainer.parentNode.insertBefore(hint, tableContainer);
+        }
+    },
+
+    // ============================================
+    // ADD THESE FUNCTIONS to app object
+    // ============================================
+
+    // Toggle summary stats visibility
+    toggleSummaryStats: function() {
+        const container = document.getElementById('summary-stats-container');
+        const toggleBtn = document.getElementById('toggle-summary-btn');
+        const toggleIcon = document.getElementById('toggle-icon');
+        const toggleText = document.getElementById('toggle-text');
+
+        if (!container) return;
+
+        const isHidden = container.classList.contains('hidden');
+
+        if (isHidden) {
+            container.classList.remove('hidden');
+            toggleIcon.textContent = '👁️';
+            toggleText.textContent = 'Hide Summary Stats';
+            localStorage.setItem('showSummaryStats', 'true');
+        } else {
+            container.classList.add('hidden');
+            toggleIcon.textContent = '👁️‍🗨️';
+            toggleText.textContent = 'Show Summary Stats';
+            localStorage.setItem('showSummaryStats', 'false');
+        }
+    },
+
+    // Load user preference on dashboard load
+    loadSummaryStatsPreference: function() {
+        const container = document.getElementById('summary-stats-container');
+        const toggleIcon = document.getElementById('toggle-icon');
+        const toggleText = document.getElementById('toggle-text');
+
+        if (!container) return;
+
+        const showStats = localStorage.getItem('showSummaryStats') !== 'false';
+
+        if (!showStats) {
+            container.classList.add('hidden');
+            toggleIcon.textContent = '👁️‍🗨️';
+            toggleText.textContent = 'Show Summary Stats';
+        } else {
+            container.classList.remove('hidden');
+            toggleIcon.textContent = '👁️';
+            toggleText.textContent = 'Hide Summary Stats';
+        }
+    },
+
+    // ============================================
+    // FIXED: enhanceDataWithMarksCalculator - EXACT COLUMN NAMES
+    // ============================================
 enhanceDataWithMarksCalculator: async function(data, type) {
-    const totalDays = type === 'weekly' ? 7 : 30;
+    const totalDaysInPeriod = type === 'weekly' ? 7 : 30;  // ALWAYS 7 or 30
+    const MAX_SOUL_PER_DAY = 50;
+    const MAX_BODY_PER_DAY = 75;
     const enhancedData = [];
     
     for (const d of data) {
-        // Prepare data for MarksCalculator
-        const devoteeData = {
-            name: d.name,
-            group: d.group,
-            voice: d.voice,
-            
-            // Soul activities
-            hearing: d.totalHearing > 0 ? 1 : 0,
-            reading: d.totalReading > 0 ? 1 : 0,
-            cleanliness: d.cleanSuccess > 0 ? 1 : 0,
-            morningClass: d.morningClassSuccess > 0 ? 1 : 0,
-            mangalaArti: d.mangalaArtiSuccess > 0 ? 1 : 0,
-            
-            // Japa
-            rounds: d.totalRounds || 0,
-            
-            // Body activities
-            toBed: d.avgSleep, // Using sleep as toBed
-            wakeUp: d.avgWakeup,
-            dayRest: d.totalRest || 0
-        };
+        // ✅ USE the new fields from backend (added in API)
+        const totalSoulMarks = d.total_soul_marks || 0;
+        const totalBodyMarks = d.total_body_marks || 0;
+        const entryCount = d.entry_count || 0;
         
-        // Get scores from MarksCalculator
-        const scores = await MarksCalculator.calculateCompleteScore(devoteeData);
+        // ✅ NEW CORRECT CALCULATION based on totals
+        const soulPercentage = Math.round((totalSoulMarks / (MAX_SOUL_PER_DAY * totalDaysInPeriod)) * 100);
+        const bodyPercentage = Math.round((totalBodyMarks / (MAX_BODY_PER_DAY * totalDaysInPeriod)) * 100);
+        
+        console.log(`📊 ${d.name}:`, {
+            entryCount,
+            totalDaysInPeriod,
+            totalSoulMarks,
+            maxSoulPossible: MAX_SOUL_PER_DAY * totalDaysInPeriod,
+            soulPercentage,
+            totalBodyMarks,
+            maxBodyPossible: MAX_BODY_PER_DAY * totalDaysInPeriod,
+            bodyPercentage
+        });
+        
+        // Calculate daily averages (using the raw data)
+        const avgDailyHearing = Math.round((d.totalHearing || 0) / totalDaysInPeriod);
+        const avgDailyReading = Math.round((d.totalReading || 0) / totalDaysInPeriod);
+        const avgDailyStudy = Math.round((d.totalStudy || 0) / totalDaysInPeriod);
+        const avgDailyRest = Math.round((d.totalRest || 0) / totalDaysInPeriod);
+        const avgDailyWaste = Math.round((d.totalWaste || 0) / totalDaysInPeriod);
         
         enhancedData.push({
             ...d,
-            soulScore: scores.soul,
-            bodyScore: scores.body,
-            soulPercentage: scores.soulPercentage,
-            bodyPercentage: scores.bodyPercentage,
-            totalDays: totalDays
+            // ✅ Use new calculated percentages
+            soulPercentage,
+            bodyPercentage,
+            totalSoulMarks,
+            totalBodyMarks,
+            entryCount,
+            // Keep existing fields for display
+            avgDailyHearing,
+            avgDailyReading,
+            avgDailyStudy,
+            avgDailyRest,
+            avgDailyWaste
         });
     }
     
     return enhancedData;
 },
 
-// Render the enhanced dashboard table
+
+// ============================================
+// COMPLETE renderDashboardTable function with DEBUG
+// ============================================
 renderDashboardTable: function(data, type, dateRange) {
-    const totalDays = type === 'weekly' ? 7 : 30;
+    // ========== DEBUG LINE 1 ==========
+    console.log('%c🔍 DEBUG: renderDashboardTable CALLED', 'color: blue; font-size: 14px');
+    console.log('📊 Data received:', data);
+    console.log('📊 Total records:', data.length);
+    console.log('📊 Type:', type);
+    console.log('📊 Date Range:', dateRange);
     
-    // Calculate summary stats using MarksCalculator scores
+    const totalDays = type === 'weekly' ? 7 : 30;
+
+    // ========== DEBUG LINE 2 ==========
+    console.log('📊 totalDays:', totalDays);
+
+    // Calculate summary stats
     const totalActive = data.length;
     const totalRounds = data.reduce((sum, d) => sum + (d.totalRounds || 0), 0);
     const avgHearing = Math.round(data.reduce((sum, d) => sum + (d.totalHearing || 0), 0) / totalActive) || 0;
     const avgReading = Math.round(data.reduce((sum, d) => sum + (d.totalReading || 0), 0) / totalActive) || 0;
     const avgStudy = Math.round(data.reduce((sum, d) => sum + (d.totalStudy || 0), 0) / totalActive) || 0;
-    
     const avgSoul = Math.round(data.reduce((sum, d) => sum + (d.soulPercentage || 0), 0) / totalActive) || 0;
     const avgBody = Math.round(data.reduce((sum, d) => sum + (d.bodyPercentage || 0), 0) / totalActive) || 0;
-    
     const avgRest = Math.round(data.reduce((sum, d) => sum + (d.totalRest || 0), 0) / totalActive) || 0;
     const avgWaste = Math.round(data.reduce((sum, d) => sum + (d.totalWaste || 0), 0) / totalActive) || 0;
 
+    // ========== DEBUG LINE 3 ==========
+    console.log('📊 Summary Stats:', {
+        totalActive,
+        totalRounds,
+        avgHearing,
+        avgReading,
+        avgStudy,
+        avgSoul,
+        avgBody,
+        avgRest,
+        avgWaste
+    });
+
+    // Update summary stats container
+    const summaryContainer = document.getElementById('summary-stats-container');
+    if (summaryContainer) {
+        summaryContainer.innerHTML = `
+            <div class="summary-card">
+                <span class="label">Active Devotees</span>
+                <span class="value">${totalActive}</span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Total Rounds</span>
+                <span class="value">${totalRounds}</span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Avg Hearing</span>
+                <span class="value">${avgHearing}<span class="unit">m</span></span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Avg Reading</span>
+                <span class="value">${avgReading}<span class="unit">m</span></span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Avg Study</span>
+                <span class="value">${avgStudy}<span class="unit">m</span></span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Avg Rest</span>
+                <span class="value">${avgRest}<span class="unit">m</span></span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Avg Waste</span>
+                <span class="value">${avgWaste}<span class="unit">m</span></span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Avg Soul %</span>
+                <span class="value">${avgSoul}%</span>
+                <span class="trend">${this.getTrendLabel(avgSoul)}</span>
+            </div>
+            <div class="summary-card">
+                <span class="label">Avg Body %</span>
+                <span class="value">${avgBody}%</span>
+                <span class="trend">${this.getTrendLabel(avgBody)}</span>
+            </div>
+        `;
+        console.log('✅ Summary container updated');
+    } else {
+        console.log('❌ Summary container NOT found - check element ID');
+    }
+
     // Generate table rows
     let tableRows = '';
+    
+    // ========== DEBUG LINE 4 ==========
+    console.log('📊 Starting to generate rows for', data.length, 'devotees');
+    
     data.forEach((d, index) => {
+        console.log(`\n📊 Processing devotee ${index + 1}: ${d.name}`);
+        console.log('   Raw data:', d);
+        
         // Calculate daily averages
         const avgDailyHearing = Math.round((d.totalHearing || 0) / totalDays);
         const avgDailyReading = Math.round((d.totalReading || 0) / totalDays);
         const avgDailyStudy = Math.round((d.totalStudy || 0) / totalDays);
         const avgDailyRest = Math.round((d.totalRest || 0) / totalDays);
         const avgDailyWaste = Math.round((d.totalWaste || 0) / totalDays);
-        
+
+        console.log('   Daily Averages:', {
+            hearing: avgDailyHearing,
+            reading: avgDailyReading,
+            study: avgDailyStudy,
+            rest: avgDailyRest,
+            waste: avgDailyWaste
+        });
+
         // Create progress bars
         const wakeBar = this.createProgressBar(d.wakeSuccess, totalDays, `${d.wakeSuccess}/${totalDays}`);
         const templeBar = this.createProgressBar(d.templeSuccess, totalDays, `${d.templeSuccess}/${totalDays}`);
         const roundsBar = this.createProgressBar(d.roundSuccess, totalDays, `${d.roundSuccess}/${totalDays}`);
         const sleepBar = this.createProgressBar(d.sleepSuccess, totalDays, `${d.sleepSuccess}/${totalDays}`);
-        
+
         // Create soul and body percentage bars
         const soulBar = this.createProgressBar(d.soulPercentage, 100, `${d.soulPercentage}%`, 'soul');
         const bodyBar = this.createProgressBar(d.bodyPercentage, 100, `${d.bodyPercentage}%`, 'body');
-        
+
         // Labels
         const hearingLabel = this.getMinutesLabel(avgDailyHearing);
         const readingLabel = this.getMinutesLabel(avgDailyReading);
         const studyLabel = this.getMinutesLabel(avgDailyStudy);
         const restLabel = this.getMinutesLabel(avgDailyRest);
         const wasteLabel = this.getMinutesLabel(avgDailyWaste, true);
-        
+
         // Icons with tooltips
         const morningIcon = this.getActivityIcon(d.morningClassSuccess, totalDays);
         const mangalaIcon = this.getActivityIcon(d.mangalaArtiSuccess, totalDays);
         const cleanIcon = this.getActivityIcon(d.cleanSuccess, totalDays);
-        
+
         const morningCount = `${d.morningClassSuccess}/${totalDays}`;
         const mangalaCount = `${d.mangalaArtiSuccess}/${totalDays}`;
         const cleanCount = `${d.cleanSuccess}/${totalDays}`;
+
+        // ========== DEBUG LINE 5 ==========
+        console.log('   Body% being displayed:', d.bodyPercentage, '%');
+        console.log('   Soul% being displayed:', d.soulPercentage, '%');
 
         tableRows += `
             <tr class="user-row" data-user-id="${index}" data-user-name="${d.name}">
@@ -5325,115 +7324,39 @@ renderDashboardTable: function(data, type, dateRange) {
                     <strong>${d.name}</strong>
                     <div style="font-size:0.7rem; color:var(--text-muted);">${d.group}</div>
                 </td>
-                
+
                 <!-- Morning Discipline -->
-                <td>
-                    <div class="metric-badge">
-                        <span class="count">${wakeBar}</span>
-                        <span class="label">${d.wakeSuccess}/${totalDays}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-badge">
-                        <span class="count">${templeBar}</span>
-                        <span class="label">${d.templeSuccess}/${totalDays}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-badge">
-                        <span class="count">${roundsBar}</span>
-                        <span class="label">${d.roundSuccess}/${totalDays}</span>
-                    </div>
-                </td>
-                
+                <td><div class="metric-badge"><span class="count">${wakeBar}</span><span class="label">${d.wakeSuccess}/${totalDays}</span></div></td>
+                <td><div class="metric-badge"><span class="count">${templeBar}</span><span class="label">${d.templeSuccess}/${totalDays}</span></div></td>
+                <td><div class="metric-badge"><span class="count">${roundsBar}</span><span class="label">${d.roundSuccess}/${totalDays}</span></div></td>
+
                 <!-- Spiritual Effort -->
-                <td>
-                    <div class="metric-badge">
-                        <span class="count" style="font-size:1rem;">${avgDailyHearing}m</span>
-                        <span class="label">${hearingLabel}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-badge">
-                        <span class="count" style="font-size:1rem;">${avgDailyReading}m</span>
-                        <span class="label">${readingLabel}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-badge">
-                        <span class="count" style="font-size:1rem;">${avgDailyStudy}m</span>
-                        <span class="label">${studyLabel}</span>
-                    </div>
-                </td>
-                
+                <td><div class="metric-badge"><span class="count">${avgDailyHearing}m</span><span class="label">${hearingLabel}</span></div></td>
+                <td><div class="metric-badge"><span class="count">${avgDailyReading}m</span><span class="label">${readingLabel}</span></div></td>
+                <td><div class="metric-badge"><span class="count">${avgDailyStudy}m</span><span class="label">${studyLabel}</span></div></td>
+
                 <!-- Temple Activities -->
-                <td>
-                    <div class="metric-badge" data-tooltip="Attended ${morningCount} days">
-                        <span class="icon-indicator ${this.getIconClass(d.morningClassSuccess, totalDays)}">${morningIcon}</span>
-                        <span class="label">${morningCount}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-badge" data-tooltip="Attended ${mangalaCount} days">
-                        <span class="icon-indicator ${this.getIconClass(d.mangalaArtiSuccess, totalDays)}">${mangalaIcon}</span>
-                        <span class="label">${mangalaCount}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-badge" data-tooltip="Cleaned ${cleanCount} days">
-                        <span class="icon-indicator ${this.getIconClass(d.cleanSuccess, totalDays)}">${cleanIcon}</span>
-                        <span class="label">${cleanCount}</span>
-                    </div>
-                </td>
-                
+                <td><div class="metric-badge" data-tooltip="Attended ${morningCount} days"><span class="icon-indicator ${this.getIconClass(d.morningClassSuccess, totalDays)}">${morningIcon}</span><span class="label">${morningCount}</span></div></td>
+                <td><div class="metric-badge" data-tooltip="Attended ${mangalaCount} days"><span class="icon-indicator ${this.getIconClass(d.mangalaArtiSuccess, totalDays)}">${mangalaIcon}</span><span class="label">${mangalaCount}</span></div></td>
+                <td><div class="metric-badge" data-tooltip="Cleaned ${cleanCount} days"><span class="icon-indicator ${this.getIconClass(d.cleanSuccess, totalDays)}">${cleanIcon}</span><span class="label">${cleanCount}</span></div></td>
+
                 <!-- Lifestyle -->
-                <td>
-                    <div class="metric-badge">
-                        <span class="count">${sleepBar}</span>
-                        <span class="label">${d.sleepSuccess}/${totalDays}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-badge">
-                        <span class="count" style="font-size:1rem;">${avgDailyRest}m</span>
-                        <span class="label">${restLabel}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-badge">
-                        <span class="count" style="font-size:1rem;">${avgDailyWaste}m</span>
-                        <span class="label ${avgDailyWaste > 30 ? 'text-warning' : ''}">${wasteLabel}</span>
-                    </div>
-                </td>
-                
+                <td><div class="metric-badge"><span class="count">${sleepBar}</span><span class="label">${d.sleepSuccess}/${totalDays}</span></div></td>
+                <td><div class="metric-badge"><span class="count">${avgDailyRest}m</span><span class="label">${restLabel}</span></div></td>
+                <td><div class="metric-badge"><span class="count">${avgDailyWaste}m</span><span class="label">${wasteLabel}</span></div></td>
+
                 <!-- Soul & Body % -->
-                <td>
-                    <div class="metric-badge soul">
-                        <span class="count">${soulBar}</span>
-                        <span class="label">${this.getScoreLabel(d.soulPercentage)}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-badge body">
-                        <span class="count">${bodyBar}</span>
-                        <span class="label">${this.getScoreLabel(d.bodyPercentage)}</span>
-                    </div>
-                </td>
-                
+                <td><div class="metric-badge soul"><span class="count">${soulBar}</span><span class="label">${this.getScoreLabel(d.soulPercentage)}</span></div></td>
+                <td><div class="metric-badge body"><span class="count">${bodyBar}</span><span class="label">${this.getScoreLabel(d.bodyPercentage)}</span></div></td>
+
                 <!-- Actions -->
-                <td>
-                    <button class="view-details-btn" onclick="app.showTodayReport('${d.name}', ${index})">
-                        👁️ <span style="display:none;">View</span>
-                    </button>
-                </td>
+                <td><button class="view-details-btn" onclick="app.showTodayReport('${d.name}', ${index})">👁️</button></td>
             </tr>
             <tr class="today-report-row hidden" id="today-report-${index}">
                 <td colspan="16">
                     <div class="today-report-panel" id="today-panel-${index}">
                         <h4>📋 Today's Report for ${d.name}</h4>
-                        <div class="today-report-grid" id="today-grid-${index}">
-                            Loading today's data...
-                        </div>
+                        <div class="today-report-grid" id="today-grid-${index}">Loading...</div>
                         <button class="close-panel" onclick="app.hideTodayReport(${index})">Close</button>
                     </div>
                 </td>
@@ -5441,77 +7364,31 @@ renderDashboardTable: function(data, type, dateRange) {
         `;
     });
 
-    // Return complete HTML
-    return `
-        <div class="dashboard-table-container">
-            <div class="dashboard-summary-stats">
-                <div class="summary-card">
-                    <span class="label">Active Devotees</span>
-                    <span class="value">${totalActive}</span>
-                </div>
-                <div class="summary-card">
-                    <span class="label">Total Rounds</span>
-                    <span class="value">${totalRounds}</span>
-                </div>
-                <div class="summary-card">
-                    <span class="label">Avg Hearing</span>
-                    <span class="value">${avgHearing}<span class="unit">m</span></span>
-                </div>
-                <div class="summary-card">
-                    <span class="label">Avg Reading</span>
-                    <span class="value">${avgReading}<span class="unit">m</span></span>
-                </div>
-                <div class="summary-card">
-                    <span class="label">Avg Study</span>
-                    <span class="value">${avgStudy}<span class="unit">m</span></span>
-                </div>
-                <div class="summary-card">
-                    <span class="label">Avg Rest</span>
-                    <span class="value">${avgRest}<span class="unit">m</span></span>
-                </div>
-                <div class="summary-card">
-                    <span class="label">Avg Waste</span>
-                    <span class="value">${avgWaste}<span class="unit">m</span></span>
-                </div>
-                <div class="summary-card">
-                    <span class="label">Avg Soul %</span>
-                    <span class="value">${avgSoul}%</span>
-                    <span class="trend">${this.getTrendLabel(avgSoul)}</span>
-                </div>
-                <div class="summary-card">
-                    <span class="label">Avg Body %</span>
-                    <span class="value">${avgBody}%</span>
-                    <span class="trend">${this.getTrendLabel(avgBody)}</span>
-                </div>
-            </div>
+    // ========== DEBUG LINE 6 ==========
+    console.log('📊 Total rows generated:', data.length);
+    console.log('📊 tableRows length:', tableRows.length);
+    console.log('📊 First 100 chars of tableRows:', tableRows.substring(0, 100));
 
+    const finalHtml = `
+        <div class="dashboard-table-container">
             <div style="overflow-x: auto;">
                 <table class="dashboard-main-table">
                     <thead>
                         <tr>
                             <th rowspan="2">Devotee</th>
-                            <th colspan="3">🌅 Morning Discipline</th>
-                            <th colspan="3">📿 Spiritual Effort (Daily)</th>
-                            <th colspan="3">🛕 Temple Activities</th>
+                            <th colspan="3">🌅 Morning</th>
+                            <th colspan="3">📿 Spiritual</th>
+                            <th colspan="3">🛕 Temple</th>
                             <th colspan="3">😴 Lifestyle</th>
                             <th colspan="2">📊 Scores</th>
                             <th rowspan="2"></th>
                         </tr>
                         <tr>
-                            <th>Wake 4:30</th>
-                            <th>Temple</th>
-                            <th>16 Rounds</th>
-                            <th>Hear</th>
-                            <th>Read</th>
-                            <th>Study</th>
-                            <th>Class</th>
-                            <th>Arti</th>
-                            <th>Clean</th>
-                            <th>Sleep 9:30</th>
-                            <th>Rest</th>
-                            <th>Waste</th>
-                            <th>Soul %</th>
-                            <th>Body %</th>
+                            <th>Wake</th><th>Temple</th><th>Rounds</th>
+                            <th>Hear</th><th>Read</th><th>Study</th>
+                            <th>Class</th><th>Arti</th><th>Clean</th>
+                            <th>Sleep</th><th>Rest</th><th>Waste</th>
+                            <th>Soul</th><th>Body</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -5521,226 +7398,123 @@ renderDashboardTable: function(data, type, dateRange) {
             </div>
         </div>
     `;
-},
 
-// Create progress bar
-createProgressBar: function(value, max, text, type = 'default') {
-    const percentage = Math.min((value / max) * 100, 100);
-    let barColor = 'var(--saffron)';
+    // ========== DEBUG LINE 7 ==========
+    console.log('✅ Final HTML generated, length:', finalHtml.length);
     
-    if (type === 'soul') {
-        if (percentage >= 80) barColor = '#48bb78';
-        else if (percentage >= 60) barColor = '#ecc94b';
-        else barColor = '#f56565';
-    } else if (type === 'body') {
-        if (percentage >= 80) barColor = '#2c7a7b';
-        else if (percentage >= 60) barColor = '#3182ce';
-        else barColor = '#f56565';
-    }
-    
-    return `
-        <div class="progress-bar-container">
-            <div class="progress-bar-fill" style="width: ${percentage}%; background: ${barColor};"></div>
-            <span class="progress-bar-text">${text}</span>
-        </div>
-    `;
+    return finalHtml;
 },
 
-// Get minutes label
-getMinutesLabel: function(minutes, isWaste = false) {
-    if (isWaste) {
-        if (minutes === 0) return 'None';
-        if (minutes <= 15) return 'Minimal';
-        if (minutes <= 30) return 'Moderate';
-        return 'High';
-    }
-    
-    if (minutes >= 60) return 'Excellent';
-    if (minutes >= 45) return 'Good';
-    if (minutes >= 30) return 'Average';
-    if (minutes >= 15) return 'Fair';
-    if (minutes > 0) return 'Low';
-    return 'None';
-},
 
-// Get activity icon
-getActivityIcon: function(success, totalDays) {
-    const percentage = (success / totalDays) * 100;
-    if (percentage >= 70) return '✅';
-    if (percentage >= 30) return '⚠️';
-    return '❌';
-},
+    // Create progress bar
+    createProgressBar: function(value, max, text, type = 'default') {
+        const percentage = Math.min((value / max) * 100, 100);
+        let barColor = 'var(--saffron)';
 
-// Get icon class
-getIconClass: function(success, totalDays) {
-    const percentage = (success / totalDays) * 100;
-    if (percentage >= 70) return 'good';
-    if (percentage >= 30) return 'warning';
-    return 'bad';
-},
-
-// Get score label
-getScoreLabel: function(score) {
-    if (score >= 90) return 'Excellent';
-    if (score >= 75) return 'Good';
-    if (score >= 60) return 'Average';
-    if (score >= 40) return 'Fair';
-    return 'Needs Work';
-},
-
-// Get trend label
-getTrendLabel: function(score) {
-    if (score >= 80) return '🔥 Excellent';
-    if (score >= 60) return '👍 Good';
-    if (score >= 40) return '⚖️ Average';
-    return '⚠️ Needs Work';
-},
-
-// Show today's report
-showTodayReport: async function(userName, userId) {
-    document.querySelectorAll('.today-report-row').forEach(row => {
-        row.classList.add('hidden');
-    });
-    
-    const panel = document.getElementById(`today-report-${userId}`);
-    if (panel) {
-        panel.classList.remove('hidden');
-        await this.loadTodayReport(userName, userId);
-    }
-},
-
-// Hide today's report
-hideTodayReport: function(userId) {
-    const panel = document.getElementById(`today-report-${userId}`);
-    if (panel) {
-        panel.classList.add('hidden');
-    }
-},
-
-// Load today's report data
-loadTodayReport: async function(userName, userId) {
-    const grid = document.getElementById(`today-grid-${userId}`);
-    if (!grid) return;
-    
-    grid.innerHTML = '<div class="dashboard-loading">Loading today\'s data...</div>';
-    
-    try {
-        const today = new Date().toISOString().split('T')[0];
-        const url = `${this.API_BASE_URL}/api/search?voice=${this.activeVoice}&date=${today}&name=${encodeURIComponent(userName)}`;
-        
-        const res = await fetch(url, {
-            headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
-        });
-        
-        if (!res.ok) throw new Error('Failed to load');
-        
-        const data = await res.json();
-        
-        if (data.length === 0) {
-            grid.innerHTML = '<div class="dashboard-empty">No entry for today yet.</div>';
-            return;
+        if (type === 'soul') {
+            if (percentage >= 80) barColor = '#48bb78';
+            else if (percentage >= 60) barColor = '#ecc94b';
+            else barColor = '#f56565';
+        } else if (type === 'body') {
+            if (percentage >= 80) barColor = '#2c7a7b';
+            else if (percentage >= 60) barColor = '#3182ce';
+            else barColor = '#f56565';
         }
-        
-        const record = data[0];
-        
-        // Calculate today's scores using MarksCalculator
-        const todayData = {
-            name: record.name,
-            group: record.user_group,
-            voice: record.voice_name,
-            hearing: record.hearing_minutes > 0 ? 1 : 0,
-            reading: record.reading_minutes > 0 ? 1 : 0,
-            cleanliness: record.cleanliness == 1 ? 1 : 0,
-            morningClass: record.morning_class == 1 ? 1 : 0,
-            mangalaArti: record.mangala_aarti == 1 ? 1 : 0,
-            rounds: record.rounds || 0,
-            toBed: record.sleep_time,
-            wakeUp: record.wakeup_time,
-            dayRest: record.day_rest_minutes || 0
-        };
-        
-        const scores = await MarksCalculator.calculateCompleteScore(todayData);
-        
-        grid.innerHTML = `
-            <div class="today-metric">
-                <span class="label">Wakeup</span>
-                <span class="value">${record.wakeup_time || '-'}</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Rounds</span>
-                <span class="value">${record.rounds || 0}</span>
-                <span class="sub-value">${scores.soul.japa}/${scores.soul.maxPossible}</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Temple</span>
-                <span class="value">${record.temp_hall_rech || '-'}</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Hearing</span>
-                <span class="value">${record.hearing_minutes || 0}m</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Reading</span>
-                <span class="value">${record.reading_minutes || 0}m</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Study</span>
-                <span class="value">${record.study_minutes || 0}m</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Morning Class</span>
-                <span class="value">${record.morning_class ? '✅ Yes' : '❌ No'}</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Mangala Arti</span>
-                <span class="value">${record.mangala_aarti ? '✅ Yes' : '❌ No'}</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Cleanliness</span>
-                <span class="value">${record.cleanliness ? '✅ Yes' : '❌ No'}</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Sleep</span>
-                <span class="value">${record.sleep_time || '-'}</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Day Rest</span>
-                <span class="value">${record.day_rest_time || '0'}</span>
-            </div>
-            <div class="today-metric">
-                <span class="label">Time Wasted</span>
-                <span class="value">${record.time_wasted || '0'}m</span>
-            </div>
-            <div class="today-metric" style="grid-column: span 2; background: #fef3c7;">
-                <span class="label">Soul Score</span>
-                <span class="value">${scores.soulPercentage}%</span>
-                <span class="sub-value">(${scores.soul.total}/${scores.soul.maxPossible})</span>
-            </div>
-            <div class="today-metric" style="grid-column: span 2; background: #e6fffa;">
-                <span class="label">Body Score</span>
-                <span class="value">${scores.bodyPercentage}%</span>
-                <span class="sub-value">(${scores.body.total}/${scores.body.maxPossible})</span>
+
+        return `
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" style="width: ${percentage}%; background: ${barColor};"></div>
+                <span class="progress-bar-text">${text}</span>
             </div>
         `;
-        
-    } catch (error) {
-        console.error('Error loading today report:', error);
-        grid.innerHTML = '<div class="dashboard-empty">Failed to load today\'s data</div>';
-    }
-},
+    },
 
-// Attach click handlers
-attachDashboardHandlers: function() {
-    document.querySelectorAll('.user-row').forEach(row => {
-        row.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
-            
-            const userId = row.dataset.userId;
-            const userName = row.dataset.userName;
-            this.showTodayReport(userName, userId);
+    // Get minutes label
+    getMinutesLabel: function(minutes, isWaste = false) {
+        if (isWaste) {
+            if (minutes === 0) return 'None';
+            if (minutes <= 15) return 'Minimal';
+            if (minutes <= 30) return 'Moderate';
+            return 'High';
+        }
+
+        if (minutes >= 60) return 'Excellent';
+        if (minutes >= 45) return 'Good';
+        if (minutes >= 30) return 'Average';
+        if (minutes >= 15) return 'Fair';
+        if (minutes > 0) return 'Low';
+        return 'None';
+    },
+
+    // Get activity icon
+    getActivityIcon: function(success, totalDays) {
+        const percentage = (success / totalDays) * 100;
+        if (percentage >= 70) return '✅';
+        if (percentage >= 30) return '⚠️';
+        return '❌';
+    },
+
+    // Get icon class
+    getIconClass: function(success, totalDays) {
+        const percentage = (success / totalDays) * 100;
+        if (percentage >= 70) return 'good';
+        if (percentage >= 30) return 'warning';
+        return 'bad';
+    },
+
+    // Get score label
+    getScoreLabel: function(score) {
+        if (score >= 90) return 'Excellent';
+        if (score >= 75) return 'Good';
+        if (score >= 60) return 'Average';
+        if (score >= 40) return 'Fair';
+        return 'Needs Work';
+    },
+
+    // Get trend label
+    getTrendLabel: function(score) {
+        if (score >= 80) return '🔥 Excellent';
+        if (score >= 60) return '👍 Good';
+        if (score >= 40) return '⚖️ Average';
+        return '⚠️ Needs Work';
+    },
+
+    // Show today's report
+    showTodayReport: async function(userName, userId) {
+        document.querySelectorAll('.today-report-row').forEach(row => {
+            row.classList.add('hidden');
         });
-    });
-},
+
+        const panel = document.getElementById(`today-report-${userId}`);
+        if (panel) {
+            panel.classList.remove('hidden');
+            await this.loadTodayReport(userName, userId);
+        }
+    },
+
+    // Hide today's report
+    hideTodayReport: function(userId) {
+        const panel = document.getElementById(`today-report-${userId}`);
+        if (panel) {
+            panel.classList.add('hidden');
+        }
+    },
+// ============================================
+// FIXED: loadTodayReport - with proper field mapping
+// ============================================
+
+    // Attach click handlers
+    attachDashboardHandlers: function() {
+        document.querySelectorAll('.user-row').forEach(row => {
+            row.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+
+                const userId = row.dataset.userId;
+                const userName = row.dataset.userName;
+                this.showTodayReport(userName, userId);
+            });
+        });
+    },
 
 //--------------------ending of new functi on-----------------//
 
@@ -5989,44 +7763,110 @@ attachDashboardHandlers: function() {
         XLSX.writeFile(wb, `Sadhana_Report.xlsx`);
     },
 
-    /*handleVoiceSwitch: function(v) { this.activeVoice = v; this.generateReport(); this.performSearch(); if(!document.getElementById('view-user-mgmt').classList.contains('hidden')) this.loadUsers(); },
-    handleLogout: function() { localStorage.clear(); location.reload(); },
-    handleRegister: async function() {
-        const body = { name: document.getElementById('reg-name').value, email: document.getElementById('reg-email').value, password: document.getElementById('reg-pass').value, voice: document.getElementById('reg-voice').value, group: document.getElementById('reg-group').value };
-        const res = await fetch(`${this.API_BASE_URL}/api/auth/register`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
-        if (res.ok) { this.notify("Registration Success!"); this.showView('login'); }
-        else { const d = await res.json(); this.notify(d.error, true); }
-    }*/
+    handleLogout: function() { 
+        // Clear all storage
+        localStorage.clear();
+        sessionStorage.clear();
 
-    handleLogout: function() { localStorage.clear(); location.reload(); },
-
-    handleVoiceSwitch: function(selectedVoice) {
-       this.activeVoice = selectedVoice;       // Update active voice
-       
-       // Refresh all components that depend on voice
-       this.loadPickers();                      // Refresh user pickers
-       
-       // Check which view is currently visible and update accordingly
-       if (!document.getElementById('view-sadhana-dashboard').classList.contains('hidden')) {
-           this.loadSadhanaDashboard();         // Reload dashboard if visible
-       }
-       if (!document.getElementById('view-reports').classList.contains('hidden')) {
-           this.generateReport();                // Reload reports if visible
-       }
-       if (!document.getElementById('view-search').classList.contains('hidden')) {
-           this.performSearch();                  // Reload search if visible
-       }
-       if (!document.getElementById('view-user-mgmt').classList.contains('hidden')) {
-           this.loadUsers();                      // Reload user management if visible
-       }
-        if (!document.getElementById('view-leaderboard').classList.contains('hidden')) {
-        if (typeof LeaderboardModule !== 'undefined') {
-            LeaderboardModule.load('current', LeaderboardModule.currentSort); //Reload leader board
+        // Clear all caches
+        if (MarksCalculator) {
+            MarksCalculator.clearCache();
         }
-    }
-       
-       this.notify(`Switched to voice: ${selectedVoice}`);
+
+        // Reset leaderboard data
+        if (LeaderboardModule) {
+            LeaderboardModule.availableMonths = ['current'];
+            LeaderboardModule.currentData = [];
+            LeaderboardModule.currentMonth = 'current';
+            LeaderboardModule.currentSort = 'high-to-low';
+        }
+
+        // Clear any app state
+        this.currentUser = null;
+        this.activeVoice = 'All';
+        this.usersData = [];
+        this.rawRecords = [];
+
+        // Redirect to login
+        this.showView('login');
+        this.notify('Logged out successfully');
+
+        // Optional: reload to ensure clean state
+        // location.reload(); 
     },
+
+    /*handleLogout: function() { localStorage.clear(); location.reload(); },*/
+
+        // Create a reusable API caller
+    callApi: async function(endpoint, options = {}) {
+        const token = localStorage.getItem('token');
+
+        // If no token and endpoint requires auth, return null
+        if (!token && !options.public) {
+            console.log(`No token available for ${endpoint}`);
+            return null;
+        }
+
+        try {
+            const res = await fetch(`${app.API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            });
+
+            if (res.status === 403) {
+                console.log('Auth failed for', endpoint);
+                // Optionally trigger logout if token is invalid
+                if (app.currentUser) {
+                    app.notify('Session expired, please login again', true);
+                    app.handleLogout();
+                }
+                return null;
+            }
+
+            return res;
+        } catch (error) {
+            console.error('API call failed:', error);
+            return null;
+        }
+    },
+handleVoiceSwitch: function(selectedVoice) {
+   this.activeVoice = selectedVoice;       // Update active voice
+   
+   // Refresh all components that depend on voice
+   this.loadPickers();                      // Refresh user pickers
+   
+   // Check which view is currently visible and update accordingly
+   if (!document.getElementById('view-sadhana-dashboard').classList.contains('hidden')) {
+       this.loadSadhanaDashboard();         // Reload dashboard if visible
+   }
+   
+   // ✅ FIX: Use generateGroupReport instead of generateReport
+   if (!document.getElementById('view-reports').classList.contains('hidden')) {
+       if (this.currentUser.role === 'devotee') {
+           this.generateGroupReport('weekly', this.currentUser.voice);
+       } else {
+           this.generateGroupReport('weekly', this.activeVoice);
+       }
+   }
+   
+   if (!document.getElementById('view-search').classList.contains('hidden')) {
+       this.performSearch();                  // Reload search if visible
+   }
+   if (!document.getElementById('view-user-mgmt').classList.contains('hidden')) {
+       this.loadUsers();                      // Reload user management if visible
+   }
+   if (!document.getElementById('view-leaderboard').classList.contains('hidden')) {
+       if (typeof LeaderboardModule !== 'undefined') {
+           LeaderboardModule.load('current', LeaderboardModule.currentSort);
+       }
+   }
+   
+   this.notify(`Switched to voice: ${selectedVoice}`);
+},
         // Show leaderboard view
     showLeaderboard: function() {
         this.showView('leaderboard');

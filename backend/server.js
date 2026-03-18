@@ -315,85 +315,181 @@ app.put('/api/users/:id/role', authenticateToken, async (req, res) => {
 // SADHANA ENTRY ROUTES
 // ============================================
 
-// --- SAVE sadhana entry ---
 app.post('/api/sadhana', authenticateToken, async (req, res) => {
     try {
+        console.log('========== SAVE SADHANA REQUEST ==========');
+        
         const {
-            date, wakeup, rounds, chantEnd, hearing, reading, study, dayRest, sleep,
-            to_bed, wake_up, day_rest_marks,
-            morning_class, mangala_aarti, cleanliness,
-            book_name, reflections,
-            temp_hall_rech, time_wasted
+            date, wakeup, rounds, chantEnd, hearing, reading, study,
+            dayRestMinutes, sleep, temp_hall_rech, time_wasted,
+            morning_class, mangala_aarti, cleanliness, book_name, reflections
         } = req.body;
 
-        // ---------- BODY MARKS ----------
-        const bodyMarks = (to_bed || 0) + (wake_up || 0) + (day_rest_marks || 0);
+        // Parse time_wasted from minutes to TIME format (HH:MM:SS)
+        const wastedHours = Math.floor(parseInt(time_wasted) / 60);
+        const wastedMinutes = parseInt(time_wasted) % 60;
+        const wastedTime = `${wastedHours.toString().padStart(2, '0')}:${wastedMinutes.toString().padStart(2, '0')}:00`;
+
+        // ============================================
+        // SOUL MARKS CALCULATION
+        // ============================================
+        let soulMarks = 0;
+        
+        // 5 Soul Activities × 5 marks each = 25 marks
+        if (parseInt(hearing) > 0) soulMarks += 5;
+        if (parseInt(reading) > 0) soulMarks += 5;
+        if (morning_class == 1 || morning_class === '1') soulMarks += 5;
+        if (mangala_aarti == 1 || mangala_aarti === '1') soulMarks += 5;
+        if (cleanliness == 1 || cleanliness === '1') soulMarks += 5;
+        
+        // Chanting End Marks - 25 marks
+        if (chantEnd) {
+            if (chantEnd <= '06:45') soulMarks += 25;
+            else if (chantEnd <= '09:00') soulMarks += 20;
+            else if (chantEnd <= '13:00') soulMarks += 15;
+            else if (chantEnd <= '16:00') soulMarks += 10;
+            else if (chantEnd <= '20:00') soulMarks += 5;
+        }
+
+        const soulPercent = Math.round((soulMarks / 50) * 100);
+
+        // ============================================
+        // BODY MARKS CALCULATION
+        // ============================================
+        let bodyMarks = 0;
+        let wakeMarks = 0, bedMarks = 0, restMarks = 0;
+
+        // Wakeup Marks
+        if (wakeup) {
+            if (wakeup <= '04:30') wakeMarks = 25;
+            else if (wakeup <= '05:00') wakeMarks = 20;
+            else if (wakeup <= '05:30') wakeMarks = 15;
+            else if (wakeup <= '06:00') wakeMarks = 10;
+            else if (wakeup <= '06:30') wakeMarks = 5;
+            bodyMarks += wakeMarks;
+        }
+
+        // Sleep Marks (to_bed)
+        if (sleep) {
+            if (sleep <= '21:30') bedMarks = 25;
+            else if (sleep <= '22:00') bedMarks = 20;
+            else if (sleep <= '22:30') bedMarks = 15;
+            else if (sleep <= '23:00') bedMarks = 10;
+            else if (sleep <= '23:30') bedMarks = 5;
+            bodyMarks += bedMarks;
+        }
+
+        // Day Rest Marks
+        const rest = parseInt(dayRestMinutes) || 0;
+        if (rest <= 30) restMarks = 25;
+        else if (rest <= 45) restMarks = 20;
+        else if (rest <= 60) restMarks = 15;
+        else if (rest <= 75) restMarks = 10;
+        else if (rest <= 90) restMarks = 5;
+        bodyMarks += restMarks;
+
         const bodyPercent = Math.round((bodyMarks / 75) * 100);
 
-        // ---------- SOUL MARKS ----------
-        let activityCount = 0;
+        console.log('Marks calculated:', {
+            soulMarks, soulPercent,
+            wakeMarks, bedMarks, restMarks, bodyMarks, bodyPercent
+        });
 
-        if (reading > 0) activityCount++;
-        if (hearing > 0) activityCount++;
-        if (morning_class == 1) activityCount++;
-        if (mangala_aarti == 1) activityCount++;
-
-        const combinedMarks = (activityCount / 4) * 25;
-
-        const japaMarks = rounds >= 16 ? 25 : (rounds / 16) * 25;
-        const studyMarks = study >= 60 ? 10 : (study / 60) * 10;
-        const cleanMarks = cleanliness ? 5 : 0;
-
-        const soulMarks = combinedMarks + japaMarks + studyMarks + cleanMarks;
-        const soulPercent = Math.round((soulMarks / 65) * 100);
-
-        // ---------- INSERT ----------
-        const sql = `
-        INSERT INTO sadhana_entries
-        (user_id, voice_name, entry_date, wakeup_time, rounds, chanting_end_time,
-        hearing_minutes, reading_minutes, study_minutes, day_rest_time, sleep_time,
-        to_bed, wake_up, day_rest_marks, morning_class, mangala_aarti,
-        cleanliness, book_name, reflections, temp_hall_rech, time_wasted,
-        body_marks, body_percent, soul_marks, soul_percent)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        // ============================================
+        // CORRECT INSERT QUERY with your actual columns
+        // ============================================
+        const query = `
+            INSERT INTO sadhana_entries 
+            (user_id, voice_name, entry_date, 
+             wakeup_time, rounds, chanting_end_time,
+             hearing_minutes, reading_minutes, study_minutes,
+             day_rest_minutes, sleep_time,
+             morning_class, mangala_aarti, cleanliness,
+             book_name, reflections,
+             temp_hall_rech, time_wasted,
+             to_bed, wake_up, day_rest_marks,
+             body_marks, body_percent, soul_marks, soul_percent)
+            VALUES (?, ?, ?, 
+                    ?, ?, ?,
+                    ?, ?, ?,
+                    ?, ?,
+                    ?, ?, ?,
+                    ?, ?,
+                    ?, ?,
+                    ?, ?, ?,
+                    ?, ?, ?, ?)
         `;
 
-        const params = [
+        const values = [
+            // Basic info
             req.user.id,
             req.user.voice,
             date,
-            wakeup || null,
-            rounds || 0,
-            chantEnd || null,
-            hearing || 0,
-            reading || 0,
-            study || 0,
-            dayRest || null,
-            sleep || null,
-            to_bed || 0,
-            wake_up || 0,
-            day_rest_marks || 0,
-            morning_class || 0,
-            mangala_aarti || 0,
-            cleanliness || 0,
+            
+            // Time fields
+            wakeup,
+            parseInt(rounds) || 0,
+            chantEnd,
+            
+            // Minutes fields
+            parseInt(hearing) || 0,
+            parseInt(reading) || 0,
+            parseInt(study) || 0,
+            
+            // Day rest
+            parseInt(dayRestMinutes) || 0,
+            sleep,
+            
+            // Boolean fields (tinyint)
+            morning_class === '1' ? 1 : 0,
+            mangala_aarti === '1' ? 1 : 0,
+            cleanliness === '1' ? 1 : 0,
+            
+            // Text fields
             book_name || null,
             reflections || null,
-            temp_hall_rech || null,
-            time_wasted || null,
+            
+            // Additional time fields
+            temp_hall_rech,
+            wastedTime,  // Converted to TIME format
+            
+            // Old columns (for backward compatibility)
+            bedMarks,     // to_bed
+            wakeMarks,    // wake_up
+            restMarks,    // day_rest_marks
+            
+            // Marks and percentages
             bodyMarks,
             bodyPercent,
             soulMarks,
             soulPercent
         ];
 
-        await pool.query(sql, params);
-        res.json({ message: 'Success' });
+        console.log('Executing query with values:', values);
 
-    } catch (e) {
-        console.error('Save sadhana error:', e);
-        if (e.code === 'ER_DUP_ENTRY')
-            return res.status(409).json({ error: 'Record already exists for this date' });
-        res.status(500).json({ error: 'Database save failed' });
+        const [result] = await pool.query(query, values);
+        
+        console.log('✅ Insert successful, ID:', result.insertId);
+        
+        res.json({ 
+            success: true, 
+            id: result.insertId,
+            marks: {
+                soul: soulMarks,
+                soulPercent,
+                body: bodyMarks,
+                bodyPercent
+            }
+        });
+
+    } catch (error) {
+        console.error('❌ Save sadhana error:', error);
+        console.error('Error stack:', error.stack);
+        res.status(500).json({ 
+            error: error.message,
+            sqlMessage: error.sqlMessage,
+            sql: error.sql
+        });
     }
 });
 
@@ -476,25 +572,23 @@ app.get('/api/search', authenticateToken, async (req, res) => {
         res.status(500).json({ error: 'Search failed' });
     }
 });
-
 // ============================================
-// DASHBOARD ROUTE - FIXED FOR DEVOTEE ACCESS
+// FIXED: Dashboard Report Endpoint 
+// ============================================
+// ============================================
+// FIXED: Dashboard Report Endpoint with proper voice filtering
 // ============================================
 app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
-    // Use let instead of const so we can modify these variables
     let voice = req.query.voice;
     let group = req.query.group;
     const type = req.query.type;
     const days = type === 'weekly' ? 7 : 30;
     
     try {
-        // --- ENFORCE ROLE-BASED ACCESS ---
-        // FIX: Devotee can ONLY see their own data
+        // --- DEVOTEE ROLE ---
         if (req.user.role === 'devotee') {
-            // Force to ONLY this devotee's data - ignore any filters
             console.log('Devotee access - restricting to user ID:', req.user.id);
             
-            // Get ONLY this specific devotee's data
             const [user] = await pool.query(
                 'SELECT id, name, voice_name, user_group FROM users WHERE id = ?', 
                 [req.user.id]
@@ -502,125 +596,165 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
             
             if (!user.length) return res.json([]);
             
-            // Get their sadhana entries
-            const [recs] = await pool.query(
-                `SELECT * FROM sadhana_entries WHERE user_id = ? AND entry_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)`,
+            const [entries] = await pool.query(
+                `SELECT * FROM sadhana_entries 
+                 WHERE user_id = ? AND entry_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+                 ORDER BY entry_date DESC`,
                 [req.user.id, days]
             );
 
-            // Calculate stats for this single user
             const u = user[0];
-            const wakeSuccess = recs.filter(r => r.wakeup_time && r.wakeup_time <= '04:30:00').length;
-            const templeSuccess = recs.filter(r => r.temp_hall_rech && r.temp_hall_rech != '').length;
-            const roundSuccess = recs.filter(r => r.rounds >= 16).length;
-            const morningClassSuccess = recs.filter(r => r.morning_class == 1).length;
-            const mangalaArtiSuccess = recs.filter(r => r.mangala_aarti == 1).length;
-            const cleanSuccess = recs.filter(r => r.cleanliness == 1).length;
-            const sleepSuccess = recs.filter(r => r.sleep_time && r.sleep_time <= '21:30:00').length;
-
-            const totalHearing = recs.reduce((s, r) => s + (r.hearing_minutes || 0), 0);
-            const totalReading = recs.reduce((s, r) => s + (r.reading_minutes || 0), 0);
-            const totalStudy = recs.reduce((s, r) => s + (r.study_minutes || 0), 0);
-            const totalRest = recs.reduce((s, r) => s + (r.day_rest_marks || 0), 0);
+            const latestEntry = entries[0] || {};
             
-            const totalWaste = recs.reduce((s, r) => {
-                if (r.time_wasted) {
-                    const parts = r.time_wasted.split(':');
-                    return s + (parseInt(parts[0] || 0) * 60) + (parseInt(parts[1] || 0));
-                }
-                return s;
-            }, 0);
+            const wakeSuccess = entries.filter(r => r.wakeup_time && r.wakeup_time <= '04:30:00').length;
+            const templeSuccess = entries.filter(r => r.temp_hall_rech && r.temp_hall_rech != '').length;
+            const roundSuccess = entries.filter(r => r.rounds >= 16).length;
+            const morningClassSuccess = entries.filter(r => r.morning_class == 1).length;
+            const mangalaArtiSuccess = entries.filter(r => r.mangala_aarti == 1).length;
+            const cleanSuccess = entries.filter(r => r.cleanliness == 1).length;
+            const sleepSuccess = entries.filter(r => r.sleep_time && r.sleep_time <= '21:30:00').length;
 
-            // Return ONLY this user's data as a single-item array
+            const totalRounds = entries.reduce((s, r) => s + (r.rounds || 0), 0);
+            const totalHearing = entries.reduce((s, r) => s + (r.hearing_minutes || 0), 0);
+            const totalReading = entries.reduce((s, r) => s + (r.reading_minutes || 0), 0);
+            const totalStudy = entries.reduce((s, r) => s + (r.study_minutes || 0), 0);
+            const totalRest = entries.reduce((s, r) => s + (r.day_rest_minutes || 0), 0);
+            
+            const totalSoulMarks = entries.reduce((s, r) => s + (r.soul_marks || 0), 0);
+            const totalBodyMarks = entries.reduce((s, r) => s + (r.body_marks || 0), 0);
+            const entryCount = entries.length;
+
             return res.json([{
-                name: u.name, 
-                voice: u.voice_name, 
+                name: u.name,
+                voice: u.voice_name,
                 group: u.user_group,
-                wakeSuccess, 
-                templeSuccess, 
+                wakeup_time: latestEntry.wakeup_time,
+                sleep_time: latestEntry.sleep_time,
+                chanting_end_time: latestEntry.chanting_end_time,
+                temp_hall_rech: latestEntry.temp_hall_rech,
+                hearing_minutes: latestEntry.hearing_minutes,
+                reading_minutes: latestEntry.reading_minutes,
+                study_minutes: latestEntry.study_minutes,
+                morning_class: latestEntry.morning_class,
+                mangala_aarti: latestEntry.mangala_aarti,
+                cleanliness: latestEntry.cleanliness,
+                rounds: latestEntry.rounds,
+                day_rest_minutes: latestEntry.day_rest_minutes,
+                wakeSuccess,
+                templeSuccess,
                 roundSuccess,
-                morningClassSuccess, 
-                mangalaArtiSuccess, 
+                morningClassSuccess,
+                mangalaArtiSuccess,
                 cleanSuccess,
                 sleepSuccess,
-                totalRounds: recs.reduce((s, r) => s + (r.rounds || 0), 0),
+                totalRounds,
                 totalHearing,
                 totalReading,
                 totalStudy,
                 totalRest,
-                totalWaste
+                total_soul_marks: totalSoulMarks,
+                total_body_marks: totalBodyMarks,
+                entry_count: entryCount
             }]);
         }
 
-        // --- ADMIN/DEVELOPER ACCESS - Can see filtered data ---
-        console.log('Admin access - using requested voice:', voice, 'group:', group);
+        // --- ADMIN/DEVELOPER ROLE - WITH PROPER VOICE FILTERING ---
+        console.log(`👑 Admin access - voice: ${voice}, group: ${group}, days: ${days}`);
         
-        // 1. Fetch Users with proper filtering for admin
-        let uSql = `SELECT id, name, voice_name, user_group FROM users WHERE 1=1`;
-        let uParams = [];
+        let query = `
+            SELECT 
+                u.id,
+                u.name,
+                u.voice_name as voice,
+                u.user_group as \`group\`,
+                COUNT(se.id) as entry_count,
+                COALESCE(SUM(se.soul_marks), 0) as total_soul_marks,
+                COALESCE(SUM(se.body_marks), 0) as total_body_marks,
+                COALESCE(SUM(se.rounds), 0) as total_rounds,
+                COALESCE(SUM(se.hearing_minutes), 0) as total_hearing,
+                COALESCE(SUM(se.reading_minutes), 0) as total_reading,
+                COALESCE(SUM(se.study_minutes), 0) as total_study,
+                COALESCE(SUM(se.day_rest_minutes), 0) as total_rest,
+                SUM(CASE WHEN se.wakeup_time <= '04:30' THEN 1 ELSE 0 END) as wake_success,
+                SUM(CASE WHEN se.temp_hall_rech IS NOT NULL AND se.temp_hall_rech != '' THEN 1 ELSE 0 END) as temple_success,
+                SUM(CASE WHEN se.rounds >= 16 THEN 1 ELSE 0 END) as round_success,
+                SUM(CASE WHEN se.morning_class = 1 THEN 1 ELSE 0 END) as morning_class_success,
+                SUM(CASE WHEN se.mangala_aarti = 1 THEN 1 ELSE 0 END) as mangala_arti_success,
+                SUM(CASE WHEN se.cleanliness = 1 THEN 1 ELSE 0 END) as clean_success,
+                SUM(CASE WHEN se.sleep_time <= '21:30' THEN 1 ELSE 0 END) as sleep_success
+            FROM users u
+            LEFT JOIN sadhana_entries se ON u.id = se.user_id 
+                AND se.entry_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+            WHERE u.user_role = 'devotee'
+        `;
         
-        if (voice && voice !== 'All' && voice !== 'undefined' && voice !== 'null') { 
-            uSql += ` AND voice_name = ?`; 
-            uParams.push(voice); 
+        let params = [days];
+        
+        // 🟢 PROPER VOICE FILTERING:
+        // If voice is 'All', get ALL users (no voice filter)
+        // If voice is specific, filter by that voice
+        if (voice && voice !== 'All') {
+            query += ` AND u.voice_name = ?`;
+            params.push(voice);
         }
         
-        if (group && group !== 'All' && group !== 'undefined' && group !== 'null') { 
-            uSql += ` AND user_group = ?`; 
-            uParams.push(group); 
+        // Add group filter if specified
+        if (group && group !== 'All') {
+            query += ` AND u.user_group = ?`;
+            params.push(group);
         }
         
-        const [users] = await pool.query(uSql, uParams);
-        if (!users.length) return res.json([]);
-
-        // 2. Aggregate Data for each user (admin only)
-        const results = await Promise.all(users.map(async (u) => {
-            const [recs] = await pool.query(
-                `SELECT * FROM sadhana_entries WHERE user_id = ? AND entry_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)`,
-                [u.id, days]
+        query += ` GROUP BY u.id ORDER BY u.user_group, u.name`;
+        
+        const [rows] = await pool.query(query, params);
+        
+        // Get latest entry for each user
+        const result = await Promise.all(rows.map(async (user) => {
+            const [latest] = await pool.query(
+                `SELECT * FROM sadhana_entries 
+                 WHERE user_id = ? AND entry_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+                 ORDER BY entry_date DESC LIMIT 1`,
+                [user.id, days]
             );
-
-            const wakeSuccess = recs.filter(r => r.wakeup_time && r.wakeup_time <= '04:30:00').length;
-            const templeSuccess = recs.filter(r => r.temp_hall_rech && r.temp_hall_rech != '').length;
-            const roundSuccess = recs.filter(r => r.rounds >= 16).length;
-            const morningClassSuccess = recs.filter(r => r.morning_class == 1).length;
-            const mangalaArtiSuccess = recs.filter(r => r.mangala_aarti == 1).length;
-            const cleanSuccess = recs.filter(r => r.cleanliness == 1).length;
-            const sleepSuccess = recs.filter(r => r.sleep_time && r.sleep_time <= '21:30:00').length;
-
-            const totalHearing = recs.reduce((s, r) => s + (r.hearing_minutes || 0), 0);
-            const totalReading = recs.reduce((s, r) => s + (r.reading_minutes || 0), 0);
-            const totalStudy = recs.reduce((s, r) => s + (r.study_minutes || 0), 0);
-            const totalRest = recs.reduce((s, r) => s + (r.day_rest_marks || 0), 0);
             
-            const totalWaste = recs.reduce((s, r) => {
-                if (r.time_wasted) {
-                    const parts = r.time_wasted.split(':');
-                    return s + (parseInt(parts[0] || 0) * 60) + (parseInt(parts[1] || 0));
-                }
-                return s;
-            }, 0);
-
+            const latestEntry = latest[0] || {};
+            
             return {
-                name: u.name, 
-                voice: u.voice_name, 
-                group: u.user_group,
-                wakeSuccess, 
-                templeSuccess, 
-                roundSuccess,
-                morningClassSuccess, 
-                mangalaArtiSuccess, 
-                cleanSuccess,
-                sleepSuccess,
-                totalRounds: recs.reduce((s, r) => s + (r.rounds || 0), 0),
-                totalHearing,
-                totalReading,
-                totalStudy,
-                totalRest,
-                totalWaste
+                name: user.name,
+                voice: user.voice,
+                group: user.group,
+                wakeup_time: latestEntry.wakeup_time,
+                sleep_time: latestEntry.sleep_time,
+                chanting_end_time: latestEntry.chanting_end_time,
+                temp_hall_rech: latestEntry.temp_hall_rech,
+                hearing_minutes: latestEntry.hearing_minutes,
+                reading_minutes: latestEntry.reading_minutes,
+                study_minutes: latestEntry.study_minutes,
+                morning_class: latestEntry.morning_class,
+                mangala_aarti: latestEntry.mangala_aarti,
+                cleanliness: latestEntry.cleanliness,
+                rounds: latestEntry.rounds,
+                day_rest_minutes: latestEntry.day_rest_minutes,
+                wakeSuccess: user.wake_success || 0,
+                templeSuccess: user.temple_success || 0,
+                roundSuccess: user.round_success || 0,
+                morningClassSuccess: user.morning_class_success || 0,
+                mangalaArtiSuccess: user.mangala_arti_success || 0,
+                cleanSuccess: user.clean_success || 0,
+                sleepSuccess: user.sleep_success || 0,
+                totalRounds: user.total_rounds || 0,
+                totalHearing: user.total_hearing || 0,
+                totalReading: user.total_reading || 0,
+                totalStudy: user.total_study || 0,
+                totalRest: user.total_rest || 0,
+                total_soul_marks: user.total_soul_marks || 0,
+                total_body_marks: user.total_body_marks || 0,
+                entry_count: user.entry_count || 0
             };
         }));
         
-        res.json(results);
+        res.json(result);
+        
     } catch (e) { 
         console.error('Dashboard error:', e);
         res.status(500).json({ error: 'Dashboard failed: ' + e.message }); 
@@ -628,17 +762,44 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
 });
 
 // ============================================
-// VOICES ROUTE
+// VOICES ENDPOINT
 // ============================================
 app.get('/api/voices', async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT DISTINCT voice_name as name FROM users UNION SELECT name FROM voices ORDER BY name ASC');
-        res.json(rows.map(r => r.name).filter(n => n)); 
-    } catch (e) { 
-        console.error('Voices error:', e);
-        res.json([]); 
+        const [rows] = await pool.query(
+            'SELECT DISTINCT voice_name FROM users WHERE voice_name IS NOT NULL AND voice_name != "" ORDER BY voice_name'
+        );
+        const voices = rows.map(r => r.voice_name);
+        res.json(voices);
+    } catch (error) {
+        console.error('Voices error:', error);
+        res.json([]);
     }
 });
+
+// ============================================
+// GROUPS ENDPOINT
+// ============================================
+app.get('/api/groups', async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            'SELECT DISTINCT user_group FROM users WHERE user_group IS NOT NULL AND user_group != "" ORDER BY user_group'
+        );
+        const groups = rows.map(r => r.user_group);
+        
+        // If no groups, return defaults
+        if (groups.length === 0) {
+            return res.json(['Yudhisthir', 'Bheem', 'Nakul', 'Sahdev']);
+        }
+        
+        res.json(groups);
+    } catch (error) {
+        console.error('Groups error:', error);
+        res.json(['Yudhisthir', 'Bheem', 'Nakul', 'Sahdev']);
+    }
+});
+
+
 // ============================================
 // ADMIN AUTHENTICATION MIDDLEWARE
 // ============================================
@@ -667,95 +828,102 @@ const authenticateAdmin = (req, res, next) => {
 };
 
 // ============================================
-// GET /api/leaderboard/months - Get available months with data
+// GET /api/leaderboard/months - Get available months
 // ============================================
 app.get('/api/leaderboard/months', authenticateToken, async (req, res) => {
     try {
-        // Get the user's voice
-        const [userInfo] = await pool.query(
-            'SELECT voice_name FROM users WHERE id = ?',
-            [req.user.id]
-        );
+        const [rows] = await pool.query(`
+            SELECT DISTINCT 
+                DATE_FORMAT(entry_date, '%Y-%m') as month
+            FROM sadhana_entries 
+            ORDER BY month DESC
+            LIMIT 12
+        `);
         
-        if (!userInfo.length) {
-            return res.json(['current']);
+        const months = rows.map(r => r.month);
+        
+        // Always include current month
+        const currentMonth = new Date().toISOString().slice(0, 7);
+        if (!months.includes(currentMonth)) {
+            months.unshift(currentMonth);
         }
         
-        const userVoice = userInfo[0].voice_name;
-        
-        // Get distinct months where there's data for users in this voice
-        const [months] = await pool.query(
-            `SELECT DISTINCT DATE_FORMAT(se.entry_date, '%Y-%m') as month 
-             FROM sadhana_entries se
-             JOIN users u ON se.user_id = u.id
-             WHERE u.voice_name = ?
-             ORDER BY month DESC
-             LIMIT 12`,
-            [userVoice]
-        );
-        
-        const monthList = months.map(m => m.month);
-        // Always include 'current' as first option
-        res.json(['current', ...monthList]);
+        res.json(months);
         
     } catch (error) {
         console.error('Error fetching months:', error);
-        res.json(['current']);
+        // Return default months
+        const months = ['current'];
+        const now = new Date();
+        for (let i = 1; i <= 3; i++) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            months.push(d.toISOString().slice(0, 7));
+        }
+        res.json(months);
     }
 });
-
 // ============================================
-// GET /api/leaderboard - Get leaderboard data for all users in same voice
+// FIXED: Leaderboard endpoint with proper calculations
+// ============================================
+// ============================================
+// FIXED: Leaderboard endpoint with proper voice filtering
 // ============================================
 app.get('/api/leaderboard', authenticateToken, async (req, res) => {
     try {
-        const { month, group } = req.query;
+        const { month, group, voice } = req.query;
         const currentUserId = req.user.id;
         const userRole = req.user.role;
         
-        // Calculate date range based on month parameter
+        // Calculate date range
         let startDate, endDate;
         const today = new Date();
         
         if (month === 'current' || !month) {
-            // Current month (from 1st till today)
             startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
             endDate = today.toISOString().split('T')[0];
         } else {
-            // Specific month (format: YYYY-MM)
             const [year, monthNum] = month.split('-');
             startDate = `${year}-${monthNum}-01`;
-            
-            // Get last day of month
             const lastDay = new Date(year, monthNum, 0).getDate();
             endDate = `${year}-${monthNum}-${lastDay}`;
         }
         
-        console.log(`📊 Leaderboard request: user=${req.user.id}, role=${userRole}, month=${month}, from=${startDate} to=${endDate}`);
+        console.log(`📊 Leaderboard request: user=${req.user.id}, role=${userRole}, month=${month}, voice=${voice}, from=${startDate} to=${endDate}`);
         
-        // First, get the current user's voice
-        const [userInfo] = await pool.query(
-            'SELECT voice_name FROM users WHERE id = ?',
-            [currentUserId]
-        );
+        // Determine voice filter based on role and query
+        let voiceFilter;
+        let userQuery;
+        let userParams = [];
         
-        if (!userInfo.length) {
-            return res.status(404).json({ error: 'User not found' });
+        if (userRole === 'devotee') {
+            // Devotee sees only their voice
+            const [userInfo] = await pool.query('SELECT voice_name FROM users WHERE id = ?', [currentUserId]);
+            voiceFilter = userInfo[0]?.voice_name;
+            userQuery = `
+                SELECT id, name, user_group, voice_name 
+                FROM users 
+                WHERE user_role = 'devotee' AND voice_name = ?
+            `;
+            userParams = [voiceFilter];
+        } else {
+            // Admin/developer - voice filtering based on query
+            userQuery = `
+                SELECT id, name, user_group, voice_name 
+                FROM users 
+                WHERE user_role = 'devotee'
+            `;
+            
+            // 🟢 PROPER VOICE FILTERING:
+            // If voice is 'All', get ALL users (no filter)
+            // If voice is specific, filter by that voice
+            if (voice && voice !== 'All') {
+                userQuery += ` AND voice_name = ?`;
+                userParams.push(voice);
+            }
         }
         
-        const userVoice = userInfo[0].voice_name;
-        console.log(`🎯 User voice: ${userVoice}`);
-        
-        // Get ALL users in the SAME VOICE (including the current user)
-        let userQuery = `
-            SELECT id, name, user_group, voice_name 
-            FROM users 
-            WHERE voice_name = ? AND user_role = 'devotee'
-        `;
-        let userParams = [userVoice];
-        
         // Add group filter if specified
-        if (group && group !== 'All' && group !== 'undefined' && group !== 'null') {
+        if (group && group !== 'All') {
             userQuery += ` AND user_group = ?`;
             userParams.push(group);
         }
@@ -763,13 +931,16 @@ app.get('/api/leaderboard', authenticateToken, async (req, res) => {
         userQuery += ` ORDER BY name ASC`;
         
         const [allUsers] = await pool.query(userQuery, userParams);
-        console.log(`👥 Found ${allUsers.length} users in voice "${userVoice}"`);
         
         if (allUsers.length === 0) {
             return res.json([]);
         }
         
-        // For each user, get their sadhana data for the period
+        // Calculate total days in period
+        const totalDays = month === 'current' ? new Date().getDate() : 
+                         new Date(endDate).getDate();
+        
+        // Get data for each user
         const leaderboardData = await Promise.all(allUsers.map(async (user) => {
             const [records] = await pool.query(
                 `SELECT * FROM sadhana_entries 
@@ -777,98 +948,27 @@ app.get('/api/leaderboard', authenticateToken, async (req, res) => {
                 [user.id, startDate, endDate]
             );
             
-            // Calculate soul activities (boolean fields)
-            const morningClassSuccess = records.filter(r => r.morning_class == 1).length;
-            const mangalaArtiSuccess = records.filter(r => r.mangala_aarti == 1).length;
-            const cleanSuccess = records.filter(r => r.cleanliness == 1).length;
+            const totalSoulMarks = records.reduce((s, r) => s + (r.soul_marks || 0), 0);
+            const totalBodyMarks = records.reduce((s, r) => s + (r.body_marks || 0), 0);
+            const entryCount = records.length;
             
-            // Calculate body success metrics
-            const wakeSuccess = records.filter(r => r.wakeup_time && r.wakeup_time <= '04:30:00').length;
-            const templeSuccess = records.filter(r => r.temp_hall_rech && r.temp_hall_rech != '').length;
-            const roundSuccess = records.filter(r => r.rounds >= 16).length;
-            const sleepSuccess = records.filter(r => r.sleep_time && r.sleep_time <= '21:30:00').length;
-            
-            // Calculate totals
-            const totalRounds = records.reduce((s, r) => s + (r.rounds || 0), 0);
-            const totalHearing = records.reduce((s, r) => s + (r.hearing_minutes || 0), 0);
-            const totalReading = records.reduce((s, r) => s + (r.reading_minutes || 0), 0);
-            const totalStudy = records.reduce((s, r) => s + (r.study_minutes || 0), 0);
-            
-            // Calculate day counts
-            const daysActive = records.length;
-            
-            // Calculate averages for time fields
-            let avgWakeup = null;
-            let avgTemple = null;
-            let avgSleep = null;
-            
-            if (records.length > 0) {
-                // Filter out null/empty times and calculate average
-                const wakeupTimes = records.filter(r => r.wakeup_time).map(r => {
-                    const [h, m] = r.wakeup_time.split(':');
-                    return parseInt(h) * 60 + parseInt(m);
-                });
-                if (wakeupTimes.length > 0) {
-                    const avgMinutes = wakeupTimes.reduce((a, b) => a + b, 0) / wakeupTimes.length;
-                    const hours = Math.floor(avgMinutes / 60);
-                    const minutes = Math.floor(avgMinutes % 60);
-                    avgWakeup = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-                }
-                
-                const templeTimes = records.filter(r => r.temp_hall_rech).map(r => {
-                    const [h, m] = r.temp_hall_rech.split(':');
-                    return parseInt(h) * 60 + parseInt(m);
-                });
-                if (templeTimes.length > 0) {
-                    const avgMinutes = templeTimes.reduce((a, b) => a + b, 0) / templeTimes.length;
-                    const hours = Math.floor(avgMinutes / 60);
-                    const minutes = Math.floor(avgMinutes % 60);
-                    avgTemple = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-                }
-                
-                const sleepTimes = records.filter(r => r.sleep_time).map(r => {
-                    const [h, m] = r.sleep_time.split(':');
-                    return parseInt(h) * 60 + parseInt(m);
-                });
-                if (sleepTimes.length > 0) {
-                    const avgMinutes = sleepTimes.reduce((a, b) => a + b, 0) / sleepTimes.length;
-                    const hours = Math.floor(avgMinutes / 60);
-                    const minutes = Math.floor(avgMinutes % 60);
-                    avgSleep = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-                }
-            }
+            // Calculate percentages based on TOTAL possible for the period
+            const soulPercentage = totalDays > 0 ? 
+                Math.round((totalSoulMarks / (50 * totalDays)) * 100) : 0;
+            const bodyPercentage = totalDays > 0 ? 
+                Math.round((totalBodyMarks / (75 * totalDays)) * 100) : 0;
             
             return {
                 id: user.id,
                 name: user.name,
                 group: user.user_group,
                 voice: user.voice_name,
-                
-                // Soul activities
-                morningClassSuccess,
-                mangalaArtiSuccess,
-                cleanSuccess,
-                
-                // Body success counts
-                wakeSuccess,
-                templeSuccess,
-                roundSuccess,
-                sleepSuccess,
-                
-                // Totals
-                totalRounds,
-                totalHearing,
-                totalReading,
-                totalStudy,
-                
-                // Averages
-                avgWakeup,
-                avgTemple,
-                avgSleep,
-                
-                // Metadata
-                daysActive,
-                recordCount: records.length
+                total_soul_marks: totalSoulMarks,
+                total_body_marks: totalBodyMarks,
+                entry_count: entryCount,
+                soulPercentage: soulPercentage,
+                bodyPercentage: bodyPercentage,
+                totalDays: totalDays
             };
         }));
         
@@ -880,7 +980,6 @@ app.get('/api/leaderboard', authenticateToken, async (req, res) => {
         res.status(500).json({ error: 'Failed to load leaderboard data: ' + error.message });
     }
 });
-
 // ============================================
 // GET /api/admin/marks-config
 // Get all voice configurations
@@ -1205,6 +1304,8 @@ app.get('/api/public/marks-config/:voice', async (req, res) => {
         console.error('Error fetching voices:', error);
         res.status(500).json({ 
             success: false, 
+
+
             error: 'Failed to fetch voices' 
         });
     }
@@ -1659,6 +1760,150 @@ function getDefaultRules() {
 }
 
 
+//=====================================
+// Analytics reports
+//=====================================
+// Add this endpoint to your server.js
+// ============================================
+// Analytics reports - Already has proper voice filtering
+// ============================================
+app.get('/api/reports/group', authenticateToken, async (req, res) => {
+    try {
+        const { voice, start, end } = req.query;
+        
+        console.log(`📊 Group report: voice=${voice}, from=${start} to=${end}`);
+        
+        let query;
+        let params;
+        
+        // 🟢 PROPER VOICE FILTERING:
+        // If voice is 'All', get ALL users
+        // If voice is specific, filter by that voice
+        if (voice === 'All') {
+            query = `
+                SELECT 
+                    u.id,
+                    u.name,
+                    u.user_group,
+                    u.voice_name,
+                    COUNT(se.id) as entry_count,
+                    COALESCE(SUM(se.soul_marks), 0) as total_soul_marks,
+                    COALESCE(SUM(se.body_marks), 0) as total_body_marks,
+                    COALESCE(SUM(CASE 
+                        WHEN se.sleep_time <= '21:30' THEN 25
+                        WHEN se.sleep_time <= '22:00' THEN 20
+                        WHEN se.sleep_time <= '22:30' THEN 15
+                        WHEN se.sleep_time <= '23:00' THEN 10
+                        WHEN se.sleep_time <= '23:30' THEN 5
+                        ELSE 0
+                    END), 0) as total_sleep_marks,
+                    COALESCE(SUM(CASE 
+                        WHEN se.wakeup_time <= '04:30' THEN 25
+                        WHEN se.wakeup_time <= '05:00' THEN 20
+                        WHEN se.wakeup_time <= '05:30' THEN 15
+                        WHEN se.wakeup_time <= '06:00' THEN 10
+                        WHEN se.wakeup_time <= '06:30' THEN 5
+                        ELSE 0
+                    END), 0) as total_wakeup_marks,
+                    COALESCE(SUM(CASE 
+                        WHEN se.day_rest_minutes <= 30 THEN 25
+                        WHEN se.day_rest_minutes <= 45 THEN 20
+                        WHEN se.day_rest_minutes <= 60 THEN 15
+                        WHEN se.day_rest_minutes <= 75 THEN 10
+                        WHEN se.day_rest_minutes <= 90 THEN 5
+                        ELSE 0
+                    END), 0) as total_rest_marks,
+                    COALESCE(SUM(CASE 
+                        WHEN se.chanting_end_time <= '06:45' THEN 25
+                        WHEN se.chanting_end_time <= '09:00' THEN 20
+                        WHEN se.chanting_end_time <= '13:00' THEN 15
+                        WHEN se.chanting_end_time <= '16:00' THEN 10
+                        WHEN se.chanting_end_time <= '20:00' THEN 5
+                        ELSE 0
+                    END), 0) as total_chanting_marks,
+                    COALESCE(SUM(
+                        (CASE WHEN se.hearing_minutes > 0 THEN 5 ELSE 0 END) +
+                        (CASE WHEN se.reading_minutes > 0 THEN 5 ELSE 0 END) +
+                        (CASE WHEN se.morning_class = 1 THEN 5 ELSE 0 END) +
+                        (CASE WHEN se.mangala_aarti = 1 THEN 5 ELSE 0 END) +
+                        (CASE WHEN se.cleanliness = 1 THEN 5 ELSE 0 END)
+                    ), 0) as total_soul_activities_marks
+                FROM users u
+                LEFT JOIN sadhana_entries se ON u.id = se.user_id 
+                    AND se.entry_date BETWEEN ? AND ?
+                WHERE u.user_role = 'devotee'
+                GROUP BY u.id, u.name, u.user_group, u.voice_name
+                ORDER BY u.voice_name, u.user_group, u.name
+            `;
+            params = [start, end];
+        } else {
+            query = `
+                SELECT 
+                    u.id,
+                    u.name,
+                    u.user_group,
+                    u.voice_name,
+                    COUNT(se.id) as entry_count,
+                    COALESCE(SUM(se.soul_marks), 0) as total_soul_marks,
+                    COALESCE(SUM(se.body_marks), 0) as total_body_marks,
+                    COALESCE(SUM(CASE 
+                        WHEN se.sleep_time <= '21:30' THEN 25
+                        WHEN se.sleep_time <= '22:00' THEN 20
+                        WHEN se.sleep_time <= '22:30' THEN 15
+                        WHEN se.sleep_time <= '23:00' THEN 10
+                        WHEN se.sleep_time <= '23:30' THEN 5
+                        ELSE 0
+                    END), 0) as total_sleep_marks,
+                    COALESCE(SUM(CASE 
+                        WHEN se.wakeup_time <= '04:30' THEN 25
+                        WHEN se.wakeup_time <= '05:00' THEN 20
+                        WHEN se.wakeup_time <= '05:30' THEN 15
+                        WHEN se.wakeup_time <= '06:00' THEN 10
+                        WHEN se.wakeup_time <= '06:30' THEN 5
+                        ELSE 0
+                    END), 0) as total_wakeup_marks,
+                    COALESCE(SUM(CASE 
+                        WHEN se.day_rest_minutes <= 30 THEN 25
+                        WHEN se.day_rest_minutes <= 45 THEN 20
+                        WHEN se.day_rest_minutes <= 60 THEN 15
+                        WHEN se.day_rest_minutes <= 75 THEN 10
+                        WHEN se.day_rest_minutes <= 90 THEN 5
+                        ELSE 0
+                    END), 0) as total_rest_marks,
+                    COALESCE(SUM(CASE 
+                        WHEN se.chanting_end_time <= '06:45' THEN 25
+                        WHEN se.chanting_end_time <= '09:00' THEN 20
+                        WHEN se.chanting_end_time <= '13:00' THEN 15
+                        WHEN se.chanting_end_time <= '16:00' THEN 10
+                        WHEN se.chanting_end_time <= '20:00' THEN 5
+                        ELSE 0
+                    END), 0) as total_chanting_marks,
+                    COALESCE(SUM(
+                        (CASE WHEN se.hearing_minutes > 0 THEN 5 ELSE 0 END) +
+                        (CASE WHEN se.reading_minutes > 0 THEN 5 ELSE 0 END) +
+                        (CASE WHEN se.morning_class = 1 THEN 5 ELSE 0 END) +
+                        (CASE WHEN se.mangala_aarti = 1 THEN 5 ELSE 0 END) +
+                        (CASE WHEN se.cleanliness = 1 THEN 5 ELSE 0 END)
+                    ), 0) as total_soul_activities_marks
+                FROM users u
+                LEFT JOIN sadhana_entries se ON u.id = se.user_id 
+                    AND se.entry_date BETWEEN ? AND ?
+                WHERE u.voice_name = ? AND u.user_role = 'devotee'
+                GROUP BY u.id, u.name, u.user_group, u.voice_name
+                ORDER BY u.user_group, u.name
+            `;
+            params = [start, end, voice];
+        }
+        
+        const [rows] = await pool.query(query, params);
+        console.log(`✅ Found ${rows.length} users for voice=${voice}`);
+        res.json(rows);
+        
+    } catch (error) {
+        console.error('❌ Group report error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 // ============================================
 // SERVER START - SIMPLE & SAFE (WORKS EVERYWHERE)
 // ============================================
