@@ -1,3 +1,12 @@
+// Helper function to ensure time is in HH:MM:SS format
+function formatTime(timeStr) {
+  if (!timeStr) return null;
+  // If already has seconds, return as is
+  if (timeStr.split(':').length === 3) return timeStr;
+  // If only HH:MM, add :00
+  if (timeStr.split(':').length === 2) return `${timeStr}:00`;
+  return timeStr;
+}
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -234,9 +243,69 @@ app.get('/api/debug/dashboard', authenticateToken, async (req, res) => {
 // ============================================
 // AUTHENTICATION ROUTES
 // ============================================
-
-// --- LOGIN: Hardcoded Developer Fail-safe + DB Check ---
 app.post('/api/auth/login', async (req, res) => {
+    const { email, password } = req.body;
+    
+    // HARDCODED DEVELOPER CHECK
+    if (email === "dev@sadhna.com" && password === "admin123") {
+        // ✅ FIX: Get the actual user from database instead of using ID 0
+        const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+        
+        let userData;
+        if (users.length > 0) {
+            // Use existing user from database
+            userData = users[0];
+        } else {
+            // If user doesn't exist, create a temporary one (or use ID 1)
+            // But since you have the user, this won't run
+            userData = { id: 1, name: 'System Developer', role: 'developer', voice_name: 'All', user_group: 'Sahdev' };
+        }
+        
+        const token = jwt.sign(
+            { id: userData.id, role: userData.user_role, voice: userData.voice_name, name: userData.name, group: userData.user_group }, 
+            process.env.JWT_SECRET || 'your-secret-key', 
+            { expiresIn: '7d' }
+        );
+        
+        return res.json({ 
+            token, 
+            user: { 
+                id: userData.id, 
+                name: userData.name, 
+                role: userData.user_role, 
+                voice: userData.voice_name, 
+                group: userData.user_group 
+            } 
+        });
+    }
+
+    // REGULAR USER LOGIN
+    try {
+        const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+        if (users.length === 0) return res.status(404).json({ error: 'User not registered' });
+        
+        const user = users[0];
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) return res.status(401).json({ error: 'Invalid password' });
+
+        const token = jwt.sign(
+            { id: user.id, role: user.user_role, voice: user.voice_name, name: user.name, group: user.user_group }, 
+            process.env.JWT_SECRET || 'your-secret-key', 
+            { expiresIn: '7d' }
+        );
+        
+        res.json({ 
+            token, 
+            user: { id: user.id, name: user.name, role: user.user_role, voice: user.voice_name, group: user.user_group } 
+        });
+        
+    } catch (e) { 
+        console.error('Login error:', e);
+        res.status(500).json({ error: 'Login failed' }); 
+    }
+});
+// --- LOGIN: Hardcoded Developer Fail-safe + DB Check ---
+/*app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     
     // 1. HARDCODED DEVELOPER CHECK (Fail-safe)
@@ -259,10 +328,38 @@ app.post('/api/auth/login', async (req, res) => {
         console.error('Login error:', e);
         res.status(500).json({ error: 'Login failed' }); 
     }
-});
+});*/
 
-// --- REGISTER new user ---
+//=======  REGISTER USER  ==========
 app.post('/api/auth/register', async (req, res) => {
+    const { name, email, password, group, voice } = req.body;
+    
+    if (!password || password.length < 6) {
+        return res.status(400).json({ error: 'Password must be min 6 characters' });
+    }
+    
+    try {
+        // ✅ FIX: Check if email already exists FIRST
+        const [existing] = await pool.query('SELECT id FROM users WHERE email = ?', [email]);
+        
+        if (existing.length > 0) {
+            return res.status(400).json({ error: 'Email already registered' });
+        }
+        
+        const hash = await bcrypt.hash(password, 10);
+        await pool.query(
+            'INSERT INTO users (name, email, password, user_group, voice_name) VALUES (?, ?, ?, ?, ?)', 
+            [name, email, hash, group, voice]
+        );
+        
+        res.status(201).json({ message: 'Success' });
+        
+    } catch (e) { 
+        console.error('Registration error:', e);
+        res.status(500).json({ error: 'Registration failed' }); 
+    }
+});
+/*app.post('/api/auth/register', async (req, res) => {
     const { name, email, password, group, voice } = req.body;
     if (!password || password.length < 6) return res.status(400).json({ error: 'Password must be min 6 characters' });
     try {
@@ -273,7 +370,7 @@ app.post('/api/auth/register', async (req, res) => {
         console.error('Registration error:', e);
         res.status(400).json({ error: 'Email already registered' }); 
     }
-});
+});*/
 
 // ============================================
 // USER MANAGEMENT ROUTES
@@ -395,6 +492,20 @@ app.post('/api/sadhana', authenticateToken, async (req, res) => {
             wakeMarks, bedMarks, restMarks, bodyMarks, bodyPercent
         });
 
+        console.log('🔍 DEBUG - Time values before insert:', {
+          wakeup,
+          chantEnd,
+          sleep,
+          temp_hall_rech,
+          wastedTime
+        });
+
+        // Also check if user exists
+        console.log('🔍 DEBUG - User info:', {
+          userId: req.user.id,
+          userVoice: req.user.voice
+        });
+
         // ============================================
         // CORRECT INSERT QUERY with your actual columns
         // ============================================
@@ -466,6 +577,33 @@ app.post('/api/sadhana', authenticateToken, async (req, res) => {
         ];
 
         console.log('Executing query with values:', values);
+        
+        console.log('🔍 VALUES BEING INSERTED:');
+        console.log('user_id:', values[0]);
+        console.log('voice_name:', values[1]);
+        console.log('entry_date:', values[2]);
+        console.log('wakeup_time:', values[3]);
+        console.log('rounds:', values[4]);
+        console.log('chanting_end_time:', values[5]);
+        console.log('hearing_minutes:', values[6]);
+        console.log('reading_minutes:', values[7]);
+        console.log('study_minutes:', values[8]);
+        console.log('day_rest_minutes:', values[9]);
+        console.log('sleep_time:', values[10]);
+        console.log('morning_class:', values[11]);
+        console.log('mangala_aarti:', values[12]);
+        console.log('cleanliness:', values[13]);
+        console.log('book_name:', values[14]);
+        console.log('reflections:', values[15]);
+        console.log('temp_hall_rech:', values[16]);
+        console.log('time_wasted:', values[17]);
+        console.log('to_bed:', values[18]);
+        console.log('wake_up:', values[19]);
+        console.log('day_rest_marks:', values[20]);
+        console.log('body_marks:', values[21]);
+        console.log('body_percent:', values[22]);
+        console.log('soul_marks:', values[23]);
+        console.log('soul_percent:', values[24]);
 
         const [result] = await pool.query(query, values);
         
@@ -482,15 +620,38 @@ app.post('/api/sadhana', authenticateToken, async (req, res) => {
             }
         });
 
-    } catch (error) {
-        console.error('❌ Save sadhana error:', error);
-        console.error('Error stack:', error.stack);
-        res.status(500).json({ 
-            error: error.message,
-            sqlMessage: error.sqlMessage,
-            sql: error.sql
-        });
+    }  catch (error) {
+    console.error('❌ Save sadhana error:', error);
+    console.error('Error stack:', error.stack);
+    console.error('SQL Error Code:', error.code);
+    console.error('SQL Error Message:', error.sqlMessage);
+    console.error('SQL:', error.sql);
+    
+    // Send detailed error to response for debugging
+    res.status(500).json({ 
+        error: error.message,
+        sqlMessage: error.sqlMessage,
+        sql: error.sql,
+        code: error.code
+    });
     }
+});
+// DELETE endpoint for test cleanup
+app.delete('/api/sadhana', authenticateToken, async (req, res) => {
+  try {
+    const { date } = req.query;
+    const userId = req.user.id;
+    
+    const [result] = await pool.query(
+      'DELETE FROM sadhana_entries WHERE user_id = ? AND entry_date = ?',
+      [userId, date]
+    );
+    
+    res.json({ success: true, deleted: result.affectedRows });
+  } catch (error) {
+    console.error('Delete error:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // ============================================
@@ -1904,6 +2065,7 @@ app.get('/api/reports/group', authenticateToken, async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+/*
 // ============================================
 // SERVER START - SIMPLE & SAFE (WORKS EVERYWHERE)
 // ============================================
@@ -1919,4 +2081,41 @@ app.listen(PORT, '0.0.0.0', () => {
     if (process.env.NODE_ENV === 'production') {
         console.log(`🌐 Public URL: https://sadhana-tracker-production.up.railway.app:${PORT}`);
     }
-});
+});*/
+// ============================================
+// SERVER START - SIMPLE & SAFE (WORKS EVERYWHERE)
+// ============================================
+const PORT = process.env.PORT || 8080;
+
+// ✅ ADD THIS EXPORT FOR TESTING (RIGHT HERE)
+// This allows Jest to import the app without starting the server
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`🚀 Sadhana Tracker Backend Ready on port ${PORT}`);
+        console.log(`🌍 Listening on 0.0.0.0:${PORT} (accessible locally & publicly)`);
+        console.log(`📝 Local URL: http://localhost:${PORT}`);
+        console.log(`🔍 Health check: http://localhost:${PORT}/api/health`);
+
+        if (process.env.NODE_ENV === 'production') {
+            console.log(`🌐 Public URL: https://sadhana-tracker-production.up.railway.app:${PORT}`);
+        }
+    });
+}
+// Only close connections in test environment
+if (process.env.NODE_ENV === 'test') {
+  // Ensure pool is closed when tests finish
+  process.on('exit', async () => {
+    if (pool) {
+      await pool.end();
+      console.log('✅ Database pool closed for tests');
+    }
+  });
+}
+// Export pool for test cleanup
+if (process.env.NODE_ENV === 'test') {
+  module.exports = { app, pool };
+} else {
+  module.exports = app;
+}
+// ✅ ADD THIS EXPORT (AT THE VERY END OF FILE)
+module.exports = app;
