@@ -2119,4 +2119,4 @@ if (process.env.NODE_ENV === 'test') {
   module.exports = app;
 }
 // ✅ ADD THIS EXPORT (AT THE VERY END OF FILE)
-module.exports = app;throw new Error('Test bug');
+module.exports = app;
