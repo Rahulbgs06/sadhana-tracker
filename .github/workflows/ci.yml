@@ -15,32 +15,33 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: testpass
+          MYSQL_DATABASE: sadhana_tracker_test
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-    - uses: actions/checkout@v3
-    
+    - uses: actions/checkout@v4
+
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
         cache-dependency-path: backend/package-lock.json
-    
+
     - name: Install dependencies
       run: |
         cd backend
         npm ci
-    
+
     - name: Wait for MySQL
       run: |
         until mysqladmin ping -h127.0.0.1 -P3306 -uroot -ptestpass --silent; do
           echo "Waiting for MySQL..."
           sleep 2
         done
-    
+
     - name: Setup test database
       run: |
         cd backend
@@ -49,7 +50,7 @@ jobs:
         DB_HOST: 127.0.0.1
         DB_USER: root
         DB_PASSWORD: testpass
-    
+
     - name: Run tests
       run: |
         cd backend
@@ -61,9 +62,9 @@ jobs:
         DB_NAME: sadhana_tracker_test
         JWT_SECRET: test_secret
         NODE_ENV: test
-    
+
     - name: Upload coverage report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4   # ✅ UPDATED to v4
       with:
         name: coverage-report
         path: backend/coverage/
