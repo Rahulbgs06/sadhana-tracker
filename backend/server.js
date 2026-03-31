@@ -889,7 +889,7 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
                 totalRest,
                 total_soul_marks: totalSoulMarks,
                 total_body_marks: totalBodyMarks,
-                entry_count: entryCount
+                entry_count: entryCount,
             }]);
         }
 
@@ -984,7 +984,9 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
                 totalRest: user.total_rest || 0,
                 total_soul_marks: user.total_soul_marks || 0,
                 total_body_marks: user.total_body_marks || 0,
-                entry_count: user.entry_count || 0
+                entry_count: user.entry_count || 0,
+                soul_percent: Math.round(((user.total_soul_marks || 0) / (50 * days)) * 100),
+                body_percent: Math.round(((user.total_body_marks || 0) / (75 * days)) * 100)
             };
         }));
         
