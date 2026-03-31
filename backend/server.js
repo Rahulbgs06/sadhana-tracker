@@ -890,6 +890,8 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
                 total_soul_marks: totalSoulMarks,
                 total_body_marks: totalBodyMarks,
                 entry_count: entryCount,
+                soul_percent: Math.round((totalSoulMarks / (50 * days)) * 100),
+                body_percent: Math.round((totalBodyMarks / (75 * days)) * 100)
             }]);
         }
 
