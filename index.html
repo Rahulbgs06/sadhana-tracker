@@ -4998,6 +4998,7 @@ const app = {
     // Auto-detect API URL based on environment
     API_BASE_URL: (function() {
         // Check if running on localhost
+    
         if (window.location.hostname === 'localhost' || 
             window.location.hostname === '127.0.0.1') {
             return 'http://localhost:3000';  // Local backend
