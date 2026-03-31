@@ -28,7 +28,8 @@ const allowedOrigins = [
     'http://127.0.0.1:5501',
     'http://localhost:8000',
     'https://rahulbgs06.github.io',  // ✅ YEH ADD KARO (important!)
-    'https://sadhana-tracker-production.up.railway.app'
+    'https://sadhana-tracker-production.up.railway.app',
+    'https://sadhana-tracker-sto2.onrender.com'
 ];
 
 app.use(cors({
