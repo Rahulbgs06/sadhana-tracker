@@ -7246,8 +7246,8 @@ renderDashboardTable: function(data, type, dateRange) {
     // ========== FIX: Map API fields to expected field names ==========
     data = data.map(item => ({
         ...item,
-        soulPercentage: item.soul_percent || item.soulPercentage || 0,
-        bodyPercentage: item.body_percent || item.bodyPercentage || 0
+    soulPercentage: Number(item.soul_percent) || Number(item.soulPercentage) || 0,
+    bodyPercentage: Number(item.body_percent) || Number(item.bodyPercentage) || 0
     }));
     // ========== DEBUG LINE 1 ==========
     console.log('%c🔍 DEBUG: renderDashboardTable CALLED', 'color: blue; font-size: 14px');
@@ -7478,6 +7478,13 @@ renderDashboardTable: function(data, type, dateRange) {
 
     // Create progress bar
     createProgressBar: function(value, max, text, type = 'default') {
+        value = Number(value);
+        max = Number(max);
+
+        if (isNaN(value) || isNaN(max) || max === 0) {
+            value = 0;
+        }
+
         const percentage = Math.min((value / max) * 100, 100);
         let barColor = 'var(--saffron)';
 
