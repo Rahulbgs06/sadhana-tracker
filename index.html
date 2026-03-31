@@ -7249,6 +7249,10 @@ renderDashboardTable: function(data, type, dateRange) {
     soulPercentage: Number(item.soul_percent) || Number(item.soulPercentage) || 0,
     bodyPercentage: Number(item.body_percent) || Number(item.bodyPercentage) || 0
     }));
+    // Add this after the mapping
+    console.log('✅ MAPPED DATA - First user:', data[0]);
+    console.log('   soulPercentage:', data[0]?.soulPercentage);
+    console.log('   bodyPercentage:', data[0]?.bodyPercentage);
     // ========== DEBUG LINE 1 ==========
     console.log('%c🔍 DEBUG: renderDashboardTable CALLED', 'color: blue; font-size: 14px');
     console.log('📊 Data received:', data);
