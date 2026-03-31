@@ -90,6 +90,7 @@ console.log(`   Port: ${dbConfig.port}`);
 console.log(`   Database: ${dbConfig.database}`);
 console.log(`   User: ${dbConfig.user}`);
 console.log(`   SSL: ${dbConfig.ssl ? 'Enabled' : 'Disabled'}`);
+
 /*const IS_RAILWAY = !!process.env.MYSQLHOST;
 
 console.log('🔍 Environment:', IS_RAILWAY ? '🚂 RAILWAY (PRODUCTION)' : '💻 LOCAL (DEVELOPMENT)');
@@ -133,9 +134,9 @@ console.log(`   Host: ${dbConfig.host}`);
 console.log(`   User: ${dbConfig.user}`);
 console.log(`   Database: ${dbConfig.database}`);
 console.log(`   Port: ${dbConfig.port}`);
-console.log(`   Password: ${dbConfig.password ? '✅ SET' : '❌ NOT SET'}`);
+console.log(`   Password: ${dbConfig.password ? '✅ SET' : '❌ NOT SET'}`);*/
 
-const pool = mysql.createPool(dbConfig).promise();*/
+const pool = mysql.createPool(dbConfig).promise();
 
 // ============================================
 // DATABASE CONNECTIVITY TEST - FIXED
