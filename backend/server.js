@@ -58,40 +58,7 @@ console.log(`🌍 Server running in ${process.env.NODE_ENV || 'development'} mod
 // ============================================
 // DATABASE CONNECTION - WITH EXTENSIVE DEBUGGING
 // ============================================
-// Detect if we're on Render (production) or local
-const IS_RENDER = !!process.env.DB_HOST;  // Since Render uses DB_HOST
-
-console.log('🔍 Environment:', IS_RENDER ? '🚀 RENDER (PRODUCTION)' : '💻 LOCAL (DEVELOPMENT)');
-
-// Aiven MySQL specific configuration
-const dbConfig = {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT) || 3306,
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'Sadhana@123',
-    database: process.env.DB_NAME || 'sadhana_tracker',
-    ssl: {
-        // Aiven requires SSL, but we need to disable certificate verification
-        rejectUnauthorized: false
-    },
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-    // Add connection timeout
-    connectTimeout: 10000,
-    // Enable keep-alive
-    enableKeepAlive: true,
-    keepAliveInitialDelay: 0
-};
-
-console.log('📊 Database Config:');
-console.log(`   Host: ${dbConfig.host}`);
-console.log(`   Port: ${dbConfig.port}`);
-console.log(`   Database: ${dbConfig.database}`);
-console.log(`   User: ${dbConfig.user}`);
-console.log(`   SSL: ${dbConfig.ssl ? 'Enabled' : 'Disabled'}`);
-
-/*const IS_RAILWAY = !!process.env.MYSQLHOST;
+const IS_RAILWAY = !!process.env.MYSQLHOST;
 
 console.log('🔍 Environment:', IS_RAILWAY ? '🚂 RAILWAY (PRODUCTION)' : '💻 LOCAL (DEVELOPMENT)');
 
@@ -118,7 +85,7 @@ const dbConfig = {
     queueLimit: 0
 };
 // Database configuration for old railway deployment
-const dbConfig = {
+/*const dbConfig = {
     host: IS_RAILWAY ? process.env.MYSQLHOST : (process.env.DB_HOST || 'localhost'),
     port: IS_RAILWAY ? process.env.MYSQLPORT : (process.env.DB_PORT || 3306),
     user: IS_RAILWAY ? process.env.MYSQLUSER : (process.env.DB_USER || 'root'),
@@ -127,14 +94,14 @@ const dbConfig = {
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
-};
+};*/
 
 console.log('📊 Final Database Config Used for Pool:');
 console.log(`   Host: ${dbConfig.host}`);
 console.log(`   User: ${dbConfig.user}`);
 console.log(`   Database: ${dbConfig.database}`);
 console.log(`   Port: ${dbConfig.port}`);
-console.log(`   Password: ${dbConfig.password ? '✅ SET' : '❌ NOT SET'}`);*/
+console.log(`   Password: ${dbConfig.password ? '✅ SET' : '❌ NOT SET'}`);
 
 const pool = mysql.createPool(dbConfig).promise();
 
@@ -750,7 +717,7 @@ app.get('/api/search', authenticateToken, async (req, res) => {
         console.log('   Query params:', { date, name, voice, userId });
         console.log('   User:', { id: req.user.id, role: req.user.role });
         
-        let query = `SELECT se.*, DATE_FORMAT(se.entry_date, "%Y-%m-%d") as date, u.name, u.user_group, u.voice_name FROM sadhana_entries se JOIN users u ON se.user_id = u.id WHERE 1=1`;
+        let query = `SELECT se.*, DATE_FORMAT(se.entry_date, '%Y-%m-%d') as date, u.name, u.user_group, u.voice_name FROM sadhana_entries se JOIN users u ON se.user_id = u.id WHERE 1=1`;
         let params = [];
         
         if (req.user.role === 'devotee') { 
