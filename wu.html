@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahul Kumar | QA Engineer & Test Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .selection-blue::selection {
+            background-color: rgba(59, 130, 246, 0.3);
+        }
+
+        /* Hide mobile menu by default */
+        #mobile-menu {
+            display: none;
+        }
+
+        #mobile-menu.open {
+            display: block;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-200 selection-blue">
+
+    <nav class="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 font-bold text-2xl tracking-tighter text-blue-500">
+                    RAHUL<span class="text-slate-100">KUMAR</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="hover:text-blue-400 transition-colors text-sm font-medium">Home</a>
+                        <a href="#about" class="hover:text-blue-400 transition-colors text-sm font-medium">About</a>
+                        <a href="#experience" class="hover:text-blue-400 transition-colors text-sm font-medium">Experience</a>
+                        <a href="#skills" class="hover:text-blue-400 transition-colors text-sm font-medium">Skills</a>
+                        <a href="#freelance" class="hover:text-blue-400 transition-colors text-sm font-medium">Freelance QA</a>
+                        <a href="#projects" class="hover:text-blue-400 transition-colors text-sm font-medium">Automation</a>
+                        <a href="#contact" class="hover:text-blue-400 transition-colors text-sm font-medium">Contact</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-slate-400 hover:text-white focus:outline-none">
+                        <i data-lucide="menu" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden bg-slate-900 border-b border-slate-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#home" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-blue-400">Home</a>
+                <a href="#about" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-blue-400">About</a>
+                <a href="#experience" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-blue-400">Experience</a>
+                <a href="#skills" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-blue-400">Skills</a>
+                <a href="#freelance" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-blue-400">Freelance QA</a>
+                <a href="#projects" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-blue-400">Automation</a>
+                <a href="#contact" class="mobile-link block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-800 hover:text-blue-400">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="relative pt-40 pb-20 overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-transparent to-transparent -z-10"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center space-x-2 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full text-blue-400 text-xs font-semibold mb-6">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>Available for QA Roles</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6">Rahul Kumar</h1>
+                <p class="text-xl md:text-2xl text-blue-400 font-medium mb-8 text-balance">QA Engineer | Manual Tester | API & Functional Testing</p>
+                <p class="text-lg text-slate-400 mb-10 leading-relaxed max-w-2xl">
+                    Around 2 Years of Experience in QA Engineering, Manual Testing, Automation, and DevOps practices. Passionate about improving software quality through end-to-end testing, root cause analysis, and reliable test strategies.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#freelance" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all shadow-lg shadow-blue-600/20">
+                        View QA Projects
+                    </a>
+                    <a href="https://github.com/Rahulbgs06" target="_blank" rel="noopener noreferrer" class="px-8 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-semibold border border-slate-700 transition-all flex items-center gap-2">
+                        <i data-lucide="github" class="w-5 h-5"></i> GitHub
+                    </a>
+                    <a href="#contact" class="px-8 py-3 bg-transparent hover:bg-slate-800 text-slate-300 rounded-lg font-semibold transition-all">Contact Me</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-8 inline-flex items-center gap-2">
+                    <i data-lucide="briefcase" class="w-7 h-7 text-blue-500"></i>
+                    Professional Summary
+                </h2>
+                <div class="bg-slate-800/40 border border-slate-700/50 p-8 md:p-12 rounded-3xl shadow-xl">
+                    <div class="space-y-6 text-lg text-slate-300 leading-relaxed">
+                        <p class="text-xl font-medium text-white border-l-4 border-blue-500 pl-6 py-2 bg-slate-900/50 rounded-r-xl italic">
+                            "I have hands-on experience testing real-world applications across multiple domains including Quality Management Systems and Accounting platforms. I focus on delivering high-quality, reliable software by combining strong functional testing skills with analytical debugging and root cause analysis."
+                        </p>
+                        <p>
+                            With around <span class="text-blue-400 font-semibold text-xl">2 Years</span> of Experience, I specialize in comprehensive test planning, meticulous execution of manual testing, API validation, and creating scalable automation scripts.
+                        </p>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-white mt-10 mb-6">🚀 Key Strengths</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="flex items-center gap-3 bg-slate-900/50 p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
+                            <i data-lucide="git-branch" class="w-6 h-6 text-blue-400 shrink-0"></i>
+                            <span class="text-sm font-medium text-slate-300">Strong understanding of real-time workflows</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-900/50 p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
+                            <i data-lucide="building-2" class="w-6 h-6 text-blue-400 shrink-0"></i>
+                            <span class="text-sm font-medium text-slate-300">Experience in Finance & QMS domains</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-900/50 p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
+                            <i data-lucide="search-code" class="w-6 h-6 text-blue-400 shrink-0"></i>
+                            <span class="text-sm font-medium text-slate-300">Advanced Root Cause Analysis (RCA)</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-900/50 p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
+                            <i data-lucide="bug" class="w-6 h-6 text-blue-400 shrink-0"></i>
+                            <span class="text-sm font-medium text-slate-300">Expert at identifying critical bugs</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-900/50 p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-colors">
+                            <i data-lucide="shield-check" class="w-6 h-6 text-blue-400 shrink-0"></i>
+                            <span class="text-sm font-medium text-slate-300">End-to-end testing mindset</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-white mb-12 text-center">Professional Experience</h2>
+        <div class="max-w-4xl mx-auto space-y-8">
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-blue-500/30 transition-all group">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+                    <div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">System Implementation Engineer</h3>
+                        <div class="text-blue-400 font-medium">Adoptnet Tech Pvt Ltd</div>
+                    </div>
+                    <div class="text-sm text-slate-500 bg-slate-950 px-3 py-1 rounded-full border border-slate-800 w-fit">Sept 2024 – Apr 2025</div>
+                </div>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Executed manual testing for telecom applications.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Performed API testing using Postman and SOAP UI.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Conducted SQL database validation and regression testing.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Logged and tracked defects using JIRA.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Participated in Agile testing activities.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Monitored systems with Prometheus & Grafana.</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-blue-500/30 transition-all group">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+                    <div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">System Support Engineer</h3>
+                        <div class="text-blue-400 font-medium">Bigseer Pvt Ltd</div>
+                    </div>
+                    <div class="text-sm text-slate-500 bg-slate-950 px-3 py-1 rounded-full border border-slate-800 w-fit">Apr 2023 – May 2024</div>
+                </div>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Provided L1/L2 production support for infrastructure and applications.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Managed daily database backups.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Performed SQL data validation and system monitoring.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Supported issue analysis and root cause identification.</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-slate-400">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-500/50 shrink-0 mt-0.5"></i>
+                        <span class="text-sm md:text-base leading-relaxed">Performed transaction scenario testing in the UAT environment.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-20 bg-slate-900/30">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-white mb-12">Tools & Technologies</h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-blue-500/50 transition-colors group">
+                    <div class="mb-4 text-blue-400 group-hover:scale-110 transition-transform"><i data-lucide="check-square" class="w-6 h-6"></i></div>
+                    <h3 class="font-bold text-white mb-4 text-lg">Manual Testing</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Functional Testing</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Regression Testing</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Test Case Documentation</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Test Planning & Strategy</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Bug Tracking</span>
+                    </div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-blue-500/50 transition-colors group">
+                    <div class="mb-4 text-indigo-400 group-hover:scale-110 transition-transform"><i data-lucide="webhook" class="w-6 h-6"></i></div>
+                    <h3 class="font-bold text-white mb-4 text-lg">API & Web Testing</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Postman</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">JMeter (Basic)</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Chrome DevTools</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">SOAP UI</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Network Debugging</span>
+                    </div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-blue-500/50 transition-colors group">
+                    <div class="mb-4 text-emerald-400 group-hover:scale-110 transition-transform"><i data-lucide="bot" class="w-6 h-6"></i></div>
+                    <h3 class="font-bold text-white mb-4 text-lg">Test Automation</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Selenium WebDriver</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">TestNG</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Page Object Model (POM)</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Java</span>
+                    </div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-blue-500/50 transition-colors group">
+                    <div class="mb-4 text-purple-400 group-hover:scale-110 transition-transform"><i data-lucide="server" class="w-6 h-6"></i></div>
+                    <h3 class="font-bold text-white mb-4 text-lg">DevOps & Database</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Jenkins CI/CD</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Docker</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">SQL / MySQL</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">JIRA</span>
+                        <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-md text-xs font-medium border border-slate-700">Git / GitHub</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FREELANCE QA PROJECTS SECTION -->
+    <section id="freelance" class="py-20 max-w-7xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-white mb-4 text-center">Freelance QA Projects</h2>
+        <p class="text-slate-400 text-center mb-12 max-w-2xl mx-auto">Real-world manual and functional testing projects across QMS, Accounting, and Dashboard domains.</p>
+        
+        <div class="grid lg:grid-cols-1 gap-12 max-w-5xl mx-auto">
+            
+            <!-- PROJECT 1: QMS -->
+            <div class="group relative bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-slate-700 transition-all shadow-2xl">
+                <div class="grid md:grid-cols-5 h-full">
+                    <div class="md:col-span-2 p-8 lg:p-10 bg-slate-950 flex flex-col justify-center border-r border-slate-800">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Freelance QA</span>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Avioa Pvt Ltd</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2 leading-snug">Deviation Management System (QMS)</h3>
+                        <p class="text-sm text-slate-400 mb-6 font-medium">Domain: Life Sciences / QMS</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="text-xs text-slate-400 border border-slate-700 px-2 py-1 rounded">Manual Testing</span>
+                            <span class="text-xs text-slate-400 border border-slate-700 px-2 py-1 rounded">Workflow Testing</span>
+                            <span class="text-xs text-slate-400 border border-slate-700 px-2 py-1 rounded">Validation</span>
+                        </div>
+                        <a href="https://docs.google.com/document/d/1dsFFEOmRIfpQh73iupzhnr1xrmNNZXY5jFed8f9qeYE/edit?usp=sharing" target="_blank" class="inline-flex items-center gap-2 text-white bg-slate-800 hover:bg-blue-600 w-fit px-6 py-2.5 rounded-xl transition-all font-semibold shadow-lg shadow-black/20">
+                            <i data-lucide="file-text" class="w-5 h-5"></i> View Test Cases
+                        </a>
+                    </div>
+                    <div class="md:col-span-3 p-8 lg:p-10">
+                        <p class="text-slate-300 text-sm mb-6 leading-relaxed italic opacity-90">Tested the Deviation Management module used in regulated industries to track quality issues, perform investigations, and ensure compliance through audit trails and approvals.</p>
+                        
+                        <div class="grid sm:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-3">Testing Scope & Activities</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500 shrink-0"></i> Designed & executed 39+ test cases</li>
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500 shrink-0"></i> Verified multi-stage lifecycles (Triage → Investigation → Closure)</li>
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500 shrink-0"></i> Validated digital signatures & audit logs</li>
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500 shrink-0"></i> Tested dropdowns, date fields & JSON export</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-red-400 uppercase tracking-wider mb-3">Critical Defects Found</h4>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm">
+                                        <i data-lucide="bug" class="w-4 h-4 text-red-500 shrink-0 mt-1"></i> 
+                                        <div><strong class="text-slate-200">Invalid Date Issue:</strong> System accepted unrealistic years (e.g., '0022'). Reported for validation fixes.</div>
+                                    </li>
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm">
+                                        <i data-lucide="bug" class="w-4 h-4 text-red-500 shrink-0 mt-1"></i> 
+                                        <div><strong class="text-slate-200">Session Timeout UX:</strong> No warning provided before forced logout, impacting user experience.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJECT 2: HelloBooks -->
+            <div class="group relative bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-slate-700 transition-all shadow-2xl">
+                <div class="grid md:grid-cols-5 h-full">
+                    <div class="md:col-span-2 p-8 lg:p-10 bg-slate-950 flex flex-col justify-center border-r border-slate-800">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Freelance QA</span>
+                            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Meru Technosoft</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2 leading-snug">HelloBooks Accounting Application</h3>
+                        <p class="text-sm text-slate-400 mb-6 font-medium">Domain: Finance / Accounting</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="text-xs text-slate-400 border border-slate-700 px-2 py-1 rounded">Functional Testing</span>
+                            <span class="text-xs text-slate-400 border border-slate-700 px-2 py-1 rounded">Root Cause Analysis</span>
+                            <span class="text-xs text-slate-400 border border-slate-700 px-2 py-1 rounded">DevTools Debugging</span>
+                        </div>
+                        <a href="https://docs.google.com/document/d/1cumw_k7yax6HYhU30vWNGmfcigLNwY-89A4iaerkgow/edit?usp=sharing" target="_blank" class="inline-flex items-center gap-2 text-white bg-slate-800 hover:bg-blue-600 w-fit px-6 py-2.5 rounded-xl transition-all font-semibold shadow-lg shadow-black/20">
+                            <i data-lucide="file-text" class="w-5 h-5"></i> View Test Cases
+                        </a>
+                    </div>
+                    <div class="md:col-span-3 p-8 lg:p-10">
+                        <p class="text-slate-300 text-sm mb-6 leading-relaxed italic opacity-90">Tested core accounting workflows including invoice generation, payment processing, tax configuration, and ledger validation.</p>
+                        
+                        <div class="grid sm:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-3">Testing Scope & Activities</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500 shrink-0"></i> E2E invoice lifecycle (create → approve → pay)</li>
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500 shrink-0"></i> Validated tax calculations & pricing logic</li>
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500 shrink-0"></i> Tested partial/full payments & ledger accuracy</li>
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500 shrink-0"></i> Conducted console & network debugging</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-red-400 uppercase tracking-wider mb-3">Critical Defects Found</h4>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm">
+                                        <i data-lucide="bug" class="w-4 h-4 text-red-500 shrink-0 mt-1"></i> 
+                                        <div><strong class="text-slate-200">Ledger Calculation Bug (HIGH):</strong> Incorrect balance after payment deletion led to negative outstandings.</div>
+                                    </li>
+                                    <li class="flex items-start gap-2 text-slate-400 text-sm">
+                                        <i data-lucide="bug" class="w-4 h-4 text-red-500 shrink-0 mt-1"></i> 
+                                        <div><strong class="text-slate-200">Black Screen Auth Issue:</strong> Used DevTools (Network tab) to perform RCA, identifying an Auth API timeout.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJECT 3: Sadhana Tracker -->
+            <div class="group relative bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-slate-700 transition-all shadow-2xl">
+                <div class="grid md:grid-cols-5 h-full">
+                    <div class="md:col-span-2 p-8 lg:p-10 bg-slate-950 flex flex-col justify-center border-r border-slate-800">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Freelance QA</span>
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Web App Testing</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2 leading-snug">Sadhana Tracker Dashboard</h3>
+                        <p class="text-sm text-slate-400 mb-6 font-medium">Domain: Dashboard / Analytics</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="text-xs text-slate-400 border border-slate-700 px-2 py-1 rounded">UI/UX Testing</span>
+                            <span class="text-xs text-slate-400 border border-slate-700 px-2 py-1 rounded">Role-Based Access</span>
+                            <span class="text-xs text-slate-400 border border-slate-700 px-2 py-1 rounded">Algorithm Validation</span>
+                        </div>
+                        <a href="https://rahulbgs06.github.io/sadhana-tracker/" target="_blank" class="inline-flex items-center gap-2 text-white bg-slate-800 hover:bg-blue-600 w-fit px-6 py-2.5 rounded-xl transition-all font-semibold shadow-lg shadow-black/20">
+                            <i data-lucide="external-link" class="w-5 h-5"></i> View Live App
+                        </a>
+                    </div>
+                    <div class="md:col-span-3 p-8 lg:p-10 flex flex-col justify-center">
+                        <p class="text-slate-300 text-sm mb-6 leading-relaxed italic opacity-90">Validated and performed comprehensive functional testing on a complex spiritual habit-tracking web application featuring dynamic scoring and hierarchical user roles.</p>
+                        
+                        <div class="grid sm:grid-cols-2 gap-x-6 gap-y-3 mt-4">
+                            <div class="flex items-center gap-3 text-slate-400">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                                <span class="text-sm font-medium">Tested Dynamic Scoring Algorithms</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-slate-400">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                                <span class="text-sm font-medium">Validated Daily/Weekly/Monthly Reports</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-slate-400">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                                <span class="text-sm font-medium">Verified Role-Based Access Controls</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-slate-400">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                                <span class="text-sm font-medium">Branch Management Workflows</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-slate-400">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                                <span class="text-sm font-medium">Tested Leaderboard System Logic</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-slate-400">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0"></i>
+                                <span class="text-sm font-medium">Automated WhatsApp Report Testing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- AUTOMATION & DEVOPS PROJECTS SECTION -->
+    <section id="projects" class="py-20 bg-slate-900/30 border-y border-slate-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-white mb-12 text-center">Automation & DevOps Projects</h2>
+            <div class="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                
+                <!-- Project: Selenium Framework -->
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 hover:border-slate-700 transition-all shadow-xl flex flex-col h-full">
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Selenium</span>
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">TestNG</span>
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Java</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">Selenium Automation Testing Framework</h3>
+                    <p class="text-slate-400 text-sm mb-6 flex-grow">Developed a scalable automation testing framework using Selenium WebDriver with POM architecture for maintainable and reusable test scripts.</p>
+                    <ul class="space-y-2 mb-8">
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> Page Object Model (POM) implementation</li>
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> TestNG Integration & HTML Reports</li>
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> Fail-Screenshot Capture mechanism</li>
+                    </ul>
+                    <a href="https://github.com/Rahulbgs06/WebAutomationFrameWork" target="_blank" class="mt-auto inline-flex items-center justify-center gap-2 text-white bg-slate-800 hover:bg-slate-700 w-full px-4 py-2.5 rounded-xl transition-all font-semibold">
+                        <i data-lucide="github" class="w-4 h-4"></i> View Repository
+                    </a>
+                </div>
+
+                <!-- Project: CI/CD Pipeline (Restored) -->
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 hover:border-slate-700 transition-all shadow-xl flex flex-col h-full">
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Jenkins CI/CD</span>
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Selenium</span>
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Docker</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">End-to-End CI/CD Deployment Pipeline</h3>
+                    <p class="text-slate-400 text-sm mb-6 flex-grow">A fully automated pipeline taking a Spring Boot app from GitHub to live deployment using Jenkins and Docker containers, followed by execution of Selenium test suites.</p>
+                    <ul class="space-y-2 mb-8">
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> Automated Selenium Tests post-deploy</li>
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> Webhook Authentication Triggers</li>
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> Docker Image Orchestration</li>
+                    </ul>
+                    <a href="https://github.com/Rahulbgs06/petclinic-devops-demo" target="_blank" class="mt-auto inline-flex items-center justify-center gap-2 text-white bg-slate-800 hover:bg-slate-700 w-full px-4 py-2.5 rounded-xl transition-all font-semibold">
+                        <i data-lucide="github" class="w-4 h-4"></i> View Repository
+                    </a>
+                </div>
+
+                <!-- Project: API Testing CI/CD (Restored) -->
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 hover:border-slate-700 transition-all shadow-xl flex flex-col h-full">
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">API Testing</span>
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Jenkins</span>
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Spring Boot</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">API Testing & Automated Pipeline</h3>
+                    <p class="text-slate-400 text-sm mb-6 flex-grow">Integrated a Spring Boot REST API with a fully automated CI/CD pipeline. The pipeline automatically builds, deploys, and executes automated API tests whenever code is pushed.</p>
+                    <ul class="space-y-2 mb-8">
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> API Endpoint Validation</li>
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> Jenkins Automation Architecture</li>
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> MySQL Database Integration</li>
+                    </ul>
+                    <a href="https://github.com/Rahulbgs06/SpringApp_Api_Testing" target="_blank" class="mt-auto inline-flex items-center justify-center gap-2 text-white bg-slate-800 hover:bg-slate-700 w-full px-4 py-2.5 rounded-xl transition-all font-semibold">
+                        <i data-lucide="github" class="w-4 h-4"></i> View Repository
+                    </a>
+                </div>
+
+                <!-- Project: Test Strategy Doc -->
+                <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 hover:border-slate-700 transition-all shadow-xl flex flex-col h-full">
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Test Planning</span>
+                        <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-bold rounded-full uppercase tracking-wider">Documentation</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-4">QA Test Planning & Strategy</h3>
+                    <p class="text-slate-400 text-sm mb-6 flex-grow">Created a detailed QA Test Plan for the SauceDemo web application to demonstrate structured testing strategy before automation.</p>
+                    <ul class="space-y-2 mb-8">
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> Testing Objectives & Scope Definition</li>
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> Functional & UI Coverage matrices</li>
+                        <li class="flex items-center gap-2 text-slate-300 text-sm"><i data-lucide="check" class="w-4 h-4 text-blue-500"></i> Risk Identification & Mitigation</li>
+                    </ul>
+                    <a href="https://docs.google.com/document/d/1o0b0cfGp250khB6ejRPV9MGgaMcscBCTEIZImCx9U1E/edit" target="_blank" class="mt-auto inline-flex items-center justify-center gap-2 text-white bg-slate-800 hover:bg-blue-600 w-full px-4 py-2.5 rounded-xl transition-all font-semibold">
+                        <i data-lucide="file-text" class="w-4 h-4"></i> View Document
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="approach" class="py-24 bg-blue-600/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white mb-4">QA Engineering Workflow</h2>
+                <p class="text-slate-400 text-lg max-w-2xl mx-auto">My structured end-to-end methodology for delivering high-quality, reliable software products.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="relative group h-full">
+                    <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 h-full hover:border-blue-500/50 hover:bg-slate-800/40 transition-all duration-300 shadow-xl flex flex-col">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="bg-blue-500/10 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                                <i data-lucide="search" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-5xl font-black text-slate-800/50 group-hover:text-blue-500/20 transition-colors leading-none tracking-tighter select-none">01</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">Requirement Analysis</h3>
+                        <p class="text-slate-400 leading-relaxed">Analyzing features to identify critical edge cases and testing scenarios.</p>
+                    </div>
+                </div>
+                <div class="relative group h-full">
+                    <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 h-full hover:border-blue-500/50 hover:bg-slate-800/40 transition-all duration-300 shadow-xl flex flex-col">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="bg-blue-500/10 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                                <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-5xl font-black text-slate-800/50 group-hover:text-blue-500/20 transition-colors leading-none tracking-tighter select-none">02</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">Test Design</h3>
+                        <p class="text-slate-400 leading-relaxed">Creating comprehensive test cases covering positive, negative, and UI scenarios.</p>
+                    </div>
+                </div>
+                <div class="relative group h-full">
+                    <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 h-full hover:border-blue-500/50 hover:bg-slate-800/40 transition-all duration-300 shadow-xl flex flex-col">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="bg-blue-500/10 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                                <i data-lucide="play-circle" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-5xl font-black text-slate-800/50 group-hover:text-blue-500/20 transition-colors leading-none tracking-tighter select-none">03</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">Test Execution</h3>
+                        <p class="text-slate-400 leading-relaxed">Performing meticulous manual and API validation to ensure system integrity.</p>
+                    </div>
+                </div>
+                <div class="relative group h-full">
+                    <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 h-full hover:border-blue-500/50 hover:bg-slate-800/40 transition-all duration-300 shadow-xl flex flex-col">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="bg-blue-500/10 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                                <i data-lucide="code-2" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-5xl font-black text-slate-800/50 group-hover:text-blue-500/20 transition-colors leading-none tracking-tighter select-none">04</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">Automation</h3>
+                        <p class="text-slate-400 leading-relaxed">Developing scalable Selenium scripts with POM for regression testing.</p>
+                    </div>
+                </div>
+                <div class="relative group h-full">
+                    <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 h-full hover:border-blue-500/50 hover:bg-slate-800/40 transition-all duration-300 shadow-xl flex flex-col">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="bg-blue-500/10 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                                <i data-lucide="zap" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-5xl font-black text-slate-800/50 group-hover:text-blue-500/20 transition-colors leading-none tracking-tighter select-none">05</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">CI/CD Testing</h3>
+                        <p class="text-slate-400 leading-relaxed">Triggering automated test suites via Jenkins pipelines on every code push.</p>
+                    </div>
+                </div>
+                <div class="relative group h-full">
+                    <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 h-full hover:border-blue-500/50 hover:bg-slate-800/40 transition-all duration-300 shadow-xl flex flex-col">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="bg-blue-500/10 w-14 h-14 rounded-2xl flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all">
+                                <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                            </div>
+                            <span class="text-5xl font-black text-slate-800/50 group-hover:text-blue-500/20 transition-colors leading-none tracking-tighter select-none">06</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">Defect Management</h3>
+                        <p class="text-slate-400 leading-relaxed">Tracking bugs through the lifecycle with detailed RCA and retesting.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 bg-blue-600 rounded-[3rem] mx-4 my-20 text-center relative overflow-hidden shadow-2xl">
+        <div class="absolute top-0 right-0 p-12 opacity-10 select-none pointer-events-none">
+            <i data-lucide="mail" class="w-96 h-96 -mr-32 -mt-32"></i>
+        </div>
+        <div class="relative z-10 max-w-4xl mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight uppercase">Let's Connect</h2>
+            <p class="text-blue-100 text-lg md:text-xl mb-12 font-medium max-w-2xl mx-auto">
+                I am currently open to new opportunities in QA Engineering and Testing roles. Let's ensure high-quality software together.
+            </p>
+            <div class="flex flex-wrap justify-center gap-6 items-center">
+                <a href="mailto:rahulbgs06@gmail.com" class="bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold flex items-center gap-3 transition-all hover:scale-105 hover:shadow-xl active:scale-95 shadow-md">
+                    <i data-lucide="mail" class="w-5 h-5"></i> rahulbgs06@gmail.com
+                </a>
+                <a href="tel:+916206431908" class="bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold flex items-center gap-3 transition-all hover:scale-105 hover:shadow-xl active:scale-95 shadow-md">
+                    <i data-lucide="phone" class="w-5 h-5"></i> +91 6206431908
+                </a>
+            </div>
+            <div class="flex justify-center gap-6 mt-12">
+                <a href="https://www.linkedin.com/in/rahul-kumar-se/" target="_blank" rel="noopener noreferrer" class="p-4 bg-blue-700 rounded-2xl text-white transition-all hover:scale-110 hover:bg-blue-800 shadow-lg border border-white/20" title="LinkedIn Profile">
+                    <i data-lucide="linkedin" class="w-7 h-7"></i>
+                </a>
+                <a href="https://github.com/Rahulbgs06" target="_blank" rel="noopener noreferrer" class="p-4 bg-slate-900 rounded-2xl text-white transition-all hover:scale-110 hover:bg-black shadow-lg border border-white/20" title="GitHub Profile">
+                    <i data-lucide="github" class="w-7 h-7"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 text-center text-slate-500 text-sm border-t border-slate-900">
+        <p>© <span id="year"></span> Rahul Kumar. Built with HTML, Tailwind CSS & Lucide.</p>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Update Copyright Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.add('open');
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                mobileMenu.classList.remove('open');
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+            // Re-render icons after change
+            lucide.createIcons();
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+
+        // Close menu when a link is clicked
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (isMenuOpen) toggleMenu();
+            });
+        });
+
+        // Smooth scrolling enhancement
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

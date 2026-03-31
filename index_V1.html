@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sadhana Tracker | || Hare Krishna ||</title>
+    <!-- CSS & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --saffron: #ff9933; --saffron-dark: #cc7a29; --saffron-light: #ffebcc; --cream: #fdfcfb;
+            --text-dark: #333333; --text-muted: #666666; --border: #eeeeee;
+            --white: #ffffff; --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --whatsapp: #25D366;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--cream); color: var(--text-dark); line-height: 1.6; padding-top: 60px; overflow-x: hidden; }
+        h1, h2, .spiritual-text { font-family: 'Lora', serif; }
+        
+        .persistent-header {
+            position: fixed; top: 0; left: 0; right: 0; height: 50px;
+            background: var(--saffron); color: white; display: flex;
+            align-items: center; justify-content: center; font-weight: 600; font-size: 1.2rem; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 15px; }
+        .card { background: var(--white); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid var(--border); }
+        
+        #status-box {
+            position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; padding: 12px 25px; border-radius: 30px;
+            font-weight: 600; font-size: 0.9rem; display: none; text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideDown 0.3s ease-out;
+        }
+        .status-success { background: #e6fffa; color: #2c7a7b; border: 1px solid #81e6d9; }
+        .status-error { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
+        @keyframes slideDown { from { top: 40px; opacity: 0; } to { top: 70px; opacity: 1; } }
+
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; outline: none; }
+        
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 10px; display: block; text-align: center; text-decoration: none; transition: 0.2s; }
+        .btn-primary { background: var(--saffron); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+        .btn-excel { background: #1D6F42; color: white; }
+        .btn-whatsapp { background: var(--whatsapp); color: white; }
+        .btn-action { font-size: 0.75rem; padding: 6px 12px; border-radius: 5px; width: auto; display: inline-block; margin: 2px; }
+        .btn-admin { background: #e6fffa; color: #2c7a7b; border: 1px solid #81e6d9; }
+        .btn-demote { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
+
+        .nav-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; background: #eee; color: #555; }
+        .hidden { display: none !important; }
+
+        .table-container { width: 100%; overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); margin-top: 15px; background: white; }
+        table { width: 100%; border-collapse: collapse; min-width: 850px; font-size: 0.85rem; }
+        th { background: var(--saffron-light); color: var(--saffron); padding: 12px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 0.8rem; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
+        .stat-item b { color: var(--saffron); }
+
+        /* ============================================
+           DASHBOARD ENHANCEMENTS - Spiritual & Responsive
+           Add at the end of your existing CSS
+        ============================================ */
+
+        /* Spiritual Banner */
+        .spiritual-banner {
+            background: linear-gradient(135deg, var(--saffron-light) 0%, #fff 50%, var(--saffron-light) 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            border: 1px solid var(--saffron);
+            box-shadow: 0 4px 15px rgba(255, 153, 51, 0.1);
+        }
+
+        .banner-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .om-symbol {
+            font-size: 1.8rem;
+            animation: gentlePulse 3s infinite;
+        }
+
+        .banner-text {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            color: var(--saffron-dark);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .banner-subtext {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+            /* Dashboard Cards */
+            .dashboard-card {
+                background: var(--white);
+                border-radius: 16px;
+                padding: 20px 15px;
+                text-align: center;
+                cursor: pointer;
+                border: 1px solid var(--border);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+        
+            .dashboard-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(255, 153, 51, 0.15);
+                border-color: var(--saffron);
+            }
+        
+            .dashboard-card.featured {
+                border: 2px solid var(--saffron);
+                background: linear-gradient(135deg, #fff, #fff9f0);
+            }
+        
+            .card-icon {
+                font-size: 2.2rem;
+                margin-bottom: 10px;
+            }
+        
+            .card-title {
+                font-family: 'Lora', serif;
+                font-weight: 600;
+                font-size: 1.1rem;
+                color: var(--text-dark);
+                margin-bottom: 5px;
+            }
+        
+            .card-desc {
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                margin-bottom: 12px;
+                line-height: 1.4;
+            }
+        
+            .card-footer {
+                font-size: 0.8rem;
+                color: var(--saffron);
+                font-weight: 600;
+                opacity: 0.8;
+                transition: opacity 0.2s;
+            }
+        
+            .dashboard-card:hover .card-footer {
+                opacity: 1;
+                text-decoration: underline;
+            }
+        
+            .featured-badge {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: var(--saffron);
+                color: white;
+                font-size: 0.6rem;
+                padding: 3px 8px;
+                border-radius: 12px;
+                font-weight: 600;
+            }
+        
+            /* Admin Card */
+            .dashboard-card.admin-card {
+                border-color: #81e6d9;
+                background: #f0fefc;
+            }
+        
+            /* Quick Stats */
+            .quick-stats {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+        
+            .stat-pill {
+                background: white;
+                border: 1px solid var(--border);
+                border-radius: 30px;
+                padding: 8px 5px;
+                text-align: center;
+                font-size: 0.75rem;
+            }
+        
+            .stat-label {
+                display: block;
+                color: var(--text-muted);
+                margin-bottom: 2px;
+            }
+        
+            .stat-value {
+                display: block;
+                font-weight: 700;
+                color: var(--saffron-dark);
+                font-size: 0.9rem;
+            }
+        
+            /* Logout Button */
+            .btn-logout {
+                width: 100%;
+                padding: 14px;
+                border: none;
+                border-radius: 12px;
+                background: white;
+                border: 1px solid #ffcdd2;
+                color: #d32f2f;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 20px;
+                transition: all 0.3s ease;
+            }
+        
+            .btn-logout:hover {
+                background: #ffebee;
+                border-color: #d32f2f;
+                transform: translateY(-2px);
+            }
+        
+            .logout-icon {
+                font-size: 1.2rem;
+            }
+        
+            /* Spiritual Footer */
+            .spiritual-footer {
+                text-align: center;
+                padding: 15px 0 5px;
+                border-top: 1px dashed var(--saffron-light);
+            }
+        
+            .footer-mantra {
+                font-family: 'Lora', serif;
+                font-size: 0.8rem;
+                color: var(--saffron-dark);
+                opacity: 0.7;
+                line-height: 1.6;
+            }
+        
+            /* Animations */
+            @keyframes gentlePulse {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0.8; transform: scale(1.05); }
+            }
+        
+            /* Responsive Design */
+            @media (min-width: 768px) {
+                .dashboard-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+            
+                .banner-text {
+                    font-size: 1.5rem;
+                }
+            }
+        
+            @media (min-width: 1024px) {
+                .dashboard-grid {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+            }
+        
+            @media (max-width: 480px) {
+                .quick-stats {
+                    grid-template-columns: 1fr;
+                    gap: 8px;
+                }
+            
+                .banner-content {
+                    gap: 8px;
+                }
+            
+                .om-symbol {
+                    font-size: 1.4rem;
+                }
+            
+                .banner-text {
+                    font-size: 1.1rem;
+                }
+            }
+        
+            /* Update current date and user info via JavaScript */
+        
+        /* ===========================================
+           TRACKING VIEW SPECIFIC STYLES
+           (Add at the end of your existing CSS)
+        ============================================ */
+          /* Tracking grid - only affects tracking view */
+        .tracking-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        /* Full width item in tracking grid */
+        .tracking-grid .tracking-full {
+            grid-column: 1 / -1;
+        }
+
+        /* Input styling specific to tracking view */
+        .tracking-input {
+            width: 100%;
+            padding: 10px !important;  /* Slightly smaller than default 12px */
+            font-size: 0.95rem !important;
+        }
+
+        /* Override number input spinners only for tracking */
+        .tracking-input[type=number] {  -moz-appearance: textfield;
+        }
+        .tracking-input[type=number]::-webkit-inner-spin-button,
+        .tracking-input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Responsive for tracking grid only */
+        @media (max-width: 768px) {
+            .tracking-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tracking-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Keep existing mt-20 class */
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        /* --- SADHANA DASHBOARD SPECIFIC STYLES --- */
+        /* --- ENHANCED SADHANA DASHBOARD STYLES --- */
+        .dashboard-card { 
+            background: #fff; border-radius: 20px; padding: 25px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
+            border: 1px solid #f0f0f0; border-top: 6px solid var(--saffron);
+        }
+        .report-header { text-align: center; margin-bottom: 20px; }
+        .report-header h3 { color: #2d3748; font-size: 1.4rem; margin-bottom: 5px; }
+        .report-header p { color: #718096; font-size: 0.9rem; letter-spacing: 0.5px; }
+
+        .score-container { 
+            display: flex; justify-content: space-around; gap: 10px; margin-bottom: 25px;
+        }
+        .score-box { 
+            flex: 1; text-align: center; padding: 12px; border-radius: 15px; 
+            font-size: 0.85rem; font-weight: 700; transition: transform 0.2s;
+        }
+        .score-box:hover { transform: translateY(-3px); }
+        .score-box span { display: block; font-size: 1.2rem; margin-top: 4px; }
+
+        .discipline-section { margin-bottom: 20px; }
+        .section-title { 
+            font-size: 0.95rem; font-weight: 800; color: var(--saffron-dark); 
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+         .metric-row { 
+            display: grid; grid-template-columns: 1fr 120px 40px; 
+            align-items: center; margin-bottom: 12px; font-size: 0.9rem;
+        }
+        .consistency-dots { display: flex; gap: 4px; justify-content: flex-end; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #edf2f7; }
+        .dot.success { background: #48bb78; box-shadow: 0 0 5px rgba(72, 187, 120, 0.4); }
+
+        .progress-track { background: #edf2f7; height: 8px; border-radius: 10px; overflow: hidden; position: relative; }
+        .progress-fill { background: var(--saffron); height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+
+        .pill-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .effort-pill { 
+            background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; 
+            border-radius: 12px; text-align: center; font-size: 0.75rem; 
+        }
+        .effort-pill b { display: block; font-size: 1rem; color: #4a5568; }
+
+        .whatsapp-btn { 
+            background: #25D366; color: white; border: none; padding: 15px; 
+            border-radius: 12px; font-weight: 700; width: 100%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin-top: 15px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+        }
+
+    </style>
+    <!-- Prevent favicon 404 -->
+    <link rel="icon" href="data:image/x-icon;,">    
+</head>
+<body>
+
+<div id="status-box"></div>
+<div class="persistent-header">|| Hare Krishna ||</div>
+
+<div class="container">
+    <div id="header-area" class="hidden" style="text-align:center; margin-bottom:20px;">
+        <h2 id="welcome-name" class="spiritual-text">Welcome</h2>
+        <div id="user-meta" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:15px;">
+            <span id="welcome-voice"></span> | <span id="welcome-group" class="badge"></span>
+        </div>
+        
+        <div id="voice-switcher-box" class="hidden" style="background:var(--saffron-light); padding:15px; border-radius:12px; border:1px solid var(--saffron)">
+            <label>CONTEXT SWITCHER:</label>
+            <select id="global-voice-switcher" onchange="app.handleVoiceSwitch(this.value)"></select>
+        </div>
+    </div>
+
+    <!-- VIEW: LOGIN -->
+    <div id="view-login" class="card">
+        <h2 class="text-center spiritual-text">Devotee Login</h2>
+        <div class="form-group mt-20"><label>Email</label><input type="email" id="login-email"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="login-pass"></div>
+        <button class="btn btn-primary" onclick="app.handleLogin()">Login</button>
+        <button class="btn btn-outline" onclick="app.showView('register')">New Registration</button>
+    </div>
+
+    <!-- VIEW: REGISTER -->
+    <div id="view-register" class="card hidden">
+        <h2 class="spiritual-text">Registration</h2>
+        <div class="form-group mt-20"><label>Full Name</label><input type="text" id="reg-name"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="reg-email"></div>
+        <div class="form-group"><label>Password (Min 6 chars)</label><input type="password" id="reg-pass"></div>
+        <div class="nav-grid">
+            <div class="form-group"><label>Voice Name (Type Manual)</label><input type="text" id="reg-voice" placeholder="e.g. Surbhikunj"></div>
+            <div class="form-group"><label>Internal Group</label>
+                <select id="reg-group">
+                    <option>Yudhisthir</option><option>Bheem</option><option>Nakul</option><option>Sahdev</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="app.handleRegister()">Create Account</button>
+        <button class="btn btn-outline" onclick="app.showView('login')">Back</button>
+    </div>
+
+    <!-- VIEW: DASHBOARD -->
+    <div id="view-dashboard" class="hidden">
+        <!-- Welcome Banner -->
+        <div class="spiritual-banner">
+            <div class="banner-content">
+                <span class="om-symbol">🕉️</span>
+                <h3 class="banner-text">Hare Krishna Hare Krishna</h3>
+                <span class="om-symbol">🕉️</span>
+            </div>
+            <div class="banner-subtext">Krishna Krishna Hare Hare</div>
+        </div>
+
+        <!-- Main Menu Grid -->
+        <div class="dashboard-grid">
+            <!-- Track Sadhana Card -->
+            <div class="dashboard-card" onclick="app.showView('tracking')">
+                <div class="card-icon">📝</div>
+                <div class="card-title">Track Sadhana</div>
+                <div class="card-desc">Record your daily spiritual activities</div>
+                <div class="card-footer">Start Now →</div>
+            </div>
+
+            <!-- Day Report Card -->
+            <div class="dashboard-card" onclick="app.showView('search')">
+                <div class="card-icon">🔍</div>
+                <div class="card-title">Day Report</div>
+                <div class="card-desc">View detailed daily reports</div>
+                <div class="card-footer">Search →</div>
+            </div>
+
+            <!-- Sadhana Dashboard Card -->
+            <div class="dashboard-card featured" onclick="app.showView('sadhana-dashboard')">
+                <div class="card-icon">🕉️</div>
+                <div class="card-title">Sadhana Dashboard</div>
+                <div class="card-desc">Track your spiritual progress</div>
+                <div class="card-footer">View Analytics →</div>
+                <div class="featured-badge">New</div>
+            </div>
+
+            <!-- Analytics Card -->
+            <div class="dashboard-card" onclick="app.showView('reports')">
+                <div class="card-icon">📊</div>
+                <div class="card-title">Analytics</div>
+                <div class="card-desc">Insights and statistics</div>
+                <div class="card-footer">Explore →</div>
+            </div>
+
+            <!-- User Management Card (Admin Only) -->
+            <div id="admin-menu" class="dashboard-card admin-card hidden" onclick="app.showView('user-mgmt')">
+                <div class="card-icon">👥</div>
+                <div class="card-title">User Management</div>
+                <div class="card-desc">Manage devotees and permissions</div>
+                <div class="card-footer">Admin →</div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Section -->
+        <div class="quick-stats">
+            <div class="stat-pill">
+                <span class="stat-label">Today's Date</span>
+                <span class="stat-value" id="current-date"></span>
+            </div>
+            <div class="stat-pill">
+                <span class="stat-label">Your Voice</span>
+                <span class="stat-value" id="user-voice-display"></span>
+            </div>
+            <div class="stat-pill">
+                <span class="stat-label">Your Group</span>
+                <span class="stat-value" id="user-group-display"></span>
+            </div>
+        </div>
+
+        <!-- Logout Button -->
+        <button class="btn-logout" onclick="app.handleLogout()">
+            <span class="logout-icon">🚪</span>
+            <span class="logout-text">Exit (Logout)</span>
+        </button>
+
+        <!-- Spiritual Footer -->
+        <div class="spiritual-footer">
+            <div class="footer-mantra">हरे कृष्ण हरे कृष्ण | कृष्ण कृष्ण हरे हरे | हरे राम हरे राम | राम राम हरे हरे ||</div>
+        </div>
+    </div>
+
+    <!-- VIEW: TRACKING -->
+    <div id="view-tracking" class="card hidden">
+        <h2 class="spiritual-text">Sadhana Entry</h2>
+
+        <!-- COMPACT GRID - Uses existing classes + new specific classes -->
+        <div class="tracking-grid">
+            <!-- Row 1 -->
+            <div class="form-group"><label>📅 Date</label><input type="date" id="sd-date" class="tracking-input"></div>
+            <div class="form-group"><label>⏰ Wakeup</label><input type="time" id="sd-wakeup" step="1" class="tracking-input"></div>
+            <div class="form-group"><label>📿 Rounds</label><input type="number" id="sd-rounds" value="16" min="0" class="tracking-input"></div>
+
+            <!-- Row 2 -->
+            <div class="form-group"><label>🔚 Chant End</label><input type="time" id="sd-chantend" step="1" class="tracking-input"></div>
+            <div class="form-group"><label>🎧 Hearing</label><input type="number" id="sd-hearing" value="0" min="0" class="tracking-input"></div>
+            <div class="form-group"><label>📖 Reading</label><input type="number" id="sd-reading" value="0" min="0" class="tracking-input"></div>
+
+            <!-- Row 3 -->
+            <div class="form-group"><label>📚 Study</label><input type="number" id="sd-study" value="0" min="0" class="tracking-input"></div>
+            <div class="form-group"><label>😴 Day Rest</label><input type="number" id="sd-dayrest" min="0" placeholder="min" class="tracking-input"></div>
+            <div class="form-group"><label>🛕 Temple</label><input type="time" id="sd-temple" class="tracking-input"></div>
+
+            <!-- Row 4 -->
+            <div class="form-group"><label>⏳ Wasted</label><input type="number" id="sd-waste" min="0" placeholder="min" class="tracking-input"></div>
+            <div class="form-group"><label>🧘 Morning</label>
+                <select id="sd-morning" class="tracking-input"><option value="0">No</option><option value="1">Yes</option></select>
+            </div>
+            <div class="form-group"><label>🪔 Mangala</label>
+                <select id="sd-mangala" class="tracking-input"><option value="0">No</option><option value="1">Yes</option></select>
+            </div>
+
+            <!-- Row 5 -->
+            <div class="form-group"><label>🧹 Clean</label>
+                <select id="sd-clean" class="tracking-input"><option value="0">No</option><option value="1">Yes</option></select>
+            </div>
+            <div class="form-group"><label>🌙 Sleep</label><input type="time" id="sd-sleep" step="1" class="tracking-input"></div>
+            <div class="form-group"><label>📘 Book</label><input type="text" id="sd-book" placeholder="Optional" class="tracking-input"></div>
+
+            <!-- Row 6 - Full Width -->
+            <div class="form-group tracking-full"><label>💭 Reflections</label><textarea id="sd-reflect" rows="2" placeholder="Optional" class="tracking-input"></textarea></div>
+        </div>
+
+        <!-- Buttons - Using existing btn classes -->
+        <button class="btn btn-primary" onclick="app.saveSadhana()">💾 Save Record</button>
+
+        <!-- WhatsApp Section -->
+        <div id="whatsapp-section" class="hidden mt-20">
+            <div class="form-group"><label style="color: var(--saffron-dark)">📱 Summary:</label>
+            <textarea id="whatsapp-preview" rows="3" class="tracking-input" style="background: #fdf6e3;"></textarea></div>
+            <button class="btn btn-whatsapp" onclick="app.sendToWhatsApp()">📲 Send WhatsApp</button>
+        </div>
+
+        <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">← Back</button>
+    </div>
+
+    <!-- VIEW: USER MANAGEMENT -->
+    <div id="view-user-mgmt" class="card hidden">
+        <h2 class="spiritual-text">Management</h2>
+        <div class="form-group mt-20"><label>Search User</label><input type="text" id="user-search" placeholder="Name or Email..." oninput="app.filterUsers()"></div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Email</th><th>Voice</th><th>Group</th><th>Role</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="user-list-body"></tbody>
+            </table>
+        </div>
+        <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">Back</button>
+    </div>
+
+    <!-- VIEW: DAY REPORT -->
+    <div id="view-search" class="card hidden">
+        <h2 class="spiritual-text">Day Report</h2>
+        <div class="nav-grid mt-20">
+            <div class="form-group"><label>Search Date</label><input type="date" id="search-date" onchange="app.performSearch()"></div>
+            <div class="form-group admin-only hidden">
+                <label>User Selection</label>
+                <select id="search-user-picker" onchange="app.performSearch()"></select>
+            </div>
+        </div>
+        <div class="form-group admin-only hidden"><label>Filter Name</label><input type="text" id="search-name" placeholder="Name..." oninput="app.performSearch()"></div>
+        <div id="search-results" class="table-container"></div>
+        <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">Back</button>
+    </div>
+    <!-- NEW: SADHANA DASHBOARD -->
+    <div id="view-sadhana-dashboard" class="card hidden">
+        <h2 class="spiritual-text">Sadhana Dashboard</h2>
+        <div class="nav-grid mt-20">
+            <div class="form-group">
+                <label>Report Period</label>
+                <select id="dash-report-type" onchange="app.loadSadhanaDashboard()">
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Filter by Group</label>
+                <select id="dash-group-filter" onchange="app.loadSadhanaDashboard()">
+                    <option value="All">All Groups</option>
+                    <option value="Yudhisthir">Yudhisthir</option>
+                    <option value="Bheem">Bheem</option>
+                    <option value="Nakul">Nakul</option>
+                    <option value="Sahdev">Sahdev</option>
+                </select>
+            </div>
+        </div>
+        <div id="dashboard-report-content" class="mt-20"></div>
+        <button class="btn btn-outline mt-20" onclick="app.showView('dashboard')">Back</button>
+    </div>
+
+    <!-- VIEW: ANALYTICS -->
+    <div id="view-reports" class="card hidden">
+        <h2 class="spiritual-text">Analytics</h2>
+        <div class="nav-grid mt-20">
+            <div class="form-group"><label>Range</label>
+                <select id="report-range" onchange="app.generateReport()">
+                    <option value="all">Overall</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option>
+                </select>
+            </div>
+            <div class="form-group admin-only hidden">
+                <label>Mode</label>
+                <select id="report-mode" onchange="app.handleReportModeSwitch(this.value)">
+                    <option value="Overall">Overall</option><option value="UserWise">User Wise</option>
+                </select>
+            </div>
+        </div>
+        <div id="report-user-container" class="form-group hidden">
+            <label>Choose Devotee</label>
+            <select id="report-user-picker" onchange="app.generateReport()"></select>
+        </div>
+        <button class="btn btn-excel" onclick="app.exportToExcel()">📥 Export XLSX</button>
+        <div id="report-content" class="mt-20"></div>
+        <button class="btn btn-outline" onclick="app.showView('dashboard')">Back</button>
+    </div>
+</div>
+
+<script>
+const app = {
+    // Auto-detect API URL based on environment
+    API_BASE_URL: (function() {
+        // Check if running on localhost
+        if (window.location.hostname === 'localhost' || 
+            window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3000';  // Local backend
+        } else {
+            // Production - use Railway URL with CORRECT PORT
+            // IMPORTANT: Check your Railway dashboard for correct port!
+            return 'https://sadhana-tracker-production.up.railway.app';  // WITHOUT :8080
+        }
+    })(),
+    MASTER_NUMBER: '916206431908',
+    currentUser: null,
+    activeVoice: 'All',
+    usersData: [],
+    rawRecords: [],
+
+    init: function() {
+        const saved = localStorage.getItem('sadhana_session');
+        if (saved) {
+            this.currentUser = JSON.parse(saved);
+            this.activeVoice = this.currentUser.voice;
+            this.showView('dashboard');
+        } else { this.showView('login'); }
+    },
+
+
+    notify: function(msg, isError = false) {
+        const box = document.getElementById('status-box');
+        box.innerText = msg;
+        box.className = isError ? 'status-error' : 'status-success';
+        box.style.display = 'block';
+        setTimeout(() => box.style.display = 'none', 3000);
+    },
+
+    showView: function(id) {
+        ['login', 'register', 'dashboard', 'tracking', 'search', 'reports', 'user-mgmt','sadhana-dashboard'].forEach(v => {
+            document.getElementById('view-' + v).classList.add('hidden');
+        });
+        document.getElementById('view-' + id).classList.remove('hidden');
+        // added dashboard function call
+        if (id === 'sadhana-dashboard') {
+        // Only allow devotees or admins
+        if (!this.currentUser || !['devotee','developer', 'admin'].includes(this.currentUser.role)) {
+        this.notify("Access Denied", true); return;} 
+        this.loadSadhanaDashboard(); 
+        }
+
+        if (id !== 'login' && id !== 'register') {
+            document.getElementById('header-area').classList.remove('hidden');
+            this.updateHeader();
+        } else { document.getElementById('header-area').classList.add('hidden'); }
+        
+        const isAdmin = this.currentUser && this.currentUser.role !== 'devotee';
+        document.querySelectorAll('.admin-only').forEach(el => el.classList.toggle('hidden', !isAdmin));
+
+        if (id === 'tracking') {
+            document.getElementById('sd-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('whatsapp-section').classList.add('hidden');
+        }
+        if (id === 'user-mgmt') this.loadUsers();
+        if (id === 'reports' || id === 'search') { this.loadPickers(); this.generateReport(); this.performSearch(); }
+        if (id === 'register') this.fetchVoices('reg-voice');
+        // ✅ NEW CODE - YAHAN PE ADD KIYA
+        if (id === 'dashboard') {
+            this.updateDashboardInfo();
+        }
+    },
+        // ✅ YAHAN PE YEH FUNCTION ADD KARO (kisi bhi existing function ke baad)
+    updateDashboardInfo: function() {
+        // Update date
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const dateElement = document.getElementById('current-date');
+        if (dateElement) {
+            dateElement.textContent = today.toLocaleDateString('en-IN', options);
+        }
+        
+        // Update user info
+        if (this.currentUser) {
+            const voiceElement = document.getElementById('user-voice-display');
+            const groupElement = document.getElementById('user-group-display');
+            
+            if (voiceElement) {
+                voiceElement.textContent = this.currentUser.voice || 'N/A';
+            }
+            if (groupElement) {
+                groupElement.textContent = this.currentUser.group || 'N/A';
+            }
+        }
+    },
+
+    updateHeader: function() {
+        if (!this.currentUser) return;
+
+        // Update welcome info
+        document.getElementById('welcome-name').innerText = `Hare Krishna, ${this.currentUser.name}`;
+        document.getElementById('welcome-voice').innerText = this.currentUser.voice;
+        document.getElementById('welcome-group').innerText = this.currentUser.group;
+
+        // Role-based access control
+        if (this.currentUser.role !== 'devotee') {
+            // Admin or other roles: show voice switcher and admin menu
+            document.getElementById('voice-switcher-box').classList.remove('hidden');
+            document.getElementById('admin-menu').classList.remove('hidden');
+            this.fetchVoices('global-voice-switcher', true); // Fetch all voices for switch
+        } else {
+            // Devotee: hide voice switcher and admin menu
+            document.getElementById('voice-switcher-box').classList.add('hidden');
+            document.getElementById('admin-menu').classList.add('hidden');
+            this.activeVoice = this.currentUser.voice; // Devotee can only see own voice
+        }
+    },
+
+    fetchVoices: async function(targetId, includeAll = false) {
+        try {
+            const res = await fetch(`${this.API_BASE_URL}/api/voices`);
+            const voices = await res.json();
+            const select = document.getElementById(targetId);
+            if (!select) return;
+            let html = includeAll ? '<option value="All">All Voices</option>' : '';
+            html += voices.map(v => `<option value="${v}" ${v === this.activeVoice ? 'selected' : ''}>${v}</option>`).join('');
+            select.innerHTML = html;
+        } catch (e) {}
+    },
+
+    /*loadPickers: async function() {
+        if (this.currentUser.role === 'devotee') return;
+        const res = await fetch(`${this.API_BASE_URL}/api/users/all?voice=${this.activeVoice}`, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
+        const users = await res.json();
+        const html = '<option value="All">All Devotees</option>' + users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+        ['search-user-picker', 'report-user-picker'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = html;
+        });
+    },*/
+     // updated loadpickers for voices by data shown in flter
+    loadPickers: async function() {
+    if (this.currentUser.role === 'devotee') return;
+
+    try {
+        const res = await fetch(`${this.API_BASE_URL}/api/users/all?voice=${this.activeVoice}`, {
+            headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+        });
+        const users = await res.json();
+
+        // Build HTML for pickers
+        const html = '<option value="All">All Devotees</option>' + 
+                     users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+
+        ['search-user-picker', 'report-user-picker'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = html;
+        });
+    } catch (e) {
+        this.notify("Failed to load users for selected voice", true);
+    }
+    },
+
+    handleLogin: async function() {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-pass').value;
+        try {
+            const res = await fetch(`${this.API_BASE_URL}/api/auth/login`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ email, password }) });
+            const data = await res.json();
+            if (res.ok) {
+                this.currentUser = data.user;
+                this.activeVoice = data.user.voice;
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('sadhana_session', JSON.stringify(data.user));
+                this.notify("Hare Krishna! Login Success.");
+                this.showView('dashboard');
+            } else { this.notify(data.error, true); }
+        } catch (e) { this.notify("Connection Error", true); }
+    },
+
+        // ✅ Registration
+    handleRegister: async function() {
+        // Get form values
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-pass').value;
+        const voice = document.getElementById('reg-voice').value;
+        const group = document.getElementById('reg-group').value;
+        
+        // Validation
+        if (!name || !email || !password || !voice || !group) {
+            this.notify("❌ All fields are required", true);
+            return;
+        }
+        
+        if (password.length < 6) {
+            this.notify("❌ Password must be at least 6 characters", true);
+            return;
+        }
+        
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            this.notify("❌ Please enter a valid email address", true);
+            return;
+        }
+        
+        // Prepare request body
+        const body = {
+            name: name,
+            email: email,
+            password: password,
+            voice: voice,
+            group: group
+        };
+        
+        try {
+            const res = await fetch(`${this.API_BASE_URL}/api/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            
+            const data = await res.json();
+            
+            if (res.ok) {
+                this.notify("✅ Registration Successful! Please login.");
+                // Clear form
+                document.getElementById('reg-name').value = '';
+                document.getElementById('reg-email').value = '';
+                document.getElementById('reg-pass').value = '';
+                document.getElementById('reg-voice').value = '';
+                document.getElementById('reg-group').selectedIndex = 0;
+                // Go to login view
+                this.showView('login');
+            } else {
+                if (res.status === 400) {
+                    this.notify(data.error || "❌ Registration failed. Email may already exist.", true);
+                } else {
+                    this.notify(data.error || "❌ Registration failed", true);
+                }
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            this.notify("❌ Network error. Please try again.", true);
+        }
+    },
+
+    loadUsers: async function() {
+        try {
+            const res = await fetch(`${this.API_BASE_URL}/api/users/all?voice=${this.activeVoice}`, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
+            this.usersData = await res.json();
+            this.renderUserTable(this.usersData);
+        } catch (e) { this.notify("Failed to load users", true); }
+    },
+
+    renderUserTable: function(data) {
+        const html = data.map(u => `
+            <tr>
+                <td>${u.name}</td>
+                <td>${u.email}</td>
+                <td>${u.voice_name}</td>
+                <td>${u.user_group}</td>
+                <td><span class="badge">${u.user_role.toUpperCase()}</span></td>
+                <td>
+                    ${u.user_role === 'devotee' ? `<button class="btn-action btn-admin" onclick="app.updateRole(${u.id}, 'admin')">Promote</button>` : ''}
+                    ${u.user_role === 'admin' ? `<button class="btn-action btn-demote" onclick="app.updateRole(${u.id}, 'devotee')">De-promote</button>` : ''}
+                    ${u.id !== 0 ? `<button class="btn-danger" onclick="app.updateRole(${u.id}, 'devotee')">Remove</button>` : 'System'}
+                </td>
+            </tr>
+        `).join('');
+        document.getElementById('user-list-body').innerHTML = html;
+    },
+
+    updateRole: async function(id, role) {
+        if (!confirm("Are you sure you want to change this role?")) return;
+        const res = await fetch(`${this.API_BASE_URL}/api/users/${id}/role`, { 
+            method: 'PUT', headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`},
+            body: JSON.stringify({ role })
+        });
+        if (res.ok) { this.notify("Updated"); this.loadUsers(); }
+    },
+
+    filterUsers: function() {
+        const term = document.getElementById('user-search').value.toLowerCase();
+        const filtered = this.usersData.filter(u => u.name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term));
+        this.renderUserTable(filtered);
+    },
+
+    // saveSadhana: async function() {
+    //     const dayRestParts = document.getElementById('sd-dayrest').value.split(':');
+    //     const dayRestMinutes = (+dayRestParts[0] || 0) * 60 + (+dayRestParts[1] || 0);
+    //     const body = {
+    //         date: document.getElementById('sd-date').value,
+    //         wakeup: document.getElementById('sd-wakeup').value,
+    //         rounds: document.getElementById('sd-rounds').value,
+    //         chantEnd: document.getElementById('sd-chantend').value,
+    //         hearing: document.getElementById('sd-hearing').value,
+    //         reading: document.getElementById('sd-reading').value,
+    //         study: document.getElementById('sd-study').value,
+    //         dayRestMinutes,
+    //         sleep: document.getElementById('sd-sleep').value,
+    //         // NEW FIELDS
+    //         temp_hall_rech: document.getElementById('sd-temple').value,
+    //         time_wasted: document.getElementById('sd-waste').value,
+    //         morning_class: document.getElementById('sd-morning').value,
+    //         mangala_aarti: document.getElementById('sd-mangala').value,
+    //         cleanliness: document.getElementById('sd-clean').value,
+    //         book_name: document.getElementById('sd-book').value,
+    //         reflections: document.getElementById('sd-reflect').value
+    //     };
+    //     const res = await fetch(`${this.API_BASE_URL}/api/sadhana`, {
+    //         method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+    //         body: JSON.stringify(body)
+    //     });
+    //     if (res.ok) {
+
+    //     this.notify("Sadhana Saved Successfully 🙏");
+    //     this.generateSummary(body);
+    //     }
+    //     else if (res.status === 409) {
+    //     this.notify("Sadhana already saved for this date", true);
+    //     }
+    //     else {
+    //     this.notify(data.error || "Save failed", true);
+    //     }
+
+    // },
+    saveSadhana: async function() {
+        // ============================================
+        // FIELD VALIDATION - Check all mandatory fields
+        // ============================================
+
+        // Get all field values
+        const date = document.getElementById('sd-date').value;
+        const wakeup = document.getElementById('sd-wakeup').value;
+        const rounds = document.getElementById('sd-rounds').value;
+        const chantEnd = document.getElementById('sd-chantend').value;
+        const hearing = document.getElementById('sd-hearing').value;
+        const reading = document.getElementById('sd-reading').value;
+        const study = document.getElementById('sd-study').value;
+        const dayRest = document.getElementById('sd-dayrest').value;
+        const sleep = document.getElementById('sd-sleep').value;
+        const temple = document.getElementById('sd-temple').value;
+        const waste = document.getElementById('sd-waste').value; 
+        const morningClass = document.getElementById('sd-morning').value;
+        const mangala = document.getElementById('sd-mangala').value;
+        const clean = document.getElementById('sd-clean').value;
+        const book = document.getElementById('sd-book').value;      // OPTIONAL
+        const reflect = document.getElementById('sd-reflect').value; // OPTIONAL
+
+        // Array to store missing fields
+        let missingFields = [];
+
+        // Check each mandatory field
+        if (!date) missingFields.push('Date');
+        if (!wakeup) missingFields.push('Wakeup Time');
+        if (!rounds && rounds !== '0') missingFields.push('Japa Rounds');
+        if (!chantEnd) missingFields.push('Chant End Time');
+        if (!hearing && hearing !== '0') missingFields.push('Hearing Minutes');
+        if (!reading && reading !== '0') missingFields.push('Reading Minutes');
+        if (!study && study !== '0') missingFields.push('Study Minutes');
+        if (!dayRest && dayRest !== '0') missingFields.push('Day Rest (minutes)');  // Minutes check
+        if (!sleep) missingFields.push('Sleep Time');
+        if (!temple) missingFields.push('Temple Reach Time');
+        if (!waste && waste !== '0') missingFields.push('Time Wasted (minutes)');   // Minutes check
+        if (!morningClass && morningClass !== '0') missingFields.push('Morning Class');
+        if (!mangala && mangala !== '0') missingFields.push('Mangala Arti');
+        if (!clean && clean !== '0') missingFields.push('Cleanliness');
+        // BOOK NAME - OPTIONAL (no validation)
+        // REFLECTIONS - OPTIONAL (no validation)
+
+        // If any fields are missing, show error and stop
+        if (missingFields.length > 0) {
+            const msg = "❌ Mandatory fields missing:\n• " + missingFields.join('\n• ');
+            this.notify(msg, true);
+
+            // Highlight the first missing field
+            const firstMissingId = this.getFieldId(missingFields[0]);
+            if (firstMissingId) {
+                document.getElementById(firstMissingId)?.focus();
+                document.getElementById(firstMissingId)?.classList.add('error-field');
+                setTimeout(() => {
+                    document.getElementById(firstMissingId)?.classList.remove('error-field');
+                }, 3000);
+            }
+            return;
+        }
+
+        // ============================================
+        // PROCESS DAY REST (convert to minutes)
+        // ============================================
+        const dayRestParts = dayRest.split(':');
+        const dayRestMinutes = (+dayRestParts[0] || 0) * 60 + (+dayRestParts[1] || 0);
+
+        // ============================================
+        // PREPARE REQUEST BODY
+        // ============================================
+        const body = {
+            date: date,
+            wakeup: wakeup,
+            rounds: rounds,
+            chantEnd: chantEnd,
+            hearing: hearing,
+            reading: reading,
+            study: study,
+            dayRestMinutes: parseInt(dayRest) || 0,     // Direct minutes bhejo
+            sleep: sleep,
+            temp_hall_rech: temple,
+            time_wasted: parseInt(waste) || 0,     //direct minutes
+            morning_class: morningClass,
+            mangala_aarti: mangala,
+            cleanliness: clean,
+            book_name: book || null,        // Agar blank hai to null bhejo
+            reflections: reflect || null     // Agar blank hai to null bhejo
+        };
+
+        // ============================================
+        // SEND TO BACKEND
+        // ============================================
+        try {
+            const res = await fetch(`${this.API_BASE_URL}/api/sadhana`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(body)
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                this.notify("✅ Sadhana Saved Successfully 🙏");
+                this.generateSummary(body);
+            } else if (res.status === 409) {
+                this.notify("⚠️ Sadhana already saved for this date", true);
+            } else {
+                this.notify(data.error || "❌ Save failed", true);
+            }
+        } catch (error) {
+            this.notify("❌ Network error. Please try again.", true);
+            console.error('Save error:', error);
+        }
+    },
+
+    // Helper function to get field ID from field name
+    getFieldId: function(fieldName) {
+        const mapping = {
+            'Date': 'sd-date',
+            'Wakeup Time': 'sd-wakeup',
+            'Japa Rounds': 'sd-rounds',
+            'Chant End Time': 'sd-chantend',
+            'Hearing Minutes': 'sd-hearing',
+            'Reading Minutes': 'sd-reading',
+            'Study Minutes': 'sd-study',
+            'Day Rest (minutes)': 'sd-dayrest', 
+            'Sleep Time': 'sd-sleep',
+            'Time Wasted (minutes)': 'sd-waste',
+            'Time Wasted': 'sd-waste',
+            'Morning Class': 'sd-morning',
+            'Mangala Arti': 'sd-mangala',
+            'Cleanliness': 'sd-clean'
+            // Book Name aur Reflections ka mapping nahi hai kyunki optional hain
+        };
+        return mapping[fieldName];
+    },
+
+    generateSummary: function(e) {
+            
+    let msg =
+    `*|| Hare Krishna ||*
+        
+    🪔 *Sadhana Summary*
+        
+    👤 Devotee: ${this.currentUser.name}
+    🏠 Voice: ${this.currentUser.voice}
+    🏷 Group: ${this.currentUser.group}   
+    📅 Date: ${e.date}
+    🌅 Wakeup: ${e.wakeup || '-'}
+    🛏 Sleep: ${e.sleep || '-'}
+    🛕 Temple Reach: ${e.temp_hall_rech || '-'}   
+    📿 Rounds: ${e.rounds}
+    🔚 Chant End: ${e.chantEnd || '-'}
+    🎧 Hearing: ${e.hearing}m
+    📖 Reading: ${e.reading}m
+    📚 Study: ${e.study}m  
+    🧘 Morning Class: ${e.morning_class == 1 ? 'Yes':'No'}
+    🪔 Mangala Arti: ${e.mangala_aarti == 1 ? 'Yes':'No'}
+    🧹 Cleanliness: ${e.cleanliness == 1 ? 'Yes':'No'}   
+    📘 Book: ${e.book_name || '-'}
+    💭 Reflections:${e.reflections || '-'}  
+    ⏳ Time Wasted: ${e.time_wasted || '-'} 
+    `;
+    document.getElementById('whatsapp-preview').value = msg;
+    document.getElementById('whatsapp-section').classList.remove('hidden');
+    },
+
+
+    /*generateSummary: function(e) {
+    let msg = `*|| Hare Krishna ||*\n 🪔 *Sadhana Summary*\n` +
+              `👤 *Devotee:* ${this.currentUser.name}\n` +
+              `🏠 *Voice:* ${this.currentUser.voice}\n` + // Voice field added with home emoji
+              `🏷️ *Group:* ${this.currentUser.group}\n` + // Group field added
+              `📅 *Date:* ${e.date}\n` +
+              `🌅 *Wakeup:* ${e.wakeup || '-'}\n` +
+              `📿 *Rounds:* ${e.rounds}\n` +
+              `🔚 *End:* ${e.chantEnd || '-'}\n` +
+              `🎧 *Hear:* ${e.hearing}m | 📖 *Read:* ${e.reading}m | 📝 *Study:* ${e.study}m\n` +
+              `🛌 *Day Rest:* ${e.dayRestMinutes || e.dayRest || '0'}m|| '-'} | 🌙 *Sleep:* ${e.sleep || '-'}`;
+
+    document.getElementById('whatsapp-preview').value = msg;
+    document.getElementById('whatsapp-section').classList.remove('hidden');
+    },*/
+
+    sendToWhatsApp: function() {
+        const text = encodeURIComponent(document.getElementById('whatsapp-preview').value);
+        window.open(`https://wa.me/${this.MASTER_NUMBER}?text=${text}`, '_blank');
+    },
+
+    /*performSearch: async function() {
+        const date = document.getElementById('search-date').value;
+        const name = (document.getElementById('search-name')) ? document.getElementById('search-name').value : "";
+        const userId = (document.getElementById('search-user-picker')) ? document.getElementById('search-user-picker').value : "All";
+        const url = `${this.API_BASE_URL}/api/search?voice=${this.activeVoice}&date=${date}&name=${encodeURIComponent(name)}&userId=${userId}`;
+        try {
+            const res = await fetch(url, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
+            const data = await res.json();
+            let html = '<div class="table-container"><table><thead><tr><th>Devotee</th><th>Rounds</th><th>Wake</th><th>End</th><th>Reading</th><th>Rest</th><th>Sleep</th></tr></thead><tbody>';
+            data.forEach(r => {
+                html += `<tr><td>${r.name}</td><td>${r.rounds}</td><td>${r.wakeup_time || '-'}</td><td>${r.chanting_end_time || '-'}</td><td>${r.reading_minutes}m</td><td>${r.day_rest_time || '-'}</td><td>${r.sleep_time || '-'}</td></tr>`;
+            });
+            document.getElementById('search-results').innerHTML = (html + '</tbody></table></div>');
+        } catch (e) {}
+    },*/
+
+    performSearch: async function() {
+    const date = document.getElementById('search-date').value;
+    const name = (document.getElementById('search-name')) ? document.getElementById('search-name').value : "";
+    const userId = (document.getElementById('search-user-picker')) ? document.getElementById('search-user-picker').value : "All";
+    
+    const url = `${this.API_BASE_URL}/api/search?voice=${this.activeVoice}&date=${date}&name=${encodeURIComponent(name)}&userId=${userId}`;
+    
+    try {
+        const res = await fetch(url, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
+        const data = await res.json();
+
+        // Build table header with all fields
+        let html = `
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Devotee</th>
+                        <th>Voice</th>
+                        <th>Group</th>
+                        <th>Wake</th>
+                        <th>Temple</th>
+                        <th>Rounds</th>
+                        <th>Chant End</th>
+                        <th>Hearing</th>
+                        <th>Reading</th>
+                        <th>Study</th>
+                        <th>Morning Class</th>
+                        <th>Mangala Arti</th>
+                        <th>Cleanliness</th>
+                        <th>Rest</th>
+                        <th>Sleep</th>
+                        <th>Waste</th>
+                        <th>Book</th>
+                        <th>Reflection</th>
+                        <th>Body %</th>
+                        <th>Soul %</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        data.forEach(r => {
+            // Convert dayRest from HH:MM to minutes
+            let dayRestMins = '-';
+            if(r.day_rest_time) {
+                const parts = r.day_rest_time.split(':');
+                dayRestMins = (+parts[0]||0)*60 + (+parts[1]||0);
+            }
+
+            html += `
+                <tr>
+                    <td>${r.name}</td>
+                    <td>${r.voice_name}</td>
+                    <td>${r.user_group}</td>
+                    <td>${r.wakeup_time || '-'}</td>
+                    <td>${r.temp_hall_rech || '-'}</td>
+                    <td>${r.rounds}</td>
+                    <td>${r.chanting_end_time || '-'}</td>
+                    <td>${r.hearing_minutes}</td>
+                    <td>${r.reading_minutes}</td>
+                    <td>${r.study_minutes}</td>
+                    <td>${r.morning_class ? 'Yes' : 'No'}</td>
+                    <td>${r.mangala_aarti ? 'Yes' : 'No'}</td>
+                    <td>${r.cleanliness ? 'Yes' : 'No'}</td>
+                    <td>${dayRestMins}</td>
+                    <td>${r.sleep_time || '-'}</td>
+                    <td>${r.time_wasted || '-'}</td>
+                    <td>${r.book_name || '-'}</td>
+                    <td>${r.reflections || '-'}</td>
+                    <td>${r.body_percent || 0}%</td>
+                    <td>${r.soul_percent || 0}%</td>
+                </tr>
+            `;
+        });
+
+        html += '</tbody></table></div>';
+        document.getElementById('search-results').innerHTML = html;
+
+    } catch (e) {
+        this.notify("Failed to load Day Report", true);
+    }
+    },
+
+/*
+    loadSadhanaDashboard: async function() {
+    const type = document.getElementById('dash-report-type').value;
+    const group = document.getElementById('dash-group-filter').value;
+    const container = document.getElementById('dashboard-report-content');
+    container.innerHTML = '<p class="text-center">Loading transcendental data...</p>';
+
+    try {
+        const url = `${this.API_BASE_URL}/api/dashboard/report?voice=${this.activeVoice}&type=${type}&group=${group}`;
+        const res = await fetch(url, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
+        const data = await res.json();
+        
+        if (!data.length) { container.innerHTML = '<p class="text-center">No records found.</p>'; return; }
+        
+        container.innerHTML = data.map(d => this.renderDevoteeDashboardCard(d, type)).join('');
+    } catch (e) { this.notify("Dashboard load failed", true); }
+    },*/
+
+    /*renderDevoteeDashboardCard: function(d, type) {
+        const totalDays = type === 'weekly' ? 7 : 30;
+        const getBar = (count) => {
+            const filled = Math.min(Math.round((count / totalDays) * 9), 9);
+            return "█".repeat(filled) + "░".repeat(9 - filled);
+        };
+
+        // Scoring logic (matching your body/soul percent intent)
+        const bodyScore = Math.round((d.wakeSuccess + d.templeSuccess + d.sleepSuccess) / (totalDays * 7) * 100);
+        const soulScore = Math.round((d.roundSuccess + d.morningClassSuccess + d.mangalaArtiSuccess) / (totalDays * 7) * 100);
+
+        return `
+            <div class="card" style="border-left: 5px solid var(--saffron); padding: 15px; margin-bottom: 15px;">
+                <div style="text-align: center;">
+                    <h3 class="spiritual-text">${type === 'weekly' ? 'Weekly' : 'Monthly'} Sadhana Report</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted)">${d.name} | ${d.voice} | ${d.group}</p>
+                </div>
+                <div style="display: flex; justify-content: center; flex-wrap: wrap;">
+                    <div class="score-badge bg-body">[ Body Score: ${bodyScore}% ]</div>
+                    <div class="score-badge bg-soul">[ Soul Score: ${soulScore}% ]</div>
+                    <div class="score-badge bg-total">[ Total Rounds: ${d.totalRounds} ]</div>
+                </div>
+                <div class="report-section">
+                    <div class="report-title">Morning Discipline</div>
+                    <div class="progress-row"><span>Wake Before 4:30</span> <span class="ascii-bar">${getBar(d.wakeSuccess)}</span> <span>${d.wakeSuccess}/${totalDays}</span></div>
+                    <div class="progress-row"><span>Temple Reach</span> <span class="ascii-bar">${getBar(d.templeSuccess)}</span> <span>${d.templeSuccess}/${totalDays}</span></div>
+                    <div class="progress-row"><span>16 Rounds</span> <span class="ascii-bar">${getBar(d.roundSuccess)}</span> <span>${d.roundSuccess}/${totalDays}</span></div>
+                </div>
+                <div class="report-section">
+                    <div class="report-title">Temple Participation</div>
+                    <div class="progress-row"><span>Morning Class</span> <span class="ascii-bar">${getBar(d.morningClassSuccess)}</span></div>
+                    <div class="progress-row"><span>Mangala Arti</span> <span class="ascii-bar">${getBar(d.mangalaArtiSuccess)}</span></div>
+                    <div class="progress-row"><span>Cleanliness</span> <span class="ascii-bar">${getBar(d.cleanSuccess)}</span></div>
+                </div>
+                <div class="report-section">
+                    <div class="report-title">Spiritual Effort</div>
+                    <div class="pill-box">
+                        <span class="lifestyle-pill">Hearing: ${d.avgHearing}m</span>
+                        <span class="lifestyle-pill">Reading: ${d.avgReading}m</span>
+                        <span class="lifestyle-pill">Study: ${d.avgStudy}m</span>
+                    </div>
+                </div>
+                <div class="report-section">
+                    <div class="report-title">Lifestyle Balance</div>
+                    <div class="pill-box">
+                        <span class="lifestyle-pill">Sleep: ${d.avgSleep}</span>
+                        <span class="lifestyle-pill">Rest: ${d.avgRest}m</span>
+                        <span class="lifestyle-pill">Waste: ${d.avgWaste}</span>
+                    </div>
+                </div>
+                <button class="btn btn-whatsapp btn-action" style="width:100%" onclick="window.open('https://wa.me/?text=' + encodeURIComponent('*Sadhana Report for ${d.name}*\\nBody: ${bodyScore}%\\nSoul: ${soulScore}%'))">[ Share WhatsApp Report ]</button>
+            </div>`;
+    },*/
+
+    loadSadhanaDashboard: async function() {
+        const type = document.getElementById('dash-report-type').value;
+        const group = document.getElementById('dash-group-filter').value;
+
+        // Determine voice filter based on user role
+        let voiceFilter;
+        if (this.currentUser.role === 'devotee') {
+            voiceFilter = this.currentUser.voice; // restrict to own voice
+        } else { 
+            voiceFilter = this.activeVoice; // admin can switch/filter
+        }
+
+        const container = document.getElementById('dashboard-report-content');
+        container.innerHTML = '<p class="text-center">Loading transcendental data...</p>';
+
+        try {
+            const url = `${this.API_BASE_URL}/api/dashboard/report?voice=${voiceFilter}&type=${type}&group=${group}`;
+            const res = await fetch(url, {
+                headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+
+            if (!data.length) {
+                container.innerHTML = '<p class="text-center">No records found.</p>';
+                return;
+            }
+
+            container.innerHTML = data.map(d => this.renderDevoteeDashboardCard(d, type)).join('');
+
+        } catch(e) {
+            console.error('Dashboard error:', e);
+            this.notify("Dashboard load failed: " + e.message, true);
+            container.innerHTML = '<p class="text-center text-error">Failed to load dashboard.</p>';
+        }
+    },
+
+
+    //reder function new
+    renderDevoteeDashboardCard: function(d, type) {
+       const totalDays = type === 'weekly' ? 7 : 30;
+       const getBar = (count) => {
+           const filled = Math.min(Math.round((count/totalDays)*9), 9);
+           return "█".repeat(filled) + "░".repeat(9-filled);
+       };
+
+       // BODY SCORE (Wake + Temple + Rounds + Sleep)
+       const bodyScore = Math.round(
+           (d.wakeSuccess + d.templeSuccess + d.roundSuccess + d.sleepSuccess) / (totalDays * 4) * 100
+       );
+
+       // SOUL SCORE (MC + MA + Cleanliness)
+       const soulScore = Math.round(
+           (d.morningClassSuccess + d.mangalaArtiSuccess + d.cleanSuccess) / (totalDays * 3) * 100
+       );
+
+       const whatsappMsg = encodeURIComponent(
+           `Hare Krishna 🙏\n\n` +
+           `Sadhana Report - ${d.name}\n` +
+           `Body Score : ${bodyScore}%\n` +
+           `Soul Score : ${soulScore}%\n\n` +
+           `Wake Before 4:30 : ${d.wakeSuccess}/${totalDays}\n` +
+           `Temple Reach     : ${d.templeSuccess}/${totalDays}\n` +
+           `16 Rounds        : ${d.roundSuccess}/${totalDays}\n` +
+           `Sleep Before 9:30: ${d.sleepSuccess}/${totalDays}\n\n` +
+           `Morning Class    : ${d.morningClassSuccess}/${totalDays}\n` +
+           `Mangala Arti     : ${d.mangalaArtiSuccess}/${totalDays}\n` +
+           `Cleanliness      : ${d.cleanSuccess}/${totalDays}\n\n` +
+           `Hearing          : ${d.totalHearing || 0} min\n` +
+           `Reading          : ${d.totalReading || 0} min\n` +
+           `Study            : ${d.totalStudy || 0} min\n\n` +
+           `Rest Taken       : ${d.totalRest || 0} min\n` +
+           `Time Wasted      : ${d.totalWaste || 0} min`
+       );
+
+       return `
+       <div class="card" style="border-left:5px solid var(--saffron);padding:15px;margin-bottom:15px;">
+           <div style="text-align:center">
+               <h3 class="spiritual-text">${type==='weekly'?'Weekly':'Monthly'} Sadhana Report</h3>
+               <p style="font-size:0.8rem;color:var(--text-muted)">
+                   ${d.name} | ${d.voice} | ${d.group} 
+               </p>
+           </div>
+           <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:15px 0;">
+               <div class="badge" style="background:#e6fffa;color:#2c7a7b;">Body Score: ${bodyScore}%</div>
+               <div class="badge" style="background:#fef3c7;color:#92400e;">Soul Score: ${soulScore}%</div>
+               <div class="badge" style="background:#fee2e2;color:#991b1b;">Total Rounds: ${d.totalRounds}</div>
+           </div>
+
+           <div class="report-section">
+               <div class="report-title" style="font-weight:bold;color:var(--saffron-dark);margin-top:10px;">Morning Discipline</div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Wake Before 4:30</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.wakeSuccess)}</span>
+                   <span>${d.wakeSuccess}/${totalDays}</span>
+               </div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Temple Reach</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.templeSuccess)}</span>
+                   <span>${d.templeSuccess}/${totalDays}</span>
+               </div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>16 Rounds</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.roundSuccess)}</span>
+                   <span>${d.roundSuccess}/${totalDays}</span>
+               </div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Sleep Before 9:30</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.sleepSuccess)}</span>
+                   <span>${d.sleepSuccess}/${totalDays}</span>
+               </div>
+           </div>
+
+           <div class="report-section">
+               <div class="report-title" style="font-weight:bold;color:var(--saffron-dark);margin-top:10px;">Temple Participation</div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Morning Class</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.morningClassSuccess)}</span>
+                   <span>${d.morningClassSuccess}/${totalDays}</span>
+               </div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Mangala Arti</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.mangalaArtiSuccess)}</span>
+                   <span>${d.mangalaArtiSuccess}/${totalDays}</span>
+               </div>
+               <div class="progress-row" style="display:flex;justify-content:space-between;margin:5px 0;">
+                   <span>Cleanliness</span>
+                   <span class="ascii-bar" style="font-family:monospace;">${getBar(d.cleanSuccess)}</span>
+                   <span>${d.cleanSuccess}/${totalDays}</span>
+               </div>
+           </div>
+
+           <div class="report-section">
+               <div class="report-title" style="font-weight:bold;color:var(--saffron-dark);margin-top:10px;">Spiritual Effort</div>
+               <div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;">
+                   <span class="badge">Hearing: ${d.totalHearing || 0}m</span>
+                   <span class="badge">Reading: ${d.totalReading || 0}m</span>
+                   <span class="badge">Study: ${d.totalStudy || 0}m</span>
+               </div>
+           </div>
+
+           <div class="report-section">
+               <div class="report-title" style="font-weight:bold;color:var(--saffron-dark);margin-top:10px;">Lifestyle Balance</div>
+               <div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;">
+                   <span class="badge">Rest: ${d.totalRest || 0}m</span>
+                   <span class="badge">Waste: ${d.totalWaste || 0}m</span>
+               </div>
+           </div>
+
+           <button class="btn btn-whatsapp btn-action"
+                   style="width:100%;margin-top:15px;"
+                   onclick="window.open('https://wa.me/?text=${whatsappMsg}')">
+               Share WhatsApp Report
+           </button>
+       </div>
+       `;
+    },
+
+    handleReportModeSwitch: function(v) {
+        document.getElementById('report-user-container').classList.toggle('hidden', v !== 'UserWise');
+        this.generateReport();
+    },
+
+    generateReport: async function() {
+        const range = document.getElementById('report-range').value;
+        const mode = (document.getElementById('report-mode')) ? document.getElementById('report-mode').value : "Overall";
+        const userId = (mode === 'UserWise') ? document.getElementById('report-user-picker').value : 'All';
+        const url = `${this.API_BASE_URL}/api/reports?voice=${this.activeVoice}&range=${range}&userId=${userId}`;
+        try {
+            const res = await fetch(url, { headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`} });
+            this.rawRecords = await res.json();
+            const grouped = this.rawRecords.reduce((acc, r) => {
+                if (!acc[r.user_id]) acc[r.user_id] = { name: r.name, group: r.user_group, voice: r.voice_name, records: [] };
+                acc[r.user_id].records.push(r);
+                return acc;
+            }, {});
+            
+            let html = '';
+            Object.values(grouped).forEach(user => {
+                const stats = this.calculateStats(user.records);
+                html += `<div class="card">
+                    <div style="font-weight:bold; color:var(--saffron)">${user.name} <span class="badge">${user.group}</span></div>
+                    <div class="stat-grid">
+                        <div class="stat-item">Avg Wake: <b>${stats.avgWake}</b></div>
+                        <div class="stat-item">Avg Chant End: <b>${stats.avgChantEnd}</b></div>
+                        <div class="stat-item">Avg Day Rest: <b>${stats.avgRestMinutes}m</b></div>
+                        <div class="stat-item">Avg Sleep: <b>${stats.avgSleep}</b></div>
+                        <div class="stat-item">Total Rounds: <b>${stats.totalRounds}</b></div>
+                        <div class="stat-item">Avg Hearing: <b>${stats.avgHearing}m</b></div>
+                        <div class="stat-item">Avg Reading: <b>${stats.avgReading}m</b></div>
+                        <div class="stat-item">Avg Study: <b>${stats.avgStudy}m</b></div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('report-content').innerHTML = html || '<p class="text-center">No matching data.</p>';
+        } catch (e) {}
+    },
+
+    calculateStats: function(records) {
+        if (!records.length) return {};
+
+        // Converts HH:MM:SS or HH:MM string to total seconds
+        const toSec = (t) => { 
+            if (!t) return 0; 
+            const [h, m, s] = t.split(':').map(Number); 
+            return h*3600 + (m||0)*60 + (s||0); 
+        };
+
+        // Converts total seconds to HH:MM or HH:MM:SS
+        const fromSec = (s, type='hh:mm') => { 
+            if (!s) return '-';
+            const h = Math.floor(s / 3600);
+            const m = Math.floor((s % 3600) / 60);
+            const sec = Math.floor(s % 60);
+            if(type === 'hh:mm') return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+            return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+        };
+
+        // Avg of HH:MM:SS fields (or HH:MM for day rest)
+        const avgTimeField = (f, type='hh:mm:ss') => {
+            const filt = records.filter(r => r[f] && r[f] !== '00:00:00');
+            if(!filt.length) return '-';
+            const avg = filt.reduce((a,b) => a + toSec(b[f]), 0)/filt.length;
+            return fromSec(avg, type==='dayrest'?'hh:mm':'hh:mm:ss');
+        };
+
+        // Avg of numeric fields (minutes)
+        const avgMinutes = (f) => {
+            const filt = records.filter(r => r[f] !== undefined);
+            return filt.length ? Math.round(filt.reduce((a,b) => a + (b[f]||0),0)/filt.length) : 0;
+        };
+
+        return {
+            totalRounds: records.reduce((a,b) => a + (b.rounds || 0), 0),
+            totalStudy: records.reduce((a,b) => a + ((b.hearing_minutes||0) + (b.reading_minutes||0) + (b.study_minutes||0)), 0),
+
+            avgWake: avgTimeField('wakeup_time'),
+            avgChantEnd: avgTimeField('chanting_end_time'),
+
+            // ✅ UPDATED: Day Rest as HH:MM
+            avgRest: avgTimeField('day_rest_time', 'dayrest'), // keeps HH:MM format for display
+
+            avgSleep: avgTimeField('sleep_time'),
+
+            // ✅ Numeric values in minutes
+            avgHearing: avgMinutes('hearing_minutes'),
+            avgReading: avgMinutes('reading_minutes'),
+            avgStudy: avgMinutes('study_minutes'),
+
+            // ✅ Optional: also avg Day Rest in minutes for calculations
+            avgRestMinutes: avgMinutes('day_rest_minutes') // <- NEW field added
+        };
+    },
+
+
+   /* calculateStats: function(records) {
+        if (!records.length) return {};
+        const toSec = (t) => { if (!t) return 0; const [h, m, s] = t.split(':').map(Number); return h * 3600 + (m || 0) * 60 + (s || 0); };
+        const fromSec = (s) => { 
+            const h = Math.floor(s / 3600).toString().padStart(2, '0');
+            const m = Math.floor((s % 3600) / 60).toString().padStart(2, '0');
+            return `${h}:${m}`;
+        };
+        const avgField = (f) => {
+            const filt = records.filter(r => r[f] && r[f] !== '00:00:00');
+            return filt.length ? filt.reduce((a, b) => a + toSec(b[f]), 0) / filt.length : 0;
+        };
+        return {
+            totalRounds: records.reduce((a, b) => a + (b.rounds || 0), 0),
+            totalStudy: records.reduce((a, b) => a + (b.hearing_minutes + b.reading_minutes + b.study_minutes), 0),
+            avgWake: fromSec(avgField('wakeup_time')),
+            avgRest: fromSec(avgField('day_rest_time'))
+        };
+    },*/
+
+    exportToExcel: function() {
+        if (!this.rawRecords.length) return this.notify("No data", true);
+        const ws = XLSX.utils.json_to_sheet(this.rawRecords);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sadhana_Data");
+        XLSX.writeFile(wb, `Sadhana_Report.xlsx`);
+    },
+
+    /*handleVoiceSwitch: function(v) { this.activeVoice = v; this.generateReport(); this.performSearch(); if(!document.getElementById('view-user-mgmt').classList.contains('hidden')) this.loadUsers(); },
+    handleLogout: function() { localStorage.clear(); location.reload(); },
+    handleRegister: async function() {
+        const body = { name: document.getElementById('reg-name').value, email: document.getElementById('reg-email').value, password: document.getElementById('reg-pass').value, voice: document.getElementById('reg-voice').value, group: document.getElementById('reg-group').value };
+        const res = await fetch(`${this.API_BASE_URL}/api/auth/register`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+        if (res.ok) { this.notify("Registration Success!"); this.showView('login'); }
+        else { const d = await res.json(); this.notify(d.error, true); }
+    }*/
+
+    handleLogout: function() { localStorage.clear(); location.reload(); },
+    handleVoiceSwitch: function(selectedVoice) {
+       this.activeVoice = selectedVoice;       // Update active voice
+       
+       // Refresh all components that depend on voice
+       this.loadPickers();                      // Refresh user pickers
+       
+       // Check which view is currently visible and update accordingly
+       if (!document.getElementById('view-sadhana-dashboard').classList.contains('hidden')) {
+           this.loadSadhanaDashboard();         // Reload dashboard if visible
+       }
+       if (!document.getElementById('view-reports').classList.contains('hidden')) {
+           this.generateReport();                // Reload reports if visible
+       }
+       if (!document.getElementById('view-search').classList.contains('hidden')) {
+           this.performSearch();                  // Reload search if visible
+       }
+       if (!document.getElementById('view-user-mgmt').classList.contains('hidden')) {
+           this.loadUsers();                      // Reload user management if visible
+       }
+       
+       this.notify(`Switched to voice: ${selectedVoice}`);
+    }  ,
+};
+document.addEventListener('DOMContentLoaded', () => app.init());
+</script>
+</body>
+</html>
