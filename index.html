@@ -7243,6 +7243,12 @@ enhanceDataWithMarksCalculator: async function(data, type) {
 // COMPLETE renderDashboardTable function with DEBUG
 // ============================================
 renderDashboardTable: function(data, type, dateRange) {
+    // ========== FIX: Map API fields to expected field names ==========
+    data = data.map(item => ({
+        ...item,
+        soulPercentage: item.soul_percent || item.soulPercentage || 0,
+        bodyPercentage: item.body_percent || item.bodyPercentage || 0
+    }));
     // ========== DEBUG LINE 1 ==========
     console.log('%c🔍 DEBUG: renderDashboardTable CALLED', 'color: blue; font-size: 14px');
     console.log('📊 Data received:', data);
