@@ -46,14 +46,18 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
-/*app.use(cors({ 
-    origin: ['http://localhost:5500', 'http://localhost:3000', 'https://rahulbgs06.github.io/sadhana-tracker/'], 
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
-    allowedHeaders: ['Content-Type', 'Authorization'] 
-}));*/
-/*app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization'] }));*/
 app.use(express.json());
 console.log(`🌍 Server running in ${process.env.NODE_ENV || 'development'} mode`);
+
+// Add this for debugging
+app.use((req, res, next) => {
+    console.log(`📥 ${req.method} ${req.url}`);
+    console.log('   Headers:', req.headers['content-type']);
+    if (req.body && Object.keys(req.body).length > 0) {
+        console.log('   Body:', { ...req.body, password: '[REDACTED]' });
+    }
+    next();
+});
 
 // ============================================
 // DATABASE CONNECTION - WITH EXTENSIVE DEBUGGING
@@ -2165,35 +2169,19 @@ app.listen(PORT, '0.0.0.0', () => {
 // ============================================
 const PORT = process.env.PORT || 8080;
 
-// ✅ ADD THIS EXPORT FOR TESTING (RIGHT HERE)
-// This allows Jest to import the app without starting the server
+// Only start server if not in test environment
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, '0.0.0.0', () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
         console.log(`🚀 Sadhana Tracker Backend Ready on port ${PORT}`);
         console.log(`🌍 Listening on 0.0.0.0:${PORT} (accessible locally & publicly)`);
         console.log(`📝 Local URL: http://localhost:${PORT}`);
         console.log(`🔍 Health check: http://localhost:${PORT}/api/health`);
 
         if (process.env.NODE_ENV === 'production') {
-            console.log(`🌐 Public URL: https://sadhana-tracker-production.up.railway.app:${PORT}`);
+            console.log(`🌐 Public URL: ${process.env.RENDER_EXTERNAL_URL || 'https://sadhana-tracker-sto2.onrender.com'}`);
         }
     });
 }
-// Only close connections in test environment
-if (process.env.NODE_ENV === 'test') {
-  // Ensure pool is closed when tests finish
-  process.on('exit', async () => {
-    if (pool) {
-      await pool.end();
-      console.log('✅ Database pool closed for tests');
-    }
-  });
-}
-// Export pool for test cleanup
-if (process.env.NODE_ENV === 'test') {
-  module.exports = { app, pool };
-} else {
-  module.exports = app;
-}
-// ✅ ADD THIS EXPORT (AT THE VERY END OF FILE)
-module.exports = app;
+
+// Export for testing
+module.exports = { app, pool };
