@@ -261,6 +261,43 @@ app.get('/api/debug/dashboard', authenticateToken, async (req, res) => {
 // ============================================
 // AUTHENTICATION ROUTES
 // ============================================
+
+
+// TEMPORARY DEBUG ENDPOINT - Remove after fixing
+app.get('/api/debug/env', (req, res) => {
+    res.json({
+        db_config: {
+            host: process.env.DB_HOST || 'not set',
+            port: process.env.DB_PORT || 'not set',
+            user: process.env.DB_USER || 'not set',
+            database: process.env.DB_NAME || 'not set',
+            password_set: !!process.env.DB_PASSWORD
+        },
+        node_env: process.env.NODE_ENV,
+        is_railway: !!process.env.MYSQLHOST
+    });
+});
+
+app.get('/api/debug/test-db', async (req, res) => {
+    try {
+        // Try to query the users table
+        const [result] = await pool.query('SELECT COUNT(*) as count FROM users');
+        res.json({ 
+            success: true, 
+            user_count: result[0].count,
+            database: dbConfig.database 
+        });
+    } catch (error) {
+        res.json({ 
+            success: false, 
+            error: error.message,
+            code: error.code,
+            database: dbConfig.database
+        });
+    }
+});
+
+
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     
