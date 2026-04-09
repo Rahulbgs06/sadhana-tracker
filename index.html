@@ -6831,8 +6831,8 @@ performSearch: async function() {
                     <td>${r.time_wasted || '-'}</td>
                     <td>${r.book_name || '-'}</td>
                     <td>${r.reflections || '-'}</td>
-                    <td><strong>${scores.soulPercentage}%</strong> (${scores.soul.total}/50)</td>
-                    <td><strong>${scores.bodyPercentage}%</strong> (${scores.body.total}/75)</td>
+                    <td><strong>${r.soul_percent || 0}%</strong> (${r.soul_marks || 0}/50)</td>
+                    <td><strong>${r.body_percent || 0}%</strong> (${r.body_marks || 0}/75)</td>
                 </tr>
             `;
         }
@@ -7185,56 +7185,43 @@ loadTodayReport: async function(userName, userId) {
     // FIXED: enhanceDataWithMarksCalculator - EXACT COLUMN NAMES
     // ============================================
 enhanceDataWithMarksCalculator: async function(data, type) {
-    const totalDaysInPeriod = type === 'weekly' ? 7 : 30;  // ALWAYS 7 or 30
-    const MAX_SOUL_PER_DAY = 50;
-    const MAX_BODY_PER_DAY = 75;
+    // ============================================
+    // FIXED: USE BACKEND PERCENTAGES - NO RECALCULATION
+    // ============================================
     const enhancedData = [];
     
     for (const d of data) {
-        // ✅ USE the new fields from backend (added in API)
-        const totalSoulMarks = d.total_soul_marks || 0;
-        const totalBodyMarks = d.total_body_marks || 0;
-        const entryCount = d.entry_count || 0;
+        // ✅ Use backend values directly (already calculated correctly)
+        let soulPercentage = 0;
+        let bodyPercentage = 0;
         
-        // ✅ NEW CORRECT CALCULATION based on totals
-        const soulPercentage = Math.round((totalSoulMarks / (MAX_SOUL_PER_DAY * totalDaysInPeriod)) * 100);
-        const bodyPercentage = Math.round((totalBodyMarks / (MAX_BODY_PER_DAY * totalDaysInPeriod)) * 100);
+        // Try different possible field names from backend
+        if (d.soul_percent !== undefined && d.soul_percent !== null) {
+            soulPercentage = Number(d.soul_percent);
+        } else if (d.soulPercentage !== undefined && d.soulPercentage !== null) {
+            soulPercentage = Number(d.soulPercentage);
+        }
         
-        console.log(`📊 ${d.name}:`, {
-            entryCount,
-            totalDaysInPeriod,
-            totalSoulMarks,
-            maxSoulPossible: MAX_SOUL_PER_DAY * totalDaysInPeriod,
-            soulPercentage,
-            totalBodyMarks,
-            maxBodyPossible: MAX_BODY_PER_DAY * totalDaysInPeriod,
-            bodyPercentage
-        });
+        if (d.body_percent !== undefined && d.body_percent !== null) {
+            bodyPercentage = Number(d.body_percent);
+        } else if (d.bodyPercentage !== undefined && d.bodyPercentage !== null) {
+            bodyPercentage = Number(d.bodyPercentage);
+        }
         
-        // Calculate daily averages (using the raw data)
-        const avgDailyHearing = Math.round((d.totalHearing || 0) / totalDaysInPeriod);
-        const avgDailyReading = Math.round((d.totalReading || 0) / totalDaysInPeriod);
-        const avgDailyStudy = Math.round((d.totalStudy || 0) / totalDaysInPeriod);
-        const avgDailyRest = Math.round((d.totalRest || 0) / totalDaysInPeriod);
-        const avgDailyWaste = Math.round((d.totalWaste || 0) / totalDaysInPeriod);
+        // Only recalculate if backend didn't send values (fallback)
+        if (soulPercentage === 0 && d.total_soul_marks && d.entry_count) {
+            soulPercentage = Math.round((d.total_soul_marks / (50 * d.entry_count)) * 100);
+        }
+        if (bodyPercentage === 0 && d.total_body_marks && d.entry_count) {
+            bodyPercentage = Math.round((d.total_body_marks / (75 * d.entry_count)) * 100);
+        }
         
         enhancedData.push({
             ...d,
-            // ✅ Use new calculated percentages
-            soulPercentage,
-            bodyPercentage,
-            totalSoulMarks,
-            totalBodyMarks,
-            entryCount,
-            // Keep existing fields for display
-            avgDailyHearing,
-            avgDailyReading,
-            avgDailyStudy,
-            avgDailyRest,
-            avgDailyWaste
+            soulPercentage: soulPercentage,
+            bodyPercentage: bodyPercentage
         });
     }
-    
     return enhancedData;
 },
 
@@ -7246,13 +7233,15 @@ renderDashboardTable: function(data, type, dateRange) {
     // ========== FIX: Map API fields to expected field names ==========
     data = data.map(item => ({
         ...item,
-    soulPercentage: Number(item.soul_percent) || Number(item.soulPercentage) || 0,
-    bodyPercentage: Number(item.body_percent) || Number(item.bodyPercentage) || 0
+        soulPercentage: Number(item.soul_percent) || Number(item.soulPercentage) || 0,
+        bodyPercentage: Number(item.body_percent) || Number(item.bodyPercentage) || 0
     }));
-    // Add this after the mapping
-    console.log('✅ MAPPED DATA - First user:', data[0]);
-    console.log('   soulPercentage:', data[0]?.soulPercentage);
-    console.log('   bodyPercentage:', data[0]?.bodyPercentage);
+    
+    console.log('✅ Rendered with percentages:', data.map(d => ({
+        name: d.name,
+        soul: d.soulPercentage,
+        body: d.bodyPercentage
+    })));
     // ========== DEBUG LINE 1 ==========
     console.log('%c🔍 DEBUG: renderDashboardTable CALLED', 'color: blue; font-size: 14px');
     console.log('📊 Data received:', data);

@@ -563,7 +563,13 @@ app.get('/api/search', authenticateToken, async (req, res) => {
         console.log('   Query params:', { date, name, voice, userId });
         console.log('   User:', { id: req.user.id, role: req.user.role });
         
-        let query = `SELECT se.*, DATE_FORMAT(se.entry_date, '%Y-%m-%d') as date, u.name, u.user_group, u.voice_name FROM sadhana_entries se JOIN users u ON se.user_id = u.id WHERE 1=1`;
+        // ✅ ADD soul_percent and body_percent to the SELECT query
+        let query = `SELECT se.*, 
+            DATE_FORMAT(se.entry_date, '%Y-%m-%d') as date, 
+            u.name, u.user_group, u.voice_name,
+            se.soul_percent, se.body_percent
+            FROM sadhana_entries se 
+            JOIN users u ON se.user_id = u.id WHERE 1=1`;
         let params = [];
         
         if (req.user.role === 'devotee') { 
@@ -596,7 +602,15 @@ app.get('/api/search', authenticateToken, async (req, res) => {
         
         const [rows] = await pool.query(query, params);
         console.log(`   ✅ Found ${rows.length} records`);
-        res.json(rows);
+        
+        // ✅ Ensure percentages are numbers, not null
+        const processedRows = rows.map(row => ({
+            ...row,
+            soul_percent: row.soul_percent !== null ? Number(row.soul_percent) : 0,
+            body_percent: row.body_percent !== null ? Number(row.body_percent) : 0
+        }));
+        
+        res.json(processedRows);
         
     } catch (e) {
         console.error('❌ Search error DETAILS:', e);
