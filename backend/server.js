@@ -331,7 +331,7 @@ app.get('/api/users/all', authenticateToken, async (req, res) => {
     if (req.user.role === 'devotee') return res.status(403).json({ error: 'Denied' });
     const { voice } = req.query;
     try {
-        let sql = 'SELECT id, name, email, user_role, user_group, voice_name, DATE_FORMAT(created_at, "%Y-%m-%d") as created_at FROM users';
+        let sql = 'SELECT id, name, email, user_role, user_group, voice_name, DATE_FORMAT(created_at, '%Y-%m-%d') as created_at FROM users';
         let params = [];
         if (voice && voice !== 'All') { 
             sql += ' WHERE voice_name = ?'; 
@@ -522,7 +522,7 @@ app.delete('/api/sadhana', authenticateToken, async (req, res) => {
 // ============================================
 app.get('/api/reports', authenticateToken, async (req, res) => {
     const { voice, range, userId } = req.query;
-    let query = `SELECT se.*, DATE_FORMAT(se.entry_date, "%Y-%m-%d") as date, u.name, u.user_group, u.voice_name FROM sadhana_entries se JOIN users u ON se.user_id = u.id WHERE 1=1`;
+    let query = `SELECT se.*, DATE_FORMAT(se.entry_date, %'Y-%m-%d') as date, u.name, u.user_group, u.voice_name FROM sadhana_entries se JOIN users u ON se.user_id = u.id WHERE 1=1`;
     let params = [];
     
     if (req.user.role === 'devotee') { 
