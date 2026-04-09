@@ -5118,6 +5118,19 @@ const app = {
             console.warn('⚠️ Skipping view-' + v + ' - element not found');
         }
     });
+
+    window.addEventListener('focus', () => {
+        if (sessionStorage.getItem('goingToWhatsApp') === 'true') {
+            sessionStorage.removeItem('goingToWhatsApp');
+            // Hide WhatsApp section and return to tracking form
+            const whatsappSection = document.getElementById('whatsapp-section');
+            if (whatsappSection && !whatsappSection.classList.contains('hidden')) {
+                whatsappSection.classList.add('hidden');
+                document.getElementById('whatsapp-preview').value = '';
+                this.notify('Returned to tracking form');
+            }
+        }
+    });
     
     // Show the requested view
     const targetEl = document.getElementById('view-' + id);
@@ -5136,6 +5149,7 @@ const app = {
         }
         return;
     }
+
     
     // Rest of your code continues here...
     // (keep all your existing if conditions below this line)
@@ -6128,26 +6142,36 @@ Sadhana recorded for ${e.date}
 },
 
     //Whatsapp integration
-    sendToWhatsApp: function() {
-        const text = document.getElementById('whatsapp-preview').value;
-        if (!text || text.trim() === '') {
-            this.notify('No summary to send', true);
-            return;
-        }
+sendToWhatsApp: function() {
+    const text = document.getElementById('whatsapp-preview').value;
+    if (!text || text.trim() === '') {
+        this.notify('No summary to send', true);
+        return;
+    }
 
-        // Encode the text for URL
-        const encodedText = encodeURIComponent(text);
+    // Mark that we're going to WhatsApp
+    sessionStorage.setItem('goingToWhatsApp', 'true');
+    
+    // Encode the text for URL
+    const encodedText = encodeURIComponent(text);
+    
+    // Open WhatsApp
+    window.open(`https://wa.me/${this.MASTER_NUMBER}?text=${encodedText}`, '_blank');
+    
+    this.notify('Opening WhatsApp...');
+},
 
-        // Open WhatsApp with the message
-        window.open(`https://wa.me/${this.MASTER_NUMBER}?text=${encodedText}`, '_blank');
+hideWhatsAppSection: function() {
+    document.getElementById('whatsapp-section').classList.add('hidden');
+    document.getElementById('whatsapp-preview').value = '';
+    sessionStorage.removeItem('goingToWhatsApp'); // Clear the flag
+    this.notify('Returned to tracking form');
+},
 
-        this.notify('Opening WhatsApp...');
-    },
-    // ============================================
+    //============================================
     // Analytics reports
-    // ============================================
-
-    // ============================================
+    //============================================
+// ============================================
 // COMPLETE ANALYTICS MODULE - Group Report
 // Add these functions to your app object
 // ============================================
@@ -7234,7 +7258,13 @@ renderDashboardTable: function(data, type, dateRange) {
     data = data.map(item => ({
         ...item,
         soulPercentage: Number(item.soul_percent) || Number(item.soulPercentage) || 0,
-        bodyPercentage: Number(item.body_percent) || Number(item.bodyPercentage) || 0
+        bodyPercentage: Number(item.body_percent) || Number(item.bodyPercentage) || 0,
+        totalRounds: Number(item.totalRounds) || 0,
+        totalHearing: Number(item.totalHearing) || 0,
+        totalReading: Number(item.totalReading) || 0,
+        totalStudy: Number(item.totalStudy) || 0,
+        totalRest: Number(item.totalRest) || 0,
+        totalWaste: Number(item.totalWaste) || 0
     }));
     
     console.log('✅ Rendered with percentages:', data.map(d => ({
@@ -7242,114 +7272,127 @@ renderDashboardTable: function(data, type, dateRange) {
         soul: d.soulPercentage,
         body: d.bodyPercentage
     })));
-    // ========== DEBUG LINE 1 ==========
-    console.log('%c🔍 DEBUG: renderDashboardTable CALLED', 'color: blue; font-size: 14px');
-    console.log('📊 Data received:', data);
-    console.log('📊 Total records:', data.length);
+    
+    // Calculate total days based on type
+    let totalDays;
+    if (type === 'weekly') {
+        totalDays = 7;
+    } else if (type === 'monthly') {
+        const today = new Date();
+        totalDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    } else {
+        totalDays = 30;
+    }
+    
+    console.log('📊 totalDays:', totalDays);
     console.log('📊 Type:', type);
     console.log('📊 Date Range:', dateRange);
+
+    // ============================================
+    // ✅ FIX 1: Summary stats - Show ONLY logged-in user
+    // ============================================
+    const currentUserData = data.find(d => d.name === this.currentUser?.name) || data[0] || {};
     
-    const totalDays = type === 'weekly' ? 7 : 30;
-
-    // ========== DEBUG LINE 2 ==========
-    console.log('📊 totalDays:', totalDays);
-
-    // Calculate summary stats
-    const totalActive = data.length;
-    const totalRounds = data.reduce((sum, d) => sum + (d.totalRounds || 0), 0);
-    const avgHearing = Math.round(data.reduce((sum, d) => sum + (d.totalHearing || 0), 0) / totalActive) || 0;
-    const avgReading = Math.round(data.reduce((sum, d) => sum + (d.totalReading || 0), 0) / totalActive) || 0;
-    const avgStudy = Math.round(data.reduce((sum, d) => sum + (d.totalStudy || 0), 0) / totalActive) || 0;
-    const avgSoul = Math.round(data.reduce((sum, d) => sum + (d.soulPercentage || 0), 0) / totalActive) || 0;
-    const avgBody = Math.round(data.reduce((sum, d) => sum + (d.bodyPercentage || 0), 0) / totalActive) || 0;
-    const avgRest = Math.round(data.reduce((sum, d) => sum + (d.totalRest || 0), 0) / totalActive) || 0;
-    const avgWaste = Math.round(data.reduce((sum, d) => sum + (d.totalWaste || 0), 0) / totalActive) || 0;
-
-    // ========== DEBUG LINE 3 ==========
-    console.log('📊 Summary Stats:', {
-        totalActive,
-        totalRounds,
-        avgHearing,
-        avgReading,
-        avgStudy,
-        avgSoul,
-        avgBody,
-        avgRest,
-        avgWaste
+    const userEntryCount = currentUserData.entry_count || 0;
+    const userTotalRounds = currentUserData.totalRounds || 0;
+    const userTotalHearing = currentUserData.totalHearing || 0;
+    const userTotalReading = currentUserData.totalReading || 0;
+    const userTotalStudy = currentUserData.totalStudy || 0;
+    const userTotalRest = currentUserData.totalRest || 0;
+    const userTotalWaste = currentUserData.totalWaste || 0;
+    const userSoulPercentage = currentUserData.soulPercentage || 0;
+    const userBodyPercentage = currentUserData.bodyPercentage || 0;
+    
+    // Calculate averages (divide by entry count, not total days)
+    const userAvgHearing = userEntryCount > 0 ? Math.round(userTotalHearing / userEntryCount) : 0;
+    const userAvgReading = userEntryCount > 0 ? Math.round(userTotalReading / userEntryCount) : 0;
+    const userAvgStudy = userEntryCount > 0 ? Math.round(userTotalStudy / userEntryCount) : 0;
+    const userAvgRest = userEntryCount > 0 ? Math.round(userTotalRest / userEntryCount) : 0;
+    const userAvgWaste = userEntryCount > 0 ? Math.round(userTotalWaste / userEntryCount) : 0;
+    
+    console.log('📊 Current User Stats:', {
+        name: currentUserData.name,
+        entryCount: userEntryCount,
+        totalRounds: userTotalRounds,
+        soulPercentage: userSoulPercentage,
+        bodyPercentage: userBodyPercentage
     });
 
-    // Update summary stats container
+    // ============================================
+    // ✅ FIX 2: Update summary stats container
+    // ============================================
     const summaryContainer = document.getElementById('summary-stats-container');
     if (summaryContainer) {
+        // Check if mobile (screen width < 768px)
+        const isMobile = window.innerWidth < 768;
+        const savedPreference = localStorage.getItem('showSummaryStats');
+        const shouldHide = savedPreference === 'false' || (isMobile && savedPreference !== 'true');
+        
         summaryContainer.innerHTML = `
             <div class="summary-card">
-                <span class="label">Active Devotees</span>
-                <span class="value">${totalActive}</span>
+                <span class="label">Your Entries</span>
+                <span class="value">${userEntryCount}</span>
             </div>
             <div class="summary-card">
-                <span class="label">Total Rounds</span>
-                <span class="value">${totalRounds}</span>
+                <span class="label">Your Rounds</span>
+                <span class="value">${userTotalRounds}</span>
             </div>
             <div class="summary-card">
                 <span class="label">Avg Hearing</span>
-                <span class="value">${avgHearing}<span class="unit">m</span></span>
+                <span class="value">${userAvgHearing}<span class="unit">m</span></span>
             </div>
             <div class="summary-card">
                 <span class="label">Avg Reading</span>
-                <span class="value">${avgReading}<span class="unit">m</span></span>
+                <span class="value">${userAvgReading}<span class="unit">m</span></span>
             </div>
             <div class="summary-card">
                 <span class="label">Avg Study</span>
-                <span class="value">${avgStudy}<span class="unit">m</span></span>
+                <span class="value">${userAvgStudy}<span class="unit">m</span></span>
             </div>
             <div class="summary-card">
                 <span class="label">Avg Rest</span>
-                <span class="value">${avgRest}<span class="unit">m</span></span>
+                <span class="value">${userAvgRest}<span class="unit">m</span></span>
             </div>
             <div class="summary-card">
                 <span class="label">Avg Waste</span>
-                <span class="value">${avgWaste}<span class="unit">m</span></span>
+                <span class="value">${userAvgWaste}<span class="unit">m</span></span>
             </div>
             <div class="summary-card">
-                <span class="label">Avg Soul %</span>
-                <span class="value">${avgSoul}%</span>
-                <span class="trend">${this.getTrendLabel(avgSoul)}</span>
+                <span class="label">Your Soul %</span>
+                <span class="value">${userSoulPercentage}%</span>
+                <span class="trend">${this.getTrendLabel(userSoulPercentage)}</span>
             </div>
             <div class="summary-card">
-                <span class="label">Avg Body %</span>
-                <span class="value">${avgBody}%</span>
-                <span class="trend">${this.getTrendLabel(avgBody)}</span>
+                <span class="label">Your Body %</span>
+                <span class="value">${userBodyPercentage}%</span>
+                <span class="trend">${this.getTrendLabel(userBodyPercentage)}</span>
             </div>
         `;
-        console.log('✅ Summary container updated');
-    } else {
-        console.log('❌ Summary container NOT found - check element ID');
+        
+        // Hide by default on mobile
+        if (shouldHide) {
+            summaryContainer.classList.add('hidden');
+            const toggleIcon = document.getElementById('toggle-icon');
+            const toggleText = document.getElementById('toggle-text');
+            if (toggleIcon) toggleIcon.textContent = '👁️‍🗨️';
+            if (toggleText) toggleText.textContent = 'Show Your Stats';
+        }
+        
+        console.log('✅ Summary container updated for user:', currentUserData.name);
     }
 
-    // Generate table rows
+    // ============================================
+    // Generate table rows (all users for admin view)
+    // ============================================
     let tableRows = '';
     
-    // ========== DEBUG LINE 4 ==========
-    console.log('📊 Starting to generate rows for', data.length, 'devotees');
-    
     data.forEach((d, index) => {
-        console.log(`\n📊 Processing devotee ${index + 1}: ${d.name}`);
-        console.log('   Raw data:', d);
-        
-        // Calculate daily averages
+        // Calculate daily averages based on TOTAL DAYS in period
         const avgDailyHearing = Math.round((d.totalHearing || 0) / totalDays);
         const avgDailyReading = Math.round((d.totalReading || 0) / totalDays);
         const avgDailyStudy = Math.round((d.totalStudy || 0) / totalDays);
         const avgDailyRest = Math.round((d.totalRest || 0) / totalDays);
         const avgDailyWaste = Math.round((d.totalWaste || 0) / totalDays);
-
-        console.log('   Daily Averages:', {
-            hearing: avgDailyHearing,
-            reading: avgDailyReading,
-            study: avgDailyStudy,
-            rest: avgDailyRest,
-            waste: avgDailyWaste
-        });
 
         // Create progress bars
         const wakeBar = this.createProgressBar(d.wakeSuccess, totalDays, `${d.wakeSuccess}/${totalDays}`);
@@ -7377,14 +7420,14 @@ renderDashboardTable: function(data, type, dateRange) {
         const mangalaCount = `${d.mangalaArtiSuccess}/${totalDays}`;
         const cleanCount = `${d.cleanSuccess}/${totalDays}`;
 
-        // ========== DEBUG LINE 5 ==========
-        console.log('   Body% being displayed:', d.bodyPercentage, '%');
-        console.log('   Soul% being displayed:', d.soulPercentage, '%');
+        // Highlight current user row
+        const isCurrentUser = d.name === this.currentUser?.name;
+        const rowHighlight = isCurrentUser ? 'style="background: var(--saffron-light);"' : '';
 
         tableRows += `
-            <tr class="user-row" data-user-id="${index}" data-user-name="${d.name}">
+            <tr class="user-row" data-user-id="${index}" data-user-name="${d.name}" ${rowHighlight}>
                 <td>
-                    <strong>${d.name}</strong>
+                    <strong>${d.name} ${isCurrentUser ? '👑' : ''}</strong>
                     <div style="font-size:0.7rem; color:var(--text-muted);">${d.group}</div>
                 </td>
 
@@ -7427,11 +7470,6 @@ renderDashboardTable: function(data, type, dateRange) {
         `;
     });
 
-    // ========== DEBUG LINE 6 ==========
-    console.log('📊 Total rows generated:', data.length);
-    console.log('📊 tableRows length:', tableRows.length);
-    console.log('📊 First 100 chars of tableRows:', tableRows.substring(0, 100));
-
     const finalHtml = `
         <div class="dashboard-table-container">
             <div style="overflow-x: auto;">
@@ -7461,13 +7499,9 @@ renderDashboardTable: function(data, type, dateRange) {
             </div>
         </div>
     `;
-
-    // ========== DEBUG LINE 7 ==========
-    console.log('✅ Final HTML generated, length:', finalHtml.length);
     
     return finalHtml;
 },
-
 
     // Create progress bar
     createProgressBar: function(value, max, text, type = 'default') {
@@ -7569,9 +7603,6 @@ renderDashboardTable: function(data, type, dateRange) {
             panel.classList.add('hidden');
         }
     },
-// ============================================
-// FIXED: loadTodayReport - with proper field mapping
-// ============================================
 
     // Attach click handlers
     attachDashboardHandlers: function() {
