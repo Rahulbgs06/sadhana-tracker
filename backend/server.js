@@ -27,14 +27,13 @@ const allowedOrigins = [
     'http://127.0.0.1:5500',
     'http://127.0.0.1:5501',
     'http://localhost:8000',
-    'https://rahulbgs06.github.io',  // ✅ YEH ADD KARO (important!)
+    'https://rahulbgs06.github.io',
     'https://sadhana-tracker-production.up.railway.app',
     'https://sadhana-tracker-sto2.onrender.com'
 ];
 
 app.use(cors({
     origin: function(origin, callback) {
-        // Allow requests with no origin (like mobile apps, curl)
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
@@ -49,7 +48,6 @@ app.use(cors({
 app.use(express.json());
 console.log(`🌍 Server running in ${process.env.NODE_ENV || 'development'} mode`);
 
-// Add this for debugging
 app.use((req, res, next) => {
     console.log(`📥 ${req.method} ${req.url}`);
     console.log('   Headers:', req.headers['content-type']);
@@ -60,13 +58,12 @@ app.use((req, res, next) => {
 });
 
 // ============================================
-// DATABASE CONNECTION - WITH EXTENSIVE DEBUGGING
+// DATABASE CONNECTION
 // ============================================
 const IS_RAILWAY = !!process.env.MYSQLHOST;
 
 console.log('🔍 Environment:', IS_RAILWAY ? '🚂 RAILWAY (PRODUCTION)' : '💻 LOCAL (DEVELOPMENT)');
 
-// Log ALL relevant environment variables at startup
 console.log('📋 Raw Environment Variables:');
 console.log(`   MYSQLHOST: ${process.env.MYSQLHOST || 'not set'}`);
 console.log(`   MYSQLPORT: ${process.env.MYSQLPORT || 'not set'}`);
@@ -76,29 +73,17 @@ console.log(`   MYSQLPASSWORD: ${process.env.MYSQLPASSWORD ? '✅ set' : '❌ no
 console.log(`   DB_HOST: ${process.env.DB_HOST || 'not set'}`);
 console.log(`   DB_NAME: ${process.env.DB_NAME || 'not set'}`);
 
-// Database configuration for aiven deployment
 const dbConfig = {
     host: IS_RAILWAY ? process.env.MYSQLHOST : (process.env.DB_HOST || 'localhost'),
     port: IS_RAILWAY ? process.env.MYSQLPORT : (process.env.DB_PORT || 3306),
     user: IS_RAILWAY ? process.env.MYSQLUSER : (process.env.DB_USER || 'root'),
     password: IS_RAILWAY ? process.env.MYSQLPASSWORD : (process.env.DB_PASSWORD || 'Sadhana@123'),
     database: IS_RAILWAY ? 'railway' : (process.env.DB_NAME || 'sadhana_tracker'),
-    ssl: IS_RAILWAY ? {} : { rejectUnauthorized: false },  // ← ADD THIS LINE FOR AIVEN
+    ssl: IS_RAILWAY ? {} : { rejectUnauthorized: false },
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
 };
-// Database configuration for old railway deployment
-/*const dbConfig = {
-    host: IS_RAILWAY ? process.env.MYSQLHOST : (process.env.DB_HOST || 'localhost'),
-    port: IS_RAILWAY ? process.env.MYSQLPORT : (process.env.DB_PORT || 3306),
-    user: IS_RAILWAY ? process.env.MYSQLUSER : (process.env.DB_USER || 'root'),
-    password: IS_RAILWAY ? process.env.MYSQLPASSWORD : (process.env.DB_PASSWORD || 'Sadhana@123'),
-    database: IS_RAILWAY ? 'railway' : (process.env.DB_NAME || 'sadhana_tracker'),
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-};*/
 
 console.log('📊 Final Database Config Used for Pool:');
 console.log(`   Host: ${dbConfig.host}`);
@@ -110,43 +95,31 @@ console.log(`   Password: ${dbConfig.password ? '✅ SET' : '❌ NOT SET'}`);
 const pool = mysql.createPool(dbConfig).promise();
 
 // ============================================
-// DATABASE CONNECTIVITY TEST - FIXED
+// DATABASE CONNECTIVITY TEST
 // ============================================
 (async function testDBConnection() {
     let connection;
     try {
         connection = await pool.getConnection();
         console.log('✅ Pool connection acquired.');
-
-        // Explicitly select the database we intend to use
         await connection.query(`USE ${dbConfig.database}`);
         console.log(`📊 Using database: ${dbConfig.database}`);
-
-        // Now test tables
         const [tables] = await connection.query('SHOW TABLES');
         console.log('📋 Available tables:', tables.map(t => Object.values(t)[0]).join(', '));
-
-        // Test users table specifically
         try {
             const [users] = await connection.query('SELECT COUNT(*) as count FROM users');
             console.log(`👥 Users in database: ${users[0].count}`);
         } catch (e) {
             console.log('⚠️ Users table not accessible:', e.message);
         }
-
         connection.release();
         console.log('✅ Database connectivity test passed.');
     } catch (error) {
         console.error('❌ Database Connection Test Failed!');
         console.error('Error details:', error.message);
-        console.error('This is likely why the container is stopping.');
-        // Don't exit the process, let the app try to run, but it will fail on first query
     }
 })();
 
-// ============================================
-// MYSQL CONNECTION ERROR HANDLER
-// ============================================
 pool.on('error', (err) => {
     console.error('❌ MySQL Pool Error:', err);
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
@@ -188,18 +161,14 @@ app.get('/api/health', async (req, res) => {
     };
     
     try {
-        // Test database connection
         const [result] = await pool.query('SELECT 1 as connection_test');
         if (result && result[0] && result[0].connection_test === 1) {
             healthStatus.services.database = 'connected';
-            
-            // Get database stats
             const [dbStats] = await pool.query(`
                 SELECT 
                     (SELECT COUNT(*) FROM users) as user_count,
                     (SELECT COUNT(*) FROM sadhana_entries) as entry_count
             `);
-            
             healthStatus.database = {
                 userCount: dbStats[0].user_count,
                 entryCount: dbStats[0].entry_count
@@ -215,34 +184,25 @@ app.get('/api/health', async (req, res) => {
 });
 
 // ============================================
-// DEBUG ENDPOINT - Check User Dashboard Data (using query param)
+// DEBUG ENDPOINTS
 // ============================================
 app.get('/api/debug/dashboard', authenticateToken, async (req, res) => {
     try {
-        // Get userId from query parameter, or use logged-in user's ID
         const userId = req.query.userId || req.user.id;
-        const days = 7; // weekly
-        
-        // Check if user has permission
+        const days = 7;
         if (req.user.role === 'devotee' && req.user.id != userId) {
             return res.status(403).json({ error: 'Access denied' });
         }
-        
-        // Get user info
         const [user] = await pool.query('SELECT id, name, voice_name, user_group, user_role FROM users WHERE id = ?', [userId]);
-        
         if (!user.length) {
             return res.status(404).json({ error: 'User not found' });
         }
-        
-        // Get their sadhana entries for last 7 days
         const [entries] = await pool.query(
             `SELECT * FROM sadhana_entries 
              WHERE user_id = ? AND entry_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
              ORDER BY entry_date DESC`,
             [userId, days]
         );
-        
         res.json({
             user: user[0],
             entriesCount: entries.length,
@@ -258,12 +218,6 @@ app.get('/api/debug/dashboard', authenticateToken, async (req, res) => {
     }
 });
 
-// ============================================
-// AUTHENTICATION ROUTES
-// ============================================
-
-
-// TEMPORARY DEBUG ENDPOINT - Remove after fixing
 app.get('/api/debug/env', (req, res) => {
     res.json({
         db_config: {
@@ -280,7 +234,6 @@ app.get('/api/debug/env', (req, res) => {
 
 app.get('/api/debug/test-db', async (req, res) => {
     try {
-        // Try to query the users table
         const [result] = await pool.query('SELECT COUNT(*) as count FROM users');
         res.json({ 
             success: true, 
@@ -297,31 +250,25 @@ app.get('/api/debug/test-db', async (req, res) => {
     }
 });
 
-
+// ============================================
+// AUTHENTICATION ROUTES
+// ============================================
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     
-    // HARDCODED DEVELOPER CHECK
     if (email === "dev@sadhna.com" && password === "admin123") {
-        // ✅ FIX: Get the actual user from database instead of using ID 0
         const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-        
         let userData;
         if (users.length > 0) {
-            // Use existing user from database
             userData = users[0];
         } else {
-            // If user doesn't exist, create a temporary one (or use ID 1)
-            // But since you have the user, this won't run
             userData = { id: 1, name: 'System Developer', role: 'developer', voice_name: 'All', user_group: 'Sahdev' };
         }
-        
         const token = jwt.sign(
             { id: userData.id, role: userData.user_role, voice: userData.voice_name, name: userData.name, group: userData.user_group }, 
             process.env.JWT_SECRET || 'your-secret-key', 
             { expiresIn: '7d' }
         );
-        
         return res.json({ 
             token, 
             user: { 
@@ -334,104 +281,52 @@ app.post('/api/auth/login', async (req, res) => {
         });
     }
 
-    // REGULAR USER LOGIN
     try {
         const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
         if (users.length === 0) return res.status(404).json({ error: 'User not registered' });
-        
         const user = users[0];
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) return res.status(401).json({ error: 'Invalid password' });
-
         const token = jwt.sign(
             { id: user.id, role: user.user_role, voice: user.voice_name, name: user.name, group: user.user_group }, 
             process.env.JWT_SECRET || 'your-secret-key', 
             { expiresIn: '7d' }
         );
-        
         res.json({ 
             token, 
             user: { id: user.id, name: user.name, role: user.user_role, voice: user.voice_name, group: user.user_group } 
         });
-        
     } catch (e) { 
         console.error('Login error:', e);
         res.status(500).json({ error: 'Login failed' }); 
     }
 });
-// --- LOGIN: Hardcoded Developer Fail-safe + DB Check ---
-/*app.post('/api/auth/login', async (req, res) => {
-    const { email, password } = req.body;
-    
-    // 1. HARDCODED DEVELOPER CHECK (Fail-safe)
-    if (email === "dev@sadhna.com" && password === "admin123") {
-        const token = jwt.sign({ id: 0, role: 'developer', voice: 'All', name: 'System Developer' }, process.env.JWT_SECRET || 'your-secret-key', { expiresIn: '7d' });
-        return res.json({ token, user: { id: 0, name: 'System Developer', role: 'developer', voice: 'All', group: 'Sahdev' } });
-    }
 
-    // 2. DATABASE CHECK
-    try {
-        const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-        if (users.length === 0) return res.status(404).json({ error: 'User not registered' });
-        const user = users[0];
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) return res.status(401).json({ error: 'Invalid password' });
-
-        const token = jwt.sign({ id: user.id, role: user.user_role, voice: user.voice_name, name: user.name, group: user.user_group }, process.env.JWT_SECRET || 'your-secret-key', { expiresIn: '7d' });
-        res.json({ token, user: { id: user.id, name: user.name, role: user.user_role, voice: user.voice_name, group: user.user_group } });
-    } catch (e) { 
-        console.error('Login error:', e);
-        res.status(500).json({ error: 'Login failed' }); 
-    }
-});*/
-
-//=======  REGISTER USER  ==========
 app.post('/api/auth/register', async (req, res) => {
     const { name, email, password, group, voice } = req.body;
-    
     if (!password || password.length < 6) {
         return res.status(400).json({ error: 'Password must be min 6 characters' });
     }
-    
     try {
-        // ✅ FIX: Check if email already exists FIRST
         const [existing] = await pool.query('SELECT id FROM users WHERE email = ?', [email]);
-        
         if (existing.length > 0) {
             return res.status(400).json({ error: 'Email already registered' });
         }
-        
         const hash = await bcrypt.hash(password, 10);
         await pool.query(
             'INSERT INTO users (name, email, password, user_group, voice_name) VALUES (?, ?, ?, ?, ?)', 
             [name, email, hash, group, voice]
         );
-        
         res.status(201).json({ message: 'Success' });
-        
     } catch (e) { 
         console.error('Registration error:', e);
         res.status(500).json({ error: 'Registration failed' }); 
     }
 });
-/*app.post('/api/auth/register', async (req, res) => {
-    const { name, email, password, group, voice } = req.body;
-    if (!password || password.length < 6) return res.status(400).json({ error: 'Password must be min 6 characters' });
-    try {
-        const hash = await bcrypt.hash(password, 10);
-        await pool.query('INSERT INTO users (name, email, password, user_group, voice_name) VALUES (?, ?, ?, ?, ?)', [name, email, hash, group, voice]);
-        res.status(201).json({ message: 'Success' });
-    } catch (e) { 
-        console.error('Registration error:', e);
-        res.status(400).json({ error: 'Email already registered' }); 
-    }
-});*/
 
 // ============================================
 // USER MANAGEMENT ROUTES
 // ============================================
-
-// --- GET all users (admin only) ---
 app.get('/api/users/all', authenticateToken, async (req, res) => {
     if (req.user.role === 'devotee') return res.status(403).json({ error: 'Denied' });
     const { voice } = req.query;
@@ -450,7 +345,6 @@ app.get('/api/users/all', authenticateToken, async (req, res) => {
     }
 });
 
-// --- UPDATE user role (admin only) ---
 app.put('/api/users/:id/role', authenticateToken, async (req, res) => {
     if (req.user.role === 'devotee') return res.status(403).json({ error: 'Denied' });
     const { role } = req.body;
@@ -466,7 +360,6 @@ app.put('/api/users/:id/role', authenticateToken, async (req, res) => {
 // ============================================
 // SADHANA ENTRY ROUTES
 // ============================================
-
 app.post('/api/sadhana', authenticateToken, async (req, res) => {
     try {
         console.log('========== SAVE SADHANA REQUEST ==========');
@@ -477,24 +370,17 @@ app.post('/api/sadhana', authenticateToken, async (req, res) => {
             morning_class, mangala_aarti, cleanliness, book_name, reflections
         } = req.body;
 
-        // Parse time_wasted from minutes to TIME format (HH:MM:SS)
         const wastedHours = Math.floor(parseInt(time_wasted) / 60);
         const wastedMinutes = parseInt(time_wasted) % 60;
         const wastedTime = `${wastedHours.toString().padStart(2, '0')}:${wastedMinutes.toString().padStart(2, '0')}:00`;
 
-        // ============================================
-        // SOUL MARKS CALCULATION
-        // ============================================
         let soulMarks = 0;
-        
-        // 5 Soul Activities × 5 marks each = 25 marks
         if (parseInt(hearing) > 0) soulMarks += 5;
         if (parseInt(reading) > 0) soulMarks += 5;
         if (morning_class == 1 || morning_class === '1') soulMarks += 5;
         if (mangala_aarti == 1 || mangala_aarti === '1') soulMarks += 5;
         if (cleanliness == 1 || cleanliness === '1') soulMarks += 5;
         
-        // Chanting End Marks - 25 marks
         if (chantEnd) {
             if (chantEnd <= '06:45') soulMarks += 25;
             else if (chantEnd <= '09:00') soulMarks += 20;
@@ -505,13 +391,9 @@ app.post('/api/sadhana', authenticateToken, async (req, res) => {
 
         const soulPercent = Math.round((soulMarks / 50) * 100);
 
-        // ============================================
-        // BODY MARKS CALCULATION
-        // ============================================
         let bodyMarks = 0;
         let wakeMarks = 0, bedMarks = 0, restMarks = 0;
 
-        // Wakeup Marks
         if (wakeup) {
             if (wakeup <= '04:30') wakeMarks = 25;
             else if (wakeup <= '05:00') wakeMarks = 20;
@@ -521,7 +403,6 @@ app.post('/api/sadhana', authenticateToken, async (req, res) => {
             bodyMarks += wakeMarks;
         }
 
-        // Sleep Marks (to_bed)
         if (sleep) {
             if (sleep <= '21:30') bedMarks = 25;
             else if (sleep <= '22:00') bedMarks = 20;
@@ -531,7 +412,6 @@ app.post('/api/sadhana', authenticateToken, async (req, res) => {
             bodyMarks += bedMarks;
         }
 
-        // Day Rest Marks
         const rest = parseInt(dayRestMinutes) || 0;
         if (rest <= 30) restMarks = 25;
         else if (rest <= 45) restMarks = 20;
@@ -547,23 +427,6 @@ app.post('/api/sadhana', authenticateToken, async (req, res) => {
             wakeMarks, bedMarks, restMarks, bodyMarks, bodyPercent
         });
 
-        console.log('🔍 DEBUG - Time values before insert:', {
-          wakeup,
-          chantEnd,
-          sleep,
-          temp_hall_rech,
-          wastedTime
-        });
-
-        // Also check if user exists
-        console.log('🔍 DEBUG - User info:', {
-          userId: req.user.id,
-          userVoice: req.user.voice
-        });
-
-        // ============================================
-        // CORRECT INSERT QUERY with your actual columns
-        // ============================================
         const query = `
             INSERT INTO sadhana_entries 
             (user_id, voice_name, entry_date, 
@@ -587,81 +450,34 @@ app.post('/api/sadhana', authenticateToken, async (req, res) => {
         `;
 
         const values = [
-            // Basic info
             req.user.id,
             req.user.voice,
             date,
-            
-            // Time fields
             wakeup,
             parseInt(rounds) || 0,
             chantEnd,
-            
-            // Minutes fields
             parseInt(hearing) || 0,
             parseInt(reading) || 0,
             parseInt(study) || 0,
-            
-            // Day rest
             parseInt(dayRestMinutes) || 0,
             sleep,
-            
-            // Boolean fields (tinyint)
             morning_class === '1' ? 1 : 0,
             mangala_aarti === '1' ? 1 : 0,
             cleanliness === '1' ? 1 : 0,
-            
-            // Text fields
             book_name || null,
             reflections || null,
-            
-            // Additional time fields
             temp_hall_rech,
-            wastedTime,  // Converted to TIME format
-            
-            // Old columns (for backward compatibility)
-            bedMarks,     // to_bed
-            wakeMarks,    // wake_up
-            restMarks,    // day_rest_marks
-            
-            // Marks and percentages
+            wastedTime,
+            bedMarks,
+            wakeMarks,
+            restMarks,
             bodyMarks,
             bodyPercent,
             soulMarks,
             soulPercent
         ];
 
-        console.log('Executing query with values:', values);
-        
-        console.log('🔍 VALUES BEING INSERTED:');
-        console.log('user_id:', values[0]);
-        console.log('voice_name:', values[1]);
-        console.log('entry_date:', values[2]);
-        console.log('wakeup_time:', values[3]);
-        console.log('rounds:', values[4]);
-        console.log('chanting_end_time:', values[5]);
-        console.log('hearing_minutes:', values[6]);
-        console.log('reading_minutes:', values[7]);
-        console.log('study_minutes:', values[8]);
-        console.log('day_rest_minutes:', values[9]);
-        console.log('sleep_time:', values[10]);
-        console.log('morning_class:', values[11]);
-        console.log('mangala_aarti:', values[12]);
-        console.log('cleanliness:', values[13]);
-        console.log('book_name:', values[14]);
-        console.log('reflections:', values[15]);
-        console.log('temp_hall_rech:', values[16]);
-        console.log('time_wasted:', values[17]);
-        console.log('to_bed:', values[18]);
-        console.log('wake_up:', values[19]);
-        console.log('day_rest_marks:', values[20]);
-        console.log('body_marks:', values[21]);
-        console.log('body_percent:', values[22]);
-        console.log('soul_marks:', values[23]);
-        console.log('soul_percent:', values[24]);
-
         const [result] = await pool.query(query, values);
-        
         console.log('✅ Insert successful, ID:', result.insertId);
         
         res.json({ 
@@ -675,33 +491,25 @@ app.post('/api/sadhana', authenticateToken, async (req, res) => {
             }
         });
 
-    }  catch (error) {
-    console.error('❌ Save sadhana error:', error);
-    console.error('Error stack:', error.stack);
-    console.error('SQL Error Code:', error.code);
-    console.error('SQL Error Message:', error.sqlMessage);
-    console.error('SQL:', error.sql);
-    
-    // Send detailed error to response for debugging
-    res.status(500).json({ 
-        error: error.message,
-        sqlMessage: error.sqlMessage,
-        sql: error.sql,
-        code: error.code
-    });
+    } catch (error) {
+        console.error('❌ Save sadhana error:', error);
+        res.status(500).json({ 
+            error: error.message,
+            sqlMessage: error.sqlMessage,
+            sql: error.sql,
+            code: error.code
+        });
     }
 });
-// DELETE endpoint for test cleanup
+
 app.delete('/api/sadhana', authenticateToken, async (req, res) => {
   try {
     const { date } = req.query;
     const userId = req.user.id;
-    
     const [result] = await pool.query(
       'DELETE FROM sadhana_entries WHERE user_id = ? AND entry_date = ?',
       [userId, date]
     );
-    
     res.json({ success: true, deleted: result.affectedRows });
   } catch (error) {
     console.error('Delete error:', error);
@@ -712,8 +520,6 @@ app.delete('/api/sadhana', authenticateToken, async (req, res) => {
 // ============================================
 // REPORTING ROUTES
 // ============================================
-
-// --- GET reports with filters ---
 app.get('/api/reports', authenticateToken, async (req, res) => {
     const { voice, range, userId } = req.query;
     let query = `SELECT se.*, DATE_FORMAT(se.entry_date, "%Y-%m-%d") as date, u.name, u.user_group, u.voice_name FROM sadhana_entries se JOIN users u ON se.user_id = u.id WHERE 1=1`;
@@ -749,7 +555,6 @@ app.get('/api/reports', authenticateToken, async (req, res) => {
     }
 });
 
-// --- SEARCH sadhana entries ---
 app.get('/api/search', authenticateToken, async (req, res) => {
     try {
         const { date, name, voice, userId } = req.query;
@@ -766,7 +571,6 @@ app.get('/api/search', authenticateToken, async (req, res) => {
             params.push(req.user.id); 
         } else {
             if (voice && voice !== 'All') { 
-            
                 query += " AND u.voice_name = ?"; 
                 params.push(voice); 
             }
@@ -791,18 +595,11 @@ app.get('/api/search', authenticateToken, async (req, res) => {
         console.log('   Params:', params);
         
         const [rows] = await pool.query(query, params);
-        
         console.log(`   ✅ Found ${rows.length} records`);
         res.json(rows);
         
     } catch (e) {
-        console.error('❌ Search error DETAILS:');
-        console.error('   Message:', e.message);
-        console.error('   Code:', e.code);
-        console.error('   SQL Message:', e.sqlMessage);
-        console.error('   Stack:', e.stack);
-        
-        // Send detailed error for debugging
+        console.error('❌ Search error DETAILS:', e);
         res.status(500).json({ 
             error: 'Search failed', 
             details: e.message,
@@ -810,49 +607,9 @@ app.get('/api/search', authenticateToken, async (req, res) => {
         });
     }
 });
-/*app.get('/api/search', authenticateToken, async (req, res) => {
-    const { date, name, voice, userId } = req.query;
-    let query = `SELECT se.*, DATE_FORMAT(se.entry_date, "%Y-%m-%d") as date, u.name, u.user_group, u.voice_name FROM sadhana_entries se JOIN users u ON se.user_id = u.id WHERE 1=1`;
-    let params = [];
-    
-    if (req.user.role === 'devotee') { 
-        query += " AND u.id = ?"; 
-        params.push(req.user.id); 
-    } else {
-        if (voice && voice !== 'All') { 
-            query += " AND u.voice_name = ?"; 
-            params.push(voice); 
-        }
-        if (userId && userId !== 'All') { 
-            query += " AND u.id = ?"; 
-            params.push(userId); 
-        }
-        if (name) { 
-            query += " AND u.name LIKE ?"; 
-            params.push(`%${name}%`); 
-        }
-    }
-    
-    if (date) { 
-        query += " AND se.entry_date = ?"; 
-        params.push(date); 
-    }
-    
-    query += ' ORDER BY se.entry_date DESC';
-    
-    try {
-        const [rows] = await pool.query(query, params);
-        res.json(rows);
-    } catch (e) {
-        console.error('Search error:', e);
-        res.status(500).json({ error: 'Search failed' });
-    }
-});*/
+
 // ============================================
-// FIXED: Dashboard Report Endpoint 
-// ============================================
-// ============================================
-// FIXED: Dashboard Report Endpoint with proper voice filtering
+// DASHBOARD REPORT ENDPOINT
 // ============================================
 app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
     let voice = req.query.voice;
@@ -861,27 +618,21 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
     const days = type === 'weekly' ? 7 : 30;
     
     try {
-        // --- DEVOTEE ROLE ---
         if (req.user.role === 'devotee') {
             console.log('Devotee access - restricting to user ID:', req.user.id);
-            
             const [user] = await pool.query(
                 'SELECT id, name, voice_name, user_group FROM users WHERE id = ?', 
                 [req.user.id]
             );
-            
             if (!user.length) return res.json([]);
-            
             const [entries] = await pool.query(
                 `SELECT * FROM sadhana_entries 
                  WHERE user_id = ? AND entry_date >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
                  ORDER BY entry_date DESC`,
                 [req.user.id, days]
             );
-
             const u = user[0];
             const latestEntry = entries[0] || {};
-            
             const wakeSuccess = entries.filter(r => r.wakeup_time && r.wakeup_time <= '04:30:00').length;
             const templeSuccess = entries.filter(r => r.temp_hall_rech && r.temp_hall_rech != '').length;
             const roundSuccess = entries.filter(r => r.rounds >= 16).length;
@@ -889,17 +640,14 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
             const mangalaArtiSuccess = entries.filter(r => r.mangala_aarti == 1).length;
             const cleanSuccess = entries.filter(r => r.cleanliness == 1).length;
             const sleepSuccess = entries.filter(r => r.sleep_time && r.sleep_time <= '21:30:00').length;
-
             const totalRounds = entries.reduce((s, r) => s + (r.rounds || 0), 0);
             const totalHearing = entries.reduce((s, r) => s + (r.hearing_minutes || 0), 0);
             const totalReading = entries.reduce((s, r) => s + (r.reading_minutes || 0), 0);
             const totalStudy = entries.reduce((s, r) => s + (r.study_minutes || 0), 0);
             const totalRest = entries.reduce((s, r) => s + (r.day_rest_minutes || 0), 0);
-            
             const totalSoulMarks = entries.reduce((s, r) => s + (r.soul_marks || 0), 0);
             const totalBodyMarks = entries.reduce((s, r) => s + (r.body_marks || 0), 0);
             const entryCount = entries.length;
-
             return res.json([{
                 name: u.name,
                 voice: u.voice_name,
@@ -936,7 +684,6 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
             }]);
         }
 
-        // --- ADMIN/DEVELOPER ROLE - WITH PROPER VOICE FILTERING ---
         console.log(`👑 Admin access - voice: ${voice}, group: ${group}, days: ${days}`);
         
         let query = `
@@ -968,25 +715,18 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
         
         let params = [days];
         
-        // 🟢 PROPER VOICE FILTERING:
-        // If voice is 'All', get ALL users (no voice filter)
-        // If voice is specific, filter by that voice
         if (voice && voice !== 'All') {
             query += ` AND u.voice_name = ?`;
             params.push(voice);
         }
-        
-        // Add group filter if specified
         if (group && group !== 'All') {
             query += ` AND u.user_group = ?`;
             params.push(group);
         }
-        
         query += ` GROUP BY u.id ORDER BY u.user_group, u.name`;
         
         const [rows] = await pool.query(query, params);
         
-        // Get latest entry for each user
         const result = await Promise.all(rows.map(async (user) => {
             const [latest] = await pool.query(
                 `SELECT * FROM sadhana_entries 
@@ -994,9 +734,7 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
                  ORDER BY entry_date DESC LIMIT 1`,
                 [user.id, days]
             );
-            
             const latestEntry = latest[0] || {};
-            
             return {
                 name: user.name,
                 voice: user.voice,
@@ -1032,9 +770,7 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
                 body_percent: Math.round(((user.total_body_marks || 0) / (75 * days)) * 100)
             };
         }));
-        
         res.json(result);
-        
     } catch (e) { 
         console.error('Dashboard error:', e);
         res.status(500).json({ error: 'Dashboard failed: ' + e.message }); 
@@ -1042,12 +778,12 @@ app.get('/api/dashboard/report', authenticateToken, async (req, res) => {
 });
 
 // ============================================
-// VOICES ENDPOINT
+// VOICES ENDPOINT - FIXED (double quotes → single quotes)
 // ============================================
 app.get('/api/voices', async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT DISTINCT voice_name FROM users WHERE voice_name IS NOT NULL AND voice_name != "" ORDER BY voice_name'
+            "SELECT DISTINCT voice_name FROM users WHERE voice_name IS NOT NULL AND voice_name != '' ORDER BY voice_name"
         );
         const voices = rows.map(r => r.voice_name);
         res.json(voices);
@@ -1058,20 +794,17 @@ app.get('/api/voices', async (req, res) => {
 });
 
 // ============================================
-// GROUPS ENDPOINT
+// GROUPS ENDPOINT - FIXED (double quotes → single quotes)
 // ============================================
 app.get('/api/groups', async (req, res) => {
     try {
         const [rows] = await pool.query(
-            'SELECT DISTINCT user_group FROM users WHERE user_group IS NOT NULL AND user_group != "" ORDER BY user_group'
+            "SELECT DISTINCT user_group FROM users WHERE user_group IS NOT NULL AND user_group != '' ORDER BY user_group"
         );
         const groups = rows.map(r => r.user_group);
-        
-        // If no groups, return defaults
         if (groups.length === 0) {
             return res.json(['Yudhisthir', 'Bheem', 'Nakul', 'Sahdev']);
         }
-        
         res.json(groups);
     } catch (error) {
         console.error('Groups error:', error);
@@ -1079,36 +812,29 @@ app.get('/api/groups', async (req, res) => {
     }
 });
 
-
 // ============================================
 // ADMIN AUTHENTICATION MIDDLEWARE
 // ============================================
 const authenticateAdmin = (req, res, next) => {
-    // First, ensure user is authenticated
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    
     if (!token) {
         return res.status(401).json({ error: 'Authentication required' });
     }
-    
     jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', (err, user) => {
         if (err) {
             return res.status(403).json({ error: 'Invalid or expired token' });
         }
-        
-        // Check if user has admin or developer role
         if (user.role !== 'admin' && user.role !== 'developer') {
             return res.status(403).json({ error: 'Admin access required' });
         }
-        
         req.user = user;
         next();
     });
 };
 
 // ============================================
-// GET /api/leaderboard/months - Get available months
+// LEADERBOARD ROUTES
 // ============================================
 app.get('/api/leaderboard/months', authenticateToken, async (req, res) => {
     try {
@@ -1119,20 +845,14 @@ app.get('/api/leaderboard/months', authenticateToken, async (req, res) => {
             ORDER BY month DESC
             LIMIT 12
         `);
-        
         const months = rows.map(r => r.month);
-        
-        // Always include current month
         const currentMonth = new Date().toISOString().slice(0, 7);
         if (!months.includes(currentMonth)) {
             months.unshift(currentMonth);
         }
-        
         res.json(months);
-        
     } catch (error) {
         console.error('Error fetching months:', error);
-        // Return default months
         const months = ['current'];
         const now = new Date();
         for (let i = 1; i <= 3; i++) {
@@ -1142,19 +862,13 @@ app.get('/api/leaderboard/months', authenticateToken, async (req, res) => {
         res.json(months);
     }
 });
-// ============================================
-// FIXED: Leaderboard endpoint with proper calculations
-// ============================================
-// ============================================
-// FIXED: Leaderboard endpoint with proper voice filtering
-// ============================================
+
 app.get('/api/leaderboard', authenticateToken, async (req, res) => {
     try {
         const { month, group, voice } = req.query;
         const currentUserId = req.user.id;
         const userRole = req.user.role;
         
-        // Calculate date range
         let startDate, endDate;
         const today = new Date();
         
@@ -1170,15 +884,12 @@ app.get('/api/leaderboard', authenticateToken, async (req, res) => {
         
         console.log(`📊 Leaderboard request: user=${req.user.id}, role=${userRole}, month=${month}, voice=${voice}, from=${startDate} to=${endDate}`);
         
-        // Determine voice filter based on role and query
-        let voiceFilter;
         let userQuery;
         let userParams = [];
         
         if (userRole === 'devotee') {
-            // Devotee sees only their voice
             const [userInfo] = await pool.query('SELECT voice_name FROM users WHERE id = ?', [currentUserId]);
-            voiceFilter = userInfo[0]?.voice_name;
+            const voiceFilter = userInfo[0]?.voice_name;
             userQuery = `
                 SELECT id, name, user_group, voice_name 
                 FROM users 
@@ -1186,58 +897,41 @@ app.get('/api/leaderboard', authenticateToken, async (req, res) => {
             `;
             userParams = [voiceFilter];
         } else {
-            // Admin/developer - voice filtering based on query
             userQuery = `
                 SELECT id, name, user_group, voice_name 
                 FROM users 
                 WHERE user_role = 'devotee'
             `;
-            
-            // 🟢 PROPER VOICE FILTERING:
-            // If voice is 'All', get ALL users (no filter)
-            // If voice is specific, filter by that voice
             if (voice && voice !== 'All') {
                 userQuery += ` AND voice_name = ?`;
                 userParams.push(voice);
             }
         }
         
-        // Add group filter if specified
         if (group && group !== 'All') {
             userQuery += ` AND user_group = ?`;
             userParams.push(group);
         }
-        
         userQuery += ` ORDER BY name ASC`;
         
         const [allUsers] = await pool.query(userQuery, userParams);
-        
         if (allUsers.length === 0) {
             return res.json([]);
         }
         
-        // Calculate total days in period
-        const totalDays = month === 'current' ? new Date().getDate() : 
-                         new Date(endDate).getDate();
+        const totalDays = month === 'current' ? new Date().getDate() : new Date(endDate).getDate();
         
-        // Get data for each user
         const leaderboardData = await Promise.all(allUsers.map(async (user) => {
             const [records] = await pool.query(
                 `SELECT * FROM sadhana_entries 
                  WHERE user_id = ? AND entry_date BETWEEN ? AND ?`,
                 [user.id, startDate, endDate]
             );
-            
             const totalSoulMarks = records.reduce((s, r) => s + (r.soul_marks || 0), 0);
             const totalBodyMarks = records.reduce((s, r) => s + (r.body_marks || 0), 0);
             const entryCount = records.length;
-            
-            // Calculate percentages based on TOTAL possible for the period
-            const soulPercentage = totalDays > 0 ? 
-                Math.round((totalSoulMarks / (50 * totalDays)) * 100) : 0;
-            const bodyPercentage = totalDays > 0 ? 
-                Math.round((totalBodyMarks / (75 * totalDays)) * 100) : 0;
-            
+            const soulPercentage = totalDays > 0 ? Math.round((totalSoulMarks / (50 * totalDays)) * 100) : 0;
+            const bodyPercentage = totalDays > 0 ? Math.round((totalBodyMarks / (75 * totalDays)) * 100) : 0;
             return {
                 id: user.id,
                 name: user.name,
@@ -1251,18 +945,16 @@ app.get('/api/leaderboard', authenticateToken, async (req, res) => {
                 totalDays: totalDays
             };
         }));
-        
         console.log(`✅ Returning leaderboard with ${leaderboardData.length} users`);
         res.json(leaderboardData);
-        
     } catch (error) {
         console.error('❌ Leaderboard error:', error);
         res.status(500).json({ error: 'Failed to load leaderboard data: ' + error.message });
     }
 });
+
 // ============================================
-// GET /api/admin/marks-config
-// Get all voice configurations
+// MARKS CONFIGURATION ADMIN ROUTES
 // ============================================
 app.get('/api/admin/marks-config', authenticateAdmin, async (req, res) => {
     try {
@@ -1273,91 +965,38 @@ app.get('/api/admin/marks-config', authenticateAdmin, async (req, res) => {
              LEFT JOIN users u2 ON mc.updated_by = u2.id
              ORDER BY mc.voice_name`
         );
-        
-        res.json({
-            success: true,
-            data: configs
-        });
+        res.json({ success: true, data: configs });
     } catch (error) {
         console.error('Error fetching configs:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch configurations' 
-        });
+        res.status(500).json({ success: false, error: 'Failed to fetch configurations' });
     }
 });
 
-// ============================================
-// GET /api/admin/marks-config/:voice
-// Get configuration for a specific voice
-// ============================================
 app.get('/api/admin/marks-config/:voice', authenticateAdmin, async (req, res) => {
     try {
         const voice = req.params.voice;
-        
-        const [configs] = await pool.query(
-            `SELECT * FROM marks_config WHERE voice_name = ?`,
-            [voice]
-        );
-        
+        const [configs] = await pool.query(`SELECT * FROM marks_config WHERE voice_name = ?`, [voice]);
         if (configs.length === 0) {
-            // If no specific config, return global default
-            const [globalConfig] = await pool.query(
-                `SELECT * FROM marks_config WHERE voice_name = 'all'`
-            );
-            
+            const [globalConfig] = await pool.query(`SELECT * FROM marks_config WHERE voice_name = 'all'`);
             if (globalConfig.length === 0) {
-                return res.status(404).json({ 
-                    success: false, 
-                    error: 'No configuration found' 
-                });
+                return res.status(404).json({ success: false, error: 'No configuration found' });
             }
-            
-            return res.json({
-                success: true,
-                data: globalConfig[0],
-                isGlobal: true,
-                message: 'Using global default configuration'
-            });
+            return res.json({ success: true, data: globalConfig[0], isGlobal: true, message: 'Using global default configuration' });
         }
-        
-        res.json({
-            success: true,
-            data: configs[0],
-            isGlobal: false
-        });
+        res.json({ success: true, data: configs[0], isGlobal: false });
     } catch (error) {
         console.error('Error fetching config:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch configuration' 
-        });
+        res.status(500).json({ success: false, error: 'Failed to fetch configuration' });
     }
 });
 
-// ============================================
-// POST /api/admin/marks-config
-// Create or update configuration (with confirmation)
-// ============================================
 app.post('/api/admin/marks-config', authenticateAdmin, async (req, res) => {
     const { voiceName, configData, changeReason, confirmed } = req.body;
-    
-    // Validation
     if (!voiceName || !configData) {
-        return res.status(400).json({ 
-            success: false, 
-            error: 'Voice name and config data are required' 
-        });
+        return res.status(400).json({ success: false, error: 'Voice name and config data are required' });
     }
-    
-    // If not confirmed, return preview
     if (!confirmed) {
-        // Get current config if exists
-        const [existing] = await pool.query(
-            `SELECT * FROM marks_config WHERE voice_name = ?`,
-            [voiceName]
-        );
-        
+        const [existing] = await pool.query(`SELECT * FROM marks_config WHERE voice_name = ?`, [voiceName]);
         return res.json({
             success: true,
             requiresConfirmation: true,
@@ -1369,112 +1008,54 @@ app.post('/api/admin/marks-config', authenticateAdmin, async (req, res) => {
             }
         });
     }
-    
-    // Start transaction
     const connection = await pool.getConnection();
     await connection.beginTransaction();
-    
     try {
-        // Check if config already exists
-        const [existing] = await connection.query(
-            `SELECT * FROM marks_config WHERE voice_name = ?`,
-            [voiceName]
-        );
-        
+        const [existing] = await connection.query(`SELECT * FROM marks_config WHERE voice_name = ?`, [voiceName]);
         let configId;
-        
         if (existing.length > 0) {
-            // Update existing config
-            
-            // Save to history first
+            configId = existing[0].id;
             await connection.query(
                 `INSERT INTO marks_config_history 
                  (config_id, changed_by, old_config, new_config, change_reason) 
                  VALUES (?, ?, ?, ?, ?)`,
-                [
-                    existing[0].id, 
-                    req.user.id, 
-                    JSON.stringify(existing[0].config_data),
-                    JSON.stringify(configData),
-                    changeReason || 'Updated via admin panel'
-                ]
+                [configId, req.user.id, JSON.stringify(existing[0].config_data), JSON.stringify(configData), changeReason || 'Updated via admin panel']
             );
-            
-            // Update the config
             await connection.query(
-                `UPDATE marks_config 
-                 SET config_data = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP 
-                 WHERE id = ?`,
-                [JSON.stringify(configData), req.user.id, existing[0].id]
+                `UPDATE marks_config SET config_data = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+                [JSON.stringify(configData), req.user.id, configId]
             );
-            
-            configId = existing[0].id;
         } else {
-            // Insert new config
             const [result] = await connection.query(
-                `INSERT INTO marks_config 
-                 (voice_name, config_data, created_by, updated_by) 
-                 VALUES (?, ?, ?, ?)`,
+                `INSERT INTO marks_config (voice_name, config_data, created_by, updated_by) VALUES (?, ?, ?, ?)`,
                 [voiceName, JSON.stringify(configData), req.user.id, req.user.id]
             );
-            
             configId = result.insertId;
         }
-        
         await connection.commit();
-        
-        res.json({
-            success: true,
-            message: 'Configuration saved successfully',
-            configId: configId
-        });
-        
+        res.json({ success: true, message: 'Configuration saved successfully', configId: configId });
     } catch (error) {
         await connection.rollback();
         console.error('Error saving config:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to save configuration' 
-        });
+        res.status(500).json({ success: false, error: 'Failed to save configuration' });
     } finally {
         connection.release();
     }
 });
 
-// Helper function to calculate changes (optional)
 function calculateChanges(oldConfig, newConfig) {
     if (!oldConfig) return { type: 'new', summary: 'New configuration created' };
-    
-    // Simple change detection - can be enhanced
-    return {
-        type: 'update',
-        summary: 'Configuration updated'
-    };
+    return { type: 'update', summary: 'Configuration updated' };
 }
-// ============================================
-// GET /api/admin/marks-config-history/:voice
-// Get change history for a voice
-// ============================================
+
 app.get('/api/admin/marks-config-history/:voice', authenticateAdmin, async (req, res) => {
     try {
         const voice = req.params.voice;
-        
-        // First get the config id
-        const [configs] = await pool.query(
-            `SELECT id FROM marks_config WHERE voice_name = ?`,
-            [voice]
-        );
-        
+        const [configs] = await pool.query(`SELECT id FROM marks_config WHERE voice_name = ?`, [voice]);
         if (configs.length === 0) {
-            return res.status(404).json({ 
-                success: false, 
-                error: 'No configuration found for this voice' 
-            });
+            return res.status(404).json({ success: false, error: 'No configuration found for this voice' });
         }
-        
         const configId = configs[0].id;
-        
-        // Get history with user names
         const [history] = await pool.query(
             `SELECT h.*, u.name as changed_by_name 
              FROM marks_config_history h
@@ -1483,183 +1064,93 @@ app.get('/api/admin/marks-config-history/:voice', authenticateAdmin, async (req,
              ORDER BY h.changed_at DESC`,
             [configId]
         );
-        
-        res.json({
-            success: true,
-            data: history
-        });
-        
+        res.json({ success: true, data: history });
     } catch (error) {
         console.error('Error fetching history:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch history' 
-        });
+        res.status(500).json({ success: false, error: 'Failed to fetch history' });
     }
 });
 
-// ============================================
-// GET /api/public/marks-config/:voice
-// Get configuration for public use (no auth needed)
-// Used by frontend calculator
-// ============================================
 app.get('/api/public/marks-config/:voice', async (req, res) => {
     try {
         const voice = req.params.voice;
-        
-        // Try to get voice-specific config first
         const [configs] = await pool.query(
-            `SELECT config_data FROM marks_config 
-             WHERE voice_name = ? AND is_active = 1`,
+            `SELECT config_data FROM marks_config WHERE voice_name = ? AND is_active = 1`,
             [voice]
         );
-        
         if (configs.length > 0) {
-            return res.json({
-                success: true,
-                data: configs[0].config_data,
-                voice: voice
-            });
+            return res.json({ success: true, data: configs[0].config_data, voice: voice });
         }
-        
-        // Fallback to global default
-        const [globalConfig] = await pool.query(
-            `SELECT config_data FROM marks_config 
-             WHERE voice_name = 'all' AND is_active = 1`
-        );
-        
+        const [globalConfig] = await pool.query(`SELECT config_data FROM marks_config WHERE voice_name = 'all' AND is_active = 1`);
         if (globalConfig.length === 0) {
-            return res.status(404).json({ 
-                success: false, 
-                error: 'No configuration found' 
-            });
+            return res.status(404).json({ success: false, error: 'No configuration found' });
         }
-        
-        res.json({
-            success: true,
-            data: globalConfig[0].config_data,
-            voice: 'all',
-            isGlobal: true
-        });
-        
+        res.json({ success: true, data: globalConfig[0].config_data, voice: 'all', isGlobal: true });
     } catch (error) {
         console.error('Error fetching config:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch configuration' 
-        });
+        res.status(500).json({ success: false, error: 'Failed to fetch configuration' });
     }
 });
 
-// ============================================
-// GET /api/admin/voices-with-config
-// Get all voices that have configurations
-// ============================================
-/*app.get('/api/admin/voices-with-config', authenticateAdmin, async (req, res) => {
+app.get('/api/admin/voices-with-config', authenticateAdmin, async (req, res) => {
     try {
         const [voices] = await pool.query(
-            `SELECT voice_name, updated_at, 
+            `SELECT DISTINCT voice_name, updated_at, 
              (SELECT name FROM users WHERE id = updated_by) as last_updated_by
              FROM marks_config 
              WHERE voice_name != 'all'
              ORDER BY voice_name`
         );
-        
-        // Also include 'all' as special option
         const [globalConfig] = await pool.query(
             `SELECT voice_name, updated_at,
              (SELECT name FROM users WHERE id = updated_by) as last_updated_by
              FROM marks_config WHERE voice_name = 'all'`
         );
-        
+        const [userVoices] = await pool.query(`SELECT DISTINCT voice_name as name FROM users WHERE voice_name IS NOT NULL`);
+        const allVoices = [...new Set([...userVoices.map(v => v.name), ...voices.map(v => v.voice_name)])];
         res.json({
             success: true,
             data: {
                 global: globalConfig[0] || null,
-                voices: voices
+                voices: voices,
+                allVoices: allVoices
             }
         });
-        
     } catch (error) {
         console.error('Error fetching voices:', error);
-        res.status(500).json({ 
-            success: false, 
-
-
-            error: 'Failed to fetch voices' 
-        });
+        res.status(500).json({ success: false, error: 'Failed to fetch voices: ' + error.message });
     }
-});*/
+});
 
-// ============================================
-// MARKS CONFIGURATION ENDPOINTS
-// ============================================
-
-// GET /api/admin/marks-config/:voice - Get config for a specific voice
 app.get('/api/admin/marks-config/:voice', authenticateAdmin, async (req, res) => {
     try {
         const voice = req.params.voice;
-        
         console.log(`📥 Fetching marks config for voice: ${voice}`);
-        
-        // Query the database
-        const [configs] = await pool.query(
-            `SELECT * FROM marks_config WHERE voice_name = ?`,
-            [voice]
-        );
-        
+        const [configs] = await pool.query(`SELECT * FROM marks_config WHERE voice_name = ?`, [voice]);
         if (configs.length === 0) {
-            // If no specific config, return default structure
             return res.json({
                 success: true,
-                data: {
-                    rules: getDefaultRules()  // We'll define this function
-                },
+                data: { rules: getDefaultRules() },
                 isGlobal: voice === 'all',
                 message: 'No configuration found, using defaults'
             });
         }
-        
-        // Parse the JSON config_data
         const configData = JSON.parse(configs[0].config_data);
-        
-        res.json({
-            success: true,
-            data: configData,
-            isGlobal: false
-        });
-        
+        res.json({ success: true, data: configData, isGlobal: false });
     } catch (error) {
         console.error('Error fetching config:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch configuration: ' + error.message 
-        });
+        res.status(500).json({ success: false, error: 'Failed to fetch configuration: ' + error.message });
     }
 });
 
-// POST /api/admin/marks-config - Save or update configuration
 app.post('/api/admin/marks-config', authenticateAdmin, async (req, res) => {
     const { voiceName, configData, changeReason, confirmed } = req.body;
-    
     console.log(`📤 Saving marks config for voice: ${voiceName}`);
-    
-    // Validation
     if (!voiceName || !configData) {
-        return res.status(400).json({ 
-            success: false, 
-            error: 'Voice name and config data are required' 
-        });
+        return res.status(400).json({ success: false, error: 'Voice name and config data are required' });
     }
-    
-    // If not confirmed, return preview
     if (!confirmed) {
-        // Get current config if exists
-        const [existing] = await pool.query(
-            `SELECT * FROM marks_config WHERE voice_name = ?`,
-            [voiceName]
-        );
-        
+        const [existing] = await pool.query(`SELECT * FROM marks_config WHERE voice_name = ?`, [voiceName]);
         return res.json({
             success: true,
             requiresConfirmation: true,
@@ -1670,102 +1161,51 @@ app.post('/api/admin/marks-config', authenticateAdmin, async (req, res) => {
             }
         });
     }
-    
-    // Start transaction for confirmed save
     const connection = await pool.getConnection();
     await connection.beginTransaction();
-    
     try {
-        // Check if config already exists
-        const [existing] = await connection.query(
-            `SELECT * FROM marks_config WHERE voice_name = ?`,
-            [voiceName]
-        );
-        
+        const [existing] = await connection.query(`SELECT * FROM marks_config WHERE voice_name = ?`, [voiceName]);
         let configId;
-        
         if (existing.length > 0) {
             configId = existing[0].id;
-            
-            // Save to history first
             await connection.query(
                 `INSERT INTO marks_config_history 
                  (config_id, changed_by, old_config, new_config, change_reason) 
                  VALUES (?, ?, ?, ?, ?)`,
-                [
-                    configId, 
-                    req.user.id, 
-                    existing[0].config_data,
-                    JSON.stringify(configData),
-                    changeReason || 'Updated via admin panel'
-                ]
+                [configId, req.user.id, existing[0].config_data, JSON.stringify(configData), changeReason || 'Updated via admin panel']
             );
-            
-            // Update the config
             await connection.query(
-                `UPDATE marks_config 
-                 SET config_data = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP 
-                 WHERE id = ?`,
+                `UPDATE marks_config SET config_data = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
                 [JSON.stringify(configData), req.user.id, configId]
             );
-            
             console.log(`✅ Updated config for ${voiceName}`);
-            
         } else {
-            // Insert new config
             const [result] = await connection.query(
-                `INSERT INTO marks_config 
-                 (voice_name, config_data, created_by, updated_by) 
-                 VALUES (?, ?, ?, ?)`,
+                `INSERT INTO marks_config (voice_name, config_data, created_by, updated_by) VALUES (?, ?, ?, ?)`,
                 [voiceName, JSON.stringify(configData), req.user.id, req.user.id]
             );
-            
             configId = result.insertId;
             console.log(`✅ Created new config for ${voiceName}`);
         }
-        
         await connection.commit();
-        
-        res.json({
-            success: true,
-            message: 'Configuration saved successfully',
-            configId: configId
-        });
-        
+        res.json({ success: true, message: 'Configuration saved successfully', configId: configId });
     } catch (error) {
         await connection.rollback();
         console.error('Error saving config:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to save configuration: ' + error.message 
-        });
+        res.status(500).json({ success: false, error: 'Failed to save configuration: ' + error.message });
     } finally {
         connection.release();
     }
 });
 
-// GET /api/admin/marks-config-history/:voice - Get change history
 app.get('/api/admin/marks-config-history/:voice', authenticateAdmin, async (req, res) => {
     try {
         const voice = req.params.voice;
-        
-        // First get the config id
-        const [configs] = await pool.query(
-            `SELECT id FROM marks_config WHERE voice_name = ?`,
-            [voice]
-        );
-        
+        const [configs] = await pool.query(`SELECT id FROM marks_config WHERE voice_name = ?`, [voice]);
         if (configs.length === 0) {
-            return res.json({ 
-                success: true, 
-                data: [],
-                message: 'No history found' 
-            });
+            return res.json({ success: true, data: [], message: 'No history found' });
         }
-        
         const configId = configs[0].id;
-        
-        // Get history with user names
         const [history] = await pool.query(
             `SELECT h.*, u.name as changed_by_name 
              FROM marks_config_history h
@@ -1775,25 +1215,15 @@ app.get('/api/admin/marks-config-history/:voice', authenticateAdmin, async (req,
              LIMIT 50`,
             [configId]
         );
-        
-        res.json({
-            success: true,
-            data: history
-        });
-        
+        res.json({ success: true, data: history });
     } catch (error) {
         console.error('Error fetching history:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch history: ' + error.message 
-        });
+        res.status(500).json({ success: false, error: 'Failed to fetch history: ' + error.message });
     }
 });
 
-// GET /api/admin/voices-with-config - Get all voices that have configurations
 app.get('/api/admin/voices-with-config', authenticateAdmin, async (req, res) => {
     try {
-        // Get all distinct voice names from marks_config
         const [voices] = await pool.query(
             `SELECT DISTINCT voice_name, updated_at, 
              (SELECT name FROM users WHERE id = updated_by) as last_updated_by
@@ -1801,22 +1231,13 @@ app.get('/api/admin/voices-with-config', authenticateAdmin, async (req, res) => 
              WHERE voice_name != 'all'
              ORDER BY voice_name`
         );
-        
-        // Get global config separately
         const [globalConfig] = await pool.query(
             `SELECT voice_name, updated_at,
              (SELECT name FROM users WHERE id = updated_by) as last_updated_by
              FROM marks_config WHERE voice_name = 'all'`
         );
-        
-        // Also get all distinct voices from users table
-        const [userVoices] = await pool.query(
-            `SELECT DISTINCT voice_name as name FROM users WHERE voice_name IS NOT NULL`
-        );
-        
-        // Combine and deduplicate
+        const [userVoices] = await pool.query(`SELECT DISTINCT voice_name as name FROM users WHERE voice_name IS NOT NULL`);
         const allVoices = [...new Set([...userVoices.map(v => v.name), ...voices.map(v => v.voice_name)])];
-        
         res.json({
             success: true,
             data: {
@@ -1825,240 +1246,73 @@ app.get('/api/admin/voices-with-config', authenticateAdmin, async (req, res) => 
                 allVoices: allVoices
             }
         });
-        
     } catch (error) {
         console.error('Error fetching voices:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch voices: ' + error.message 
-        });
+        res.status(500).json({ success: false, error: 'Failed to fetch voices: ' + error.message });
     }
 });
 
-// PUBLIC ENDPOINT - GET /api/public/marks-config/:voice - Used by MarksCalculator
 app.get('/api/public/marks-config/:voice', async (req, res) => {
     try {
         const voice = req.params.voice;
-        
         console.log(`📢 Public request for marks config: ${voice}`);
-        
-        // Try to get voice-specific config first
         const [configs] = await pool.query(
-            `SELECT config_data FROM marks_config 
-             WHERE voice_name = ? AND is_active = 1`,
+            `SELECT config_data FROM marks_config WHERE voice_name = ? AND is_active = 1`,
             [voice]
         );
-        
         if (configs.length > 0) {
             const configData = JSON.parse(configs[0].config_data);
-            return res.json({
-                success: true,
-                data: configData,
-                voice: voice
-            });
+            return res.json({ success: true, data: configData, voice: voice });
         }
-        
-        // Fallback to global default
-        const [globalConfig] = await pool.query(
-            `SELECT config_data FROM marks_config 
-             WHERE voice_name = 'all' AND is_active = 1`
-        );
-        
+        const [globalConfig] = await pool.query(`SELECT config_data FROM marks_config WHERE voice_name = 'all' AND is_active = 1`);
         if (globalConfig.length > 0) {
             const configData = JSON.parse(globalConfig[0].config_data);
-            return res.json({
-                success: true,
-                data: configData,
-                voice: 'all',
-                isGlobal: true
-            });
+            return res.json({ success: true, data: configData, voice: 'all', isGlobal: true });
         }
-        
-        // If no config found, return default rules
         return res.json({
             success: true,
-            data: {
-                rules: getDefaultRules()
-            },
+            data: { rules: getDefaultRules() },
             voice: 'all',
             isGlobal: true,
             isDefault: true
         });
-        
     } catch (error) {
         console.error('Error fetching public config:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to fetch configuration' 
-        });
+        res.status(500).json({ success: false, error: 'Failed to fetch configuration' });
     }
 });
 
-// Helper function to get default rules
 function getDefaultRules() {
     return {
         soul: [
-            {
-                id: 'hearing',
-                name: 'Hearing',
-                field: 'hearing_minutes',
-                type: 'boolean',
-                maxMarks: 5,
-                conditions: [
-                    { operator: '>', value: 0, marks: 5 }
-                ]
-            },
-            {
-                id: 'reading',
-                name: 'Reading',
-                field: 'reading_minutes',
-                type: 'boolean',
-                maxMarks: 5,
-                conditions: [
-                    { operator: '>', value: 0, marks: 5 }
-                ]
-            },
-            {
-                id: 'cleanliness',
-                name: 'Cleanliness',
-                field: 'cleanliness',
-                type: 'boolean',
-                maxMarks: 5,
-                conditions: [
-                    { operator: '=', value: 1, marks: 5 }
-                ]
-            },
-            {
-                id: 'morningClass',
-                name: 'Morning Class',
-                field: 'morning_class',
-                type: 'boolean',
-                maxMarks: 5,
-                conditions: [
-                    { operator: '=', value: 1, marks: 5 }
-                ]
-            },
-            {
-                id: 'mangalaArti',
-                name: 'Mangala Arti',
-                field: 'mangala_aarti',
-                type: 'boolean',
-                maxMarks: 5,
-                conditions: [
-                    { operator: '=', value: 1, marks: 5 }
-                ]
-            }
+            { id: 'hearing', name: 'Hearing', field: 'hearing_minutes', type: 'boolean', maxMarks: 5, conditions: [{ operator: '>', value: 0, marks: 5 }] },
+            { id: 'reading', name: 'Reading', field: 'reading_minutes', type: 'boolean', maxMarks: 5, conditions: [{ operator: '>', value: 0, marks: 5 }] },
+            { id: 'cleanliness', name: 'Cleanliness', field: 'cleanliness', type: 'boolean', maxMarks: 5, conditions: [{ operator: '=', value: 1, marks: 5 }] },
+            { id: 'morningClass', name: 'Morning Class', field: 'morning_class', type: 'boolean', maxMarks: 5, conditions: [{ operator: '=', value: 1, marks: 5 }] },
+            { id: 'mangalaArti', name: 'Mangala Arti', field: 'mangala_aarti', type: 'boolean', maxMarks: 5, conditions: [{ operator: '=', value: 1, marks: 5 }] }
         ],
         body: [
-            {
-                id: 'earlyWakeup',
-                name: 'Early Wakeup',
-                field: 'wakeup_time',
-                type: 'time',
-                maxMarks: 25,
-                conditions: [
-                    { operator: '<=', value: '04:30', marks: 25 },
-                    { operator: '<=', value: '05:00', marks: 20 },
-                    { operator: '<=', value: '05:30', marks: 15 },
-                    { operator: '<=', value: '06:00', marks: 10 },
-                    { operator: '<=', value: '06:30', marks: 5 }
-                ]
-            },
-            {
-                id: 'earlyToBed',
-                name: 'Early to Bed',
-                field: 'to_bed_time',
-                type: 'time',
-                maxMarks: 25,
-                conditions: [
-                    { operator: '<=', value: '21:30', marks: 25 },
-                    { operator: '<=', value: '22:00', marks: 20 },
-                    { operator: '<=', value: '22:30', marks: 15 },
-                    { operator: '<=', value: '23:00', marks: 10 },
-                    { operator: '<=', value: '23:30', marks: 5 }
-                ]
-            },
-            {
-                id: 'templeReach',
-                name: 'Temple Reach',
-                field: 'temp_hall_rech',
-                type: 'time',
-                maxMarks: 25,
-                conditions: [
-                    { operator: '<=', value: '04:30', marks: 25 },
-                    { operator: '<=', value: '05:00', marks: 20 },
-                    { operator: '<=', value: '05:30', marks: 15 },
-                    { operator: '<=', value: '06:00', marks: 10 },
-                    { operator: '<=', value: '06:30', marks: 5 }
-                ]
-            },
-            {
-                id: 'dayRest',
-                name: 'Day Rest',
-                field: 'day_rest_marks',
-                type: 'duration',
-                maxMarks: 25,
-                conditions: [
-                    { operator: '<=', value: 15, marks: 25 },
-                    { operator: '<=', value: 30, marks: 20 },
-                    { operator: '<=', value: 45, marks: 15 },
-                    { operator: '<=', value: 60, marks: 10 },
-                    { operator: '<=', value: 75, marks: 5 }
-                ]
-            },
-            {
-                id: 'study',
-                name: 'Study',
-                field: 'study_minutes',
-                type: 'duration',
-                maxMarks: 25,
-                conditions: [
-                    { operator: '<=', value: 30, marks: 25 },
-                    { operator: '<=', value: 60, marks: 20 },
-                    { operator: '<=', value: 90, marks: 15 },
-                    { operator: '<=', value: 120, marks: 10 }
-                ]
-            }
+            { id: 'earlyWakeup', name: 'Early Wakeup', field: 'wakeup_time', type: 'time', maxMarks: 25, conditions: [{ operator: '<=', value: '04:30', marks: 25 }, { operator: '<=', value: '05:00', marks: 20 }, { operator: '<=', value: '05:30', marks: 15 }, { operator: '<=', value: '06:00', marks: 10 }, { operator: '<=', value: '06:30', marks: 5 }] },
+            { id: 'earlyToBed', name: 'Early to Bed', field: 'to_bed_time', type: 'time', maxMarks: 25, conditions: [{ operator: '<=', value: '21:30', marks: 25 }, { operator: '<=', value: '22:00', marks: 20 }, { operator: '<=', value: '22:30', marks: 15 }, { operator: '<=', value: '23:00', marks: 10 }, { operator: '<=', value: '23:30', marks: 5 }] },
+            { id: 'templeReach', name: 'Temple Reach', field: 'temp_hall_rech', type: 'time', maxMarks: 25, conditions: [{ operator: '<=', value: '04:30', marks: 25 }, { operator: '<=', value: '05:00', marks: 20 }, { operator: '<=', value: '05:30', marks: 15 }, { operator: '<=', value: '06:00', marks: 10 }, { operator: '<=', value: '06:30', marks: 5 }] },
+            { id: 'dayRest', name: 'Day Rest', field: 'day_rest_marks', type: 'duration', maxMarks: 25, conditions: [{ operator: '<=', value: 15, marks: 25 }, { operator: '<=', value: 30, marks: 20 }, { operator: '<=', value: 45, marks: 15 }, { operator: '<=', value: 60, marks: 10 }, { operator: '<=', value: 75, marks: 5 }] },
+            { id: 'study', name: 'Study', field: 'study_minutes', type: 'duration', maxMarks: 25, conditions: [{ operator: '<=', value: 30, marks: 25 }, { operator: '<=', value: 60, marks: 20 }, { operator: '<=', value: 90, marks: 15 }, { operator: '<=', value: 120, marks: 10 }] }
         ],
         japa: [
-            {
-                id: 'japaRounds',
-                name: 'Japa Rounds',
-                field: 'rounds',
-                type: 'slab',
-                maxMarks: 25,
-                conditions: [
-                    { operator: '>=', value: 16, marks: 25 },
-                    { operator: '>=', value: 15, marks: 20 },
-                    { operator: '>=', value: 14, marks: 15 },
-                    { operator: '>=', value: 13, marks: 10 },
-                    { operator: '>=', value: 12, marks: 5 }
-                ]
-            }
+            { id: 'japaRounds', name: 'Japa Rounds', field: 'rounds', type: 'slab', maxMarks: 25, conditions: [{ operator: '>=', value: 16, marks: 25 }, { operator: '>=', value: 15, marks: 20 }, { operator: '>=', value: 14, marks: 15 }, { operator: '>=', value: 13, marks: 10 }, { operator: '>=', value: 12, marks: 5 }] }
         ]
     };
 }
 
-
-//=====================================
-// Analytics reports
-//=====================================
-// Add this endpoint to your server.js
 // ============================================
-// Analytics reports - Already has proper voice filtering
+// ANALYTICS REPORTS
 // ============================================
 app.get('/api/reports/group', authenticateToken, async (req, res) => {
     try {
         const { voice, start, end } = req.query;
-        
         console.log(`📊 Group report: voice=${voice}, from=${start} to=${end}`);
-        
         let query;
         let params;
-        
-        // 🟢 PROPER VOICE FILTERING:
-        // If voice is 'All', get ALL users
-        // If voice is specific, filter by that voice
         if (voice === 'All') {
             query = `
                 SELECT 
@@ -2174,51 +1428,30 @@ app.get('/api/reports/group', authenticateToken, async (req, res) => {
             `;
             params = [start, end, voice];
         }
-        
         const [rows] = await pool.query(query, params);
         console.log(`✅ Found ${rows.length} users for voice=${voice}`);
         res.json(rows);
-        
     } catch (error) {
         console.error('❌ Group report error:', error);
         res.status(500).json({ error: error.message });
     }
 });
-/*
+
 // ============================================
-// SERVER START - SIMPLE & SAFE (WORKS EVERYWHERE)
+// SERVER START
 // ============================================
 const PORT = process.env.PORT || 8080;
 
-// '0.0.0.0' har jagah kaam karta hai - local bhi, production bhi
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Sadhana Tracker Backend Ready on port ${PORT}`);
-    console.log(`🌍 Listening on 0.0.0.0:${PORT} (accessible locally & publicly)`);
-    console.log(`📝 Local URL: http://localhost:${PORT}`);
-    console.log(`🔍 Health check: http://localhost:${PORT}/api/health`);
-    
-    if (process.env.NODE_ENV === 'production') {
-        console.log(`🌐 Public URL: https://sadhana-tracker-production.up.railway.app:${PORT}`);
-    }
-});*/
-// ============================================
-// SERVER START - SIMPLE & SAFE (WORKS EVERYWHERE)
-// ============================================
-const PORT = process.env.PORT || 8080;
-
-// Only start server if not in test environment
 if (process.env.NODE_ENV !== 'test') {
     const server = app.listen(PORT, '0.0.0.0', () => {
         console.log(`🚀 Sadhana Tracker Backend Ready on port ${PORT}`);
         console.log(`🌍 Listening on 0.0.0.0:${PORT} (accessible locally & publicly)`);
         console.log(`📝 Local URL: http://localhost:${PORT}`);
         console.log(`🔍 Health check: http://localhost:${PORT}/api/health`);
-
         if (process.env.NODE_ENV === 'production') {
             console.log(`🌐 Public URL: ${process.env.RENDER_EXTERNAL_URL || 'https://sadhana-tracker-sto2.onrender.com'}`);
         }
     });
 }
 
-// Export for testing
 module.exports = { app, pool };
